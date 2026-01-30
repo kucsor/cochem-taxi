@@ -9,8 +9,8 @@ type Dictionary = {
 };
 
 export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
-  const otherLang = lang === 'de' ? 'en' : 'de';
-  const currentLangLabel = lang === 'de' ? 'DE' : 'EN';
+  const isDE = lang === 'de';
+  const isEN = lang === 'en';
 
   return (
     <>
@@ -33,26 +33,38 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
               Cochem Taxi
             </motion.a>
 
-            {/* Language Toggle Button - Direct switch */}
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-                href={`/${otherLang}`}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
-              >
-                <span>{currentLangLabel}</span>
-                <motion.span
-                  animate={{ rotate: 180 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-xs opacity-60"
+            {/* Language Toggle Switch */}
+            <div className="flex items-center gap-1 p-1 rounded-xl bg-white/10 border border-white/10">
+              {/* DE Button */}
+              <Link href="/de">
+                <motion.button
+                  whileHover={{ scale: isDE ? 1 : 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                    isDE 
+                      ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' 
+                      : 'text-white/50 hover:text-white/80'
+                  }`}
                 >
-                  ↔
-                </motion.span>
-                <span className="opacity-80">{otherLang.toUpperCase()}</span>
+                  DE
+                </motion.button>
               </Link>
-            </motion.div>
+
+              {/* EN Button */}
+              <Link href="/en">
+                <motion.button
+                  whileHover={{ scale: isEN ? 1 : 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 ${
+                    isEN 
+                      ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' 
+                      : 'text-white/50 hover:text-white/80'
+                  }`}
+                >
+                  EN
+                </motion.button>
+              </Link>
+            </div>
           </div>
         </nav>
       </motion.header>

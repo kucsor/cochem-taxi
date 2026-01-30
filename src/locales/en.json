@@ -1,0 +1,98 @@
+
+{
+  "metadata": {
+    "title": "Your Reliable Taxi in Cochem",
+    "description": "Your reliable taxi in Cochem and the surrounding area. Book hotel transfers, Reichsburg tours, and trips to Hahn Airport."
+  },
+  "hero": {
+    "title": "Need a Taxi in Cochem?",
+    "subtitle": "Always reliable & there for you.",
+    "callButton": "CALL NOW",
+    "phoneNumber": "02671 8080"
+  },
+  "fareCalculator": {
+    "title": "Calculate Fare",
+    "startLabel": "From (Start)",
+    "startPlaceholder": "e.g., Cochem Station",
+    "endLabel": "To (Destination)",
+    "endPlaceholder": "e.g., Reichsburg Cochem",
+    "timeLabel": "Time",
+    "submitButton": "Estimate Price",
+    "locateMeAriaLabel": "Use current location",
+    "resultTitle": "Approximate Price",
+    "resultDistance": "Based on an estimated distance of {distance} km.",
+    "routeMapTitle": "Route on the map",
+    "anfahrtInfo": "Price includes an approach fee of ~{anfahrtPrice}.",
+    "errorMessages": {
+      "generic": "An unexpected error occurred.",
+      "geocoding_both": "Start and destination address could not be found.",
+      "geocoding_start": "Start address could not be found.",
+      "geocoding_end": "Destination address could not be found.",
+      "routing": "Route between the addresses could not be calculated.",
+      "missing_input": "Please enter start, destination, and time."
+    },
+    "locationPrefix": "Location:",
+    "locating": "Locating"
+  },
+  "services": {
+    "title": "Your Local Taxi Service in Cochem",
+    "description": "Welcome to Cochem Taxi. We are your reliable partner for trips in, around, and from Cochem. Whatever your destination, we are here for you.",
+    "items": {
+      "hotel": {
+        "title": "Hotel Transfer",
+        "description": "We will take you safely and punctually to your hotel or pick you up from there."
+      },
+      "castle": {
+        "title": "Reichsburg Transfer",
+        "description": "Visit Cochem's landmark without worrying about parking."
+      },
+      "airport": {
+        "title": "Airport Transfer",
+        "description": "Start your vacation relaxed with our transfer to Hahn Airport."
+      }
+    }
+  },
+  "whyUs": {
+    "title": "Why Cochem Taxi?",
+    "features": [
+      "Local and multilingual drivers",
+      "Air-conditioned & modern vehicles",
+      "Courier & messenger services",
+      "Patient transport for all health insurances (seated)"
+    ]
+  },
+  "serviceRegion": {
+    "title": "We operate in the entire region",
+    "andMore": "... and more"
+  },
+  "footer": {
+    "companyName": "Cochem Taxi",
+    "openingHoursTitle": "Opening Hours",
+    "openingHoursContent": "24 hours / 7 days\nAlso on Sundays and public holidays",
+    "copyright": "© {year} Cochem Taxi. All rights reserved.",
+    "tagline": "",
+    "legalLink": "Imprint & Privacy"
+  },
+  "legalPage": {
+    "title": "Imprint & Privacy Policy",
+    "impressumTitle": "Imprint",
+    "angabenTitle": "Information pursuant to § 5 TMG",
+    "betreiber": "<strong>Website Operator:</strong><br>Alexandru Kucsor<br>Bergstrasse 18<br>56812 Cochem<br>Germany",
+    "kontaktTitle": "Contact",
+    "kontaktContent": "Phone: +49 0151 29616693<br>Email: Alexandru.Kucsor@gmail.com",
+    "verantwortlichTitle": "Editorially responsible",
+    "verantwortlichContent": "Alexandru Kucsor<br>Bergstrasse 18<br>56812 Cochem<br>Germany",
+    "disclaimerTitle": "Disclaimer",
+    "unabhaengigkeitTitle": "1. Important Notice on Independence",
+    "unabhaengigkeitContent": "This website ([Your Domain Name]) is an <strong>independent information portal</strong> for taxi services in Cochem. We are <strong>not</strong> the official website of the company \"Taxco AG\" or any other taxi company. All calls made via this site are forwarded directly to the official taxi control center (Tel: 02671 8080). We act as a private intermediary at no extra charge to the user.",
+    "tarifrechnerTitle": "2. Liability for the Fare Calculator",
+    "tarifrechnerContent": "The fare calculator integrated on this website is for rough guidance only. The calculated prices are <strong>non-binding estimates</strong> (approx. prices) based on average values. <strong>Legally binding is exclusively the fare displayed by the calibrated taximeter in the vehicle.</strong> We assume no liability for the accuracy of the calculated distances or prices.",
+    "inhalteTitle": "3. Liability for Content",
+    "inhalteContent": "As a service provider, we are responsible for our own content on these pages in accordance with general laws pursuant to § 7 (1) TMG. However, we are not obligated to monitor transmitted or stored third-party information. Upon notification of violations, we will remove such content immediately.",
+    "linksTitle": "4. Liability for Links",
+    "linksContent": "Our offer contains links to external websites of third parties (e.g., partner recommendations for hotels or restaurants), on whose contents we have no influence. Therefore, we cannot assume any liability for these external contents. The respective provider or operator of the pages is always responsible for the contents of the linked pages.",
+    "datenschutzTitle": "Privacy Policy (Excerpt)",
+    "analyticsTitle": "Google Analytics",
+    "analyticsContent": "This website uses functions of the web analysis service Google Analytics. The provider is Google Ireland Limited. Google Analytics uses so-called \"cookies\". These are text files that are stored on your computer and that allow an analysis of your use of the website.<br><br><strong>IP Anonymization:</strong> We have activated the IP anonymization function on this website. As a result, your IP address will be truncated by Google within member states of the European Union before being transmitted to the USA."
+  }
+}

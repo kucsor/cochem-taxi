@@ -1,0 +1,98 @@
+
+{
+  "metadata": {
+    "title": "Ihr zuverlässiges Taxi in Cochem",
+    "description": "Ihr zuverlässiges Taxi in Cochem und Umgebung. Buchen Sie Hotel-Transfers, Reichsburg-Touren und Fahrten zum Flughafen Hahn."
+  },
+  "hero": {
+    "title": "Brauchen Sie ein Taxi in Cochem?",
+    "subtitle": "Immer zuverlässig & für Sie da.",
+    "callButton": "JETZT ANRUFEN",
+    "phoneNumber": "02671 8080"
+  },
+  "fareCalculator": {
+    "title": "Fahrpreis berechnen",
+    "startLabel": "Von (Start)",
+    "startPlaceholder": "z.B. Cochem Bahnhof",
+    "endLabel": "Nach (Ziel)",
+    "endPlaceholder": "z.B. Reichsburg Cochem",
+    "timeLabel": "Uhrzeit",
+    "submitButton": "Preis schätzen",
+    "locateMeAriaLabel": "Aktuellen Standort verwenden",
+    "resultTitle": "Ungefährer Preis",
+    "resultDistance": "Basierend auf einer geschätzten Entfernung von {distance} km.",
+    "routeMapTitle": "Route auf der Karte",
+    "anfahrtInfo": "Preis inkl. Anfahrtspauschale von ~{anfahrtPrice}.",
+    "errorMessages": {
+      "generic": "Ein unerwarteter Fehler ist aufgetreten.",
+      "geocoding_both": "Start- und Zieladresse konnten nicht gefunden werden.",
+      "geocoding_start": "Startadresse konnte nicht gefunden werden.",
+      "geocoding_end": "Zieladresse konnte nicht gefunden werden.",
+      "routing": "Route zwischen den Adressen konnte nicht berechnet werden.",
+      "missing_input": "Bitte geben Sie Start, Ziel und Uhrzeit ein."
+    },
+    "locationPrefix": "Standort:",
+    "locating": "Wird gesucht"
+  },
+  "services": {
+    "title": "Ihr lokaler Taxi-Service in Cochem",
+    "description": "Willkommen bei Cochem Taxi. Wir sind Ihr zuverlässiger Partner für Fahrten in, um und ab Cochem. Egal welches Ziel, wir sind für Sie da.",
+    "items": {
+      "hotel": {
+        "title": "Hotel-Transfer",
+        "description": "Wir bringen Sie sicher und pünktlich zu Ihrem Hotel oder holen Sie von dort ab."
+      },
+      "castle": {
+        "title": "Reichsburg Transfer",
+        "description": "Besichtigen Sie das Wahrzeichen von Cochem ohne Parkplatzsorgen."
+      },
+      "airport": {
+        "title": "Flughafen-Transfer",
+        "description": "Starten Sie entspannt in den Urlaub mit unserem Transfer zum Flughafen Hahn."
+      }
+    }
+  },
+  "whyUs": {
+    "title": "Warum Cochem Taxi?",
+    "features": [
+      "Ortskundige und mehrsprachige Fahrer",
+      "Klimatisierte & moderne Fahrzeuge",
+      "Kurier- & Botenfahrten",
+      "Krankenfahrten für alle Kassen (sitzend)"
+    ]
+  },
+  "serviceRegion": {
+    "title": "Wir fahren in der gesamten Region",
+    "andMore": "... und mehr"
+  },
+  "footer": {
+    "companyName": "Cochem Taxi",
+    "openingHoursTitle": "Öffnungszeiten",
+    "openingHoursContent": "24 Stunden / 7 Tage\nAuch an Sonn- und Feiertagen",
+    "copyright": "© {year} Cochem Taxi. Alle Rechte vorbehalten.",
+    "tagline": "",
+    "legalLink": "Impressum & Datenschutz"
+  },
+  "legalPage": {
+    "title": "Impressum & Datenschutz",
+    "impressumTitle": "Impressum",
+    "angabenTitle": "Angaben gemäß § 5 TMG",
+    "betreiber": "<strong>Betreiber der Website:</strong><br>Alexandru Kucsor<br>Bergstrasse 18<br>56812 Cochem<br>Deutschland",
+    "kontaktTitle": "Kontakt",
+    "kontaktContent": "Telefon: +49 0151 29616693<br>E-Mail: Alexandru.Kucsor@gmail.com",
+    "verantwortlichTitle": "Redaktionell verantwortlich",
+    "verantwortlichContent": "Alexandru Kucsor<br>Bergstrasse 18<br>56812 Cochem<br>Deutschland",
+    "disclaimerTitle": "Haftungsausschluss (Disclaimer)",
+    "unabhaengigkeitTitle": "1. Wichtiger Hinweis zur Unabhängigkeit",
+    "unabhaengigkeitContent": "Diese Website ([Ihr Domainname]) ist ein <strong>unabhängiges Informationsportal</strong> für Taxidienstleistungen in Cochem. Wir sind <strong>nicht</strong> die offizielle Website der Firma \"Taxco AG\" oder eines anderen Taxiunternehmens. Alle über diese Seite getätigten Anrufe werden direkt an die offizielle Taxizentrale (Tel: 02671 8080) weitergeleitet. Wir handeln als privater Vermittler ohne Aufpreis für den Nutzer.",
+    "tarifrechnerTitle": "2. Haftung für den Tarifrechner",
+    "tarifrechnerContent": "Der auf dieser Website integrierte Fahrpreisrechner dient ausschließlich der groben Orientierung. Die berechneten Preise sind <strong>unverbindliche Schätzungen</strong> (ca. Preise) basierend auf Durchschnittswerten. <strong>Rechtlich bindend ist ausschließlich der Fahrpreis, der vom geeichten Taxameter im Fahrzeug angezeigt wird.</strong> Wir übernehmen keine Gewähr für die Richtigkeit der berechneten Distanzen oder Preise.",
+    "inhalteTitle": "3. Haftung für Inhalte",
+    "inhalteContent": "Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Wir sind jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.",
+    "linksTitle": "4. Haftung für Links",
+    "linksContent": "Unser Angebot enthält Links zu externen Websites Dritter (z.B. Partnerempfehlungen für Hotels oder Restaurants), auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.",
+    "datenschutzTitle": "Datenschutzerklärung (Auszug)",
+    "analyticsTitle": "Google Analytics",
+    "analyticsContent": "Diese Website nutzt Funktionen des Webanalysedienstes Google Analytics. Anbieter ist die Google Ireland Limited. Google Analytics verwendet sog. \"Cookies\". Das sind Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie ermöglichen.<br><br><strong>IP-Anonymisierung:</strong> Wir haben auf dieser Website die Funktion IP-Anonymisierung aktiviert. Dadurch wird Ihre IP-Adresse von Google innerhalb von Mitgliedstaaten der Europäischen Union vor der Übermittlung in die USA gekürzt."
+  }
+}

@@ -8,7 +8,17 @@
     "title": "Need a Taxi in Cochem?",
     "subtitle": "Always reliable & there for you.",
     "callButton": "CALL NOW",
-    "phoneNumber": "02671 8080"
+    "phoneNumber": "02671 8080",
+    "badge": "24/7 Available in Cochem",
+    "mainTitle": "Need a",
+    "mainTitleAccent": "Taxi in Cochem?",
+    "features": "Fast • Reliable • Affordable",
+    "trustIndicators": {
+      "available": "Available now",
+      "drivers": "Local drivers",
+      "prices": "Fixed prices"
+    },
+    "calculateButton": "Calculate price"
   },
   "fareCalculator": {
     "title": "Calculate Fare",

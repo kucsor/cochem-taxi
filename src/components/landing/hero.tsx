@@ -11,6 +11,16 @@ type Dictionary = {
     subtitle: string;
     callButton: string;
     phoneNumber: string;
+    badge: string;
+    mainTitle: string;
+    mainTitleAccent: string;
+    features: string;
+    trustIndicators: {
+        available: string;
+        drivers: string;
+        prices: string;
+    };
+    calculateButton: string;
 }
 
 export function Hero({ dict }: { dict: Dictionary }) {
@@ -37,7 +47,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
           className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full glass mb-4 md:mb-6"
         >
           <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary" />
-          <span className="text-xs md:text-sm text-muted-foreground">24/7 Verfügbar in Cochem</span>
+          <span className="text-xs md:text-sm text-muted-foreground">{dict.badge}</span>
         </motion.div>
 
         {/* Main title with gradient - smaller on mobile */}
@@ -47,10 +57,10 @@ export function Hero({ dict }: { dict: Dictionary }) {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-3 md:mb-4"
         >
-          <span className="text-white">Brauchen Sie ein</span>
+          <span className="text-white">{dict.mainTitle}</span>
           <br />
           <span className="text-gradient-gold animate-gradient-text">
-            Taxi in Cochem?
+            {dict.mainTitleAccent}
           </span>
         </motion.h1>
 
@@ -70,7 +80,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-xs md:text-sm text-primary/80 mb-8 md:mb-12"
         >
-          Schnell • Zuverlässig • Preiswert
+          {dict.features}
         </motion.p>
 
         {/* CTA Buttons - stacked on mobile */}
@@ -112,7 +122,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
               trackEvent('click_calculator');
             }}
           >
-            <span>Preis berechnen</span>
+            <span>{dict.calculateButton}</span>
             <ArrowDown className="w-4 h-4 ml-2 group-hover:translate-y-1 transition-transform" />
           </Button>
         </motion.div>
@@ -126,15 +136,15 @@ export function Hero({ dict }: { dict: Dictionary }) {
         >
           <div className="flex items-center gap-1.5 md:gap-2">
             <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse" />
-            <span>Jetzt verfügbar</span>
+            <span>{dict.trustIndicators.available}</span>
           </div>
           <div className="flex items-center gap-1.5 md:gap-2">
             <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary rounded-full" />
-            <span>Ortskundige Fahrer</span>
+            <span>{dict.trustIndicators.drivers}</span>
           </div>
           <div className="flex items-center gap-1.5 md:gap-2">
             <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary rounded-full" />
-            <span>Feste Preise</span>
+            <span>{dict.trustIndicators.prices}</span>
           </div>
         </motion.div>
       </div>

@@ -3,6 +3,7 @@ import { Hero } from '@/components/landing/hero'
 import { ServiceRegion } from '@/components/landing/service-region'
 import { Services } from '@/components/landing/services'
 import { WhyUs } from '@/components/landing/why-us'
+import { ScrollToTop } from '@/components/scroll-to-top'
 import { getDictionary } from '@/lib/dictionaries'
 import { Locale } from '@/i18n-config'
 
@@ -15,6 +16,7 @@ export default async function Home({
   const dict = await getDictionary(lang)
   return (
     <>
+      <ScrollToTop />
       <Hero dict={dict.hero} />
       
       <section id="rechner" className="py-8">

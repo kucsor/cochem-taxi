@@ -28,40 +28,46 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
         <nav className="max-w-6xl mx-auto glass rounded-2xl px-4 py-3 md:px-8 md:py-4">
           <div className="flex items-center justify-between">
             
-            {/* Logo - just text */}
+            {/* Logo - just text in GOLD */}
             <motion.a 
               href={`/${lang}`}
-              className="font-bold text-lg md:text-xl text-white tracking-tight"
+              className="font-bold text-lg md:text-xl text-primary tracking-tight"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
               Cochem Taxi
             </motion.a>
 
-            {/* Language Selector - Simple Dropdown */}
+            {/* Language Selector - Pill Style */}
             <div className="relative">
               <button
                 onClick={() => setIsLangOpen(!isLangOpen)}
-                className="flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium bg-white/10 text-white hover:bg-white/20 transition-all border border-white/10"
               >
-                {currentLangLabel}
-                <ChevronDown className={`w-4 h-4 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
+                <span className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
+                  {currentLangLabel}
+                </span>
+                <ChevronDown className={`w-3 h-3 text-white/60 transition-transform ${isLangOpen ? 'rotate-180' : ''}`} />
               </button>
               
-              {/* Dropdown */}
+              {/* Dropdown - Clean glass style */}
               {isLangOpen && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 top-full mt-2 py-1 bg-black/90 backdrop-blur-xl rounded-lg border border-white/10 shadow-xl min-w-[80px]"
+                  initial={{ opacity: 0, y: -5, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -5, scale: 0.95 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-full mt-2 py-1 glass rounded-xl border border-white/10 shadow-2xl min-w-[100px] overflow-hidden"
                 >
                   <Link
                     href={`/${otherLang}`}
-                    className="block px-4 py-2 text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 text-sm text-white/70 hover:text-white hover:bg-white/10 transition-colors"
                     onClick={() => setIsLangOpen(false)}
                   >
-                    {otherLangLabel}
+                    <span className="w-5 h-5 rounded-full bg-white/10 flex items-center justify-center text-xs font-medium">
+                      {otherLangLabel}
+                    </span>
+                    <span>{otherLang === 'de' ? 'Deutsch' : 'English'}</span>
                   </Link>
                 </motion.div>
               )}

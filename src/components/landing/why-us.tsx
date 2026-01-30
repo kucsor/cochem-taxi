@@ -83,13 +83,13 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
           })}
         </div>
 
-        {/* Stats Row */}
+        {/* Stats Row - Smaller text */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="grid grid-cols-3 gap-4"
+          className="grid grid-cols-3 gap-3 md:gap-4"
         >
           {stats.map((stat, index) => (
             <motion.div
@@ -99,18 +99,18 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
               viewport={{ once: true }}
               transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
               whileHover={{ y: -3 }}
-              className="text-center p-6 rounded-2xl glass-card"
+              className="text-center p-3 md:p-4 rounded-xl glass-card"
             >
               <motion.div
                 initial={{ scale: 0 }}
                 whileInView={{ scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ type: "spring", damping: 15, stiffness: 200, delay: 0.6 + index * 0.1 }}
-                className="text-3xl md:text-4xl font-bold text-gradient-gold mb-2"
+                className="text-xl md:text-2xl font-bold text-gradient-gold mb-1"
               >
                 {stat.value}
               </motion.div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
+              <div className="text-xs md:text-sm text-muted-foreground leading-tight">{stat.label}</div>
             </motion.div>
           ))}
         </motion.div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Phone, Clock, MapPin, ExternalLink, Heart } from "lucide-react";
+import { Mail, Clock, MapPin, ExternalLink, Heart } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
 
 type Dictionary = {
@@ -56,18 +56,17 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
           <div className="space-y-4">
             <h3 className="font-semibold text-white">Schneller Kontakt</h3>
             <motion.a
-              href="tel:026718080"
+              href="mailto:contact@cochem-taxi.de"
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => trackEvent('click_call_now')}
               className="flex items-center gap-3 p-4 rounded-xl glass-card hover:bg-primary/10 transition-colors group"
             >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <Phone className="w-5 h-5 text-primary" />
+                <Mail className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <div className="text-sm text-muted-foreground">Telefon</div>
-                <div className="text-lg font-semibold text-white">02671 8080</div>
+                <div className="text-sm text-muted-foreground">E-Mail</div>
+                <div className="text-sm font-semibold text-white">contact@cochem-taxi.de</div>
               </div>
             </motion.a>
           </div>

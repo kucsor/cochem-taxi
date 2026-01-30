@@ -1,7 +1,6 @@
 "use client";
 
-import { useActionState, useState, useEffect } from "react";
-import { useFormStatus } from "react-dom";
+import { useState, useEffect } from "react";
 import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation } from "lucide-react";
 import {
   Card,
@@ -12,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { calculateFare } from "@/app/actions";
 import { SubmitButton } from "./submit-button";
 import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
@@ -26,15 +24,6 @@ const Map = dynamic(() => import('@/components/landing/map').then(mod => mod.Map
 });
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
-
-const initialState = {
-  price: null as number | null,
-  distance: null as number | null,
-  message: null as string | null,
-  geometry: null as any,
-  hasAnfahrt: false,
-  anfahrtFee: null as number | null,
-};
 
 type Dictionary = {
   title: string;
@@ -54,9 +43,25 @@ type Dictionary = {
   locating: string;
 };
 
-function PriceResult({ state, dict }: { state: typeof initialState, dict: Dictionary }) {
-  const { pending } = useFormStatus();
+type FareState = {
+  price: number | null;
+  distance: number | null;
+  message: string | null;
+  geometry: any | null;
+  hasAnfahrt: boolean;
+  anfahrtFee: number | null;
+};
 
+const initialState: FareState = {
+  price: null,
+  distance: null,
+  message: null,
+  geometry: null,
+  hasAnfahrt: false,
+  anfahrtFee: null,
+};
+
+function PriceResult({ state, pending, dict }: { state: FareState; pending: boolean; dict: Dictionary }) {
   useEffect(() => {
     if (state.price !== null && !pending) {
       trackEvent('calculator_success');
@@ -131,8 +136,7 @@ function PriceResult({ state, dict }: { state: typeof initialState, dict: Dictio
   );
 }
 
-function MapResult({ state }: { state: typeof initialState }) {
-  const { pending } = useFormStatus();
+function MapResult({ state, pending }: { state: FareState; pending: boolean }) {
   const mapContainerClass = "h-[250px] md:h-[300px] lg:h-full w-full rounded-xl md:rounded-2xl overflow-hidden glass min-h-[200px] md:min-h-[300px]";
 
   if (pending) {
@@ -152,9 +156,7 @@ function MapResult({ state }: { state: typeof initialState }) {
 
 export function FareCalculator({ dict }: { dict: Dictionary }) {
   const isMobile = useIsMobile();
-  const calculateFareWithDict = calculateFare.bind(null, dict.errorMessages);
-  const [state, formAction] = useActionState(calculateFareWithDict, initialState);
-
+  
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
   const [pickupTime, setPickupTime] = useState("");
@@ -165,6 +167,9 @@ export function FareCalculator({ dict }: { dict: Dictionary }) {
   const [startCoords, setStartCoords] = useState<{ lat: number, lon: number } | null>(null);
   const [endCoords, setEndCoords] = useState<{ lat: number, lon: number } | null>(null);
   const [showMap, setShowMap] = useState(false);
+  
+  const [state, setState] = useState<FareState>(initialState);
+  const [pending, setPending] = useState(false);
 
   const formatPlaceName = (suggestion: any): string => {
     const isAddress = suggestion.place_type.includes('address');
@@ -273,6 +278,40 @@ export function FareCalculator({ dict }: { dict: Dictionary }) {
     navigator.geolocation.getCurrentPosition(success, error, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPending(true);
+    
+    try {
+      const response = await fetch('/api/calculate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          startAddress,
+          endAddress,
+          pickupTime,
+          startLat: startCoords?.lat.toString() || '',
+          startLon: startCoords?.lon.toString() || '',
+          endLat: endCoords?.lat.toString() || '',
+          endLon: endCoords?.lon.toString() || '',
+          errorMessages: dict.errorMessages,
+        }),
+      });
+      
+      if (!response.ok) throw new Error('API error');
+      const data = await response.json();
+      setState(data);
+      trackEvent('use_calculator');
+    } catch (error) {
+      setState({
+        ...initialState,
+        message: dict.errorMessages.generic || "Ein Fehler ist aufgetreten",
+      });
+    } finally {
+      setPending(false);
+    }
+  };
+
   return (
     <section id="rechner" className="w-full max-w-5xl mx-auto scroll-mt-20 px-3 md:px-4">
       <motion.div
@@ -282,7 +321,7 @@ export function FareCalculator({ dict }: { dict: Dictionary }) {
         transition={{ duration: 0.6 }}
       >
         <Card className="glass-card overflow-hidden border-white/10">
-          <form action={formAction}>
+          <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-5 lg:gap-0">
               
               {/* Left side - Form */}
@@ -298,11 +337,6 @@ export function FareCalculator({ dict }: { dict: Dictionary }) {
                     Berechnen Sie den geschätzten Preis für Ihre Fahrt
                   </p>
                 </CardHeader>
-                
-                <input type="hidden" name="startLat" value={startCoords?.lat.toString() || ''} />
-                <input type="hidden" name="startLon" value={startCoords?.lon.toString() || ''} />
-                <input type="hidden" name="endLat" value={endCoords?.lat.toString() || ''} />
-                <input type="hidden" name="endLon" value={endCoords?.lon.toString() || ''} />
                 
                 <CardContent className="p-0 space-y-3 md:space-y-5 flex-grow">
                   {/* Start Location */}
@@ -420,7 +454,7 @@ export function FareCalculator({ dict }: { dict: Dictionary }) {
                   <SubmitButton label={dict.submitButton} />
                 </CardFooter>
 
-                <PriceResult state={state} dict={dict} />
+                <PriceResult state={state} pending={pending} dict={dict} />
               </div>
 
               {/* Right side - Map */}
@@ -445,7 +479,7 @@ export function FareCalculator({ dict }: { dict: Dictionary }) {
                     )}
                   </div>
                   <div className={`flex-grow ${isMobile && !showMap ? 'hidden' : 'block'}`}>
-                    <MapResult state={state} />
+                    <MapResult state={state} pending={pending} />
                   </div>
                   {/* Mobile map placeholder when hidden */}
                   {isMobile && !showMap && (

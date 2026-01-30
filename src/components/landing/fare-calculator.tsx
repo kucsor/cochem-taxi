@@ -313,7 +313,7 @@ export function FareCalculator({ dict }: { dict: Dictionary }) {
   };
 
   return (
-    <section id="rechner" className="w-full max-w-5xl mx-auto scroll-mt-20 px-3 md:px-4">
+    <section id="rechner" className="w-full max-w-5xl mx-auto scroll-mt-28 md:scroll-mt-32 px-4 md:px-6 py-8 md:py-12">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}

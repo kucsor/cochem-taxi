@@ -72,7 +72,7 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Header dict={dict.footer} lang={lang} />
-        <main className="container mx-auto px-4 py-4 md:py-8 flex-grow w-full flex flex-col items-center justify-start space-y-8 md:space-y-20">
+        <main className="container mx-auto px-4 py-6 md:py-12 flex-grow w-full flex flex-col items-center justify-start space-y-12 md:space-y-24 lg:space-y-32">
             {children}
         </main>
         <Footer dict={dict.footer} lang={lang} />

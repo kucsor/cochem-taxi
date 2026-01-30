@@ -1,8 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ChevronDown } from "lucide-react";
-import { useState } from "react";
 import Link from "next/link";
 
 type Dictionary = {
@@ -11,11 +9,8 @@ type Dictionary = {
 };
 
 export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
-  const [isLangOpen, setIsLangOpen] = useState(false);
-  
   const otherLang = lang === 'de' ? 'en' : 'de';
   const currentLangLabel = lang === 'de' ? 'DE' : 'EN';
-  const otherLangLabel = otherLang === 'de' ? 'DE' : 'EN';
 
   return (
     <>
@@ -38,38 +33,26 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
               Cochem Taxi
             </motion.a>
 
-            {/* Language Selector - Clean Button */}
-            <div className="relative">
-              <button
-                onClick={() => setIsLangOpen(!isLangOpen)}
+            {/* Language Toggle Button - Direct switch */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Link
+                href={`/${otherLang}`}
                 className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-lg shadow-primary/20"
               >
                 <span>{currentLangLabel}</span>
-                <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${isLangOpen ? 'rotate-180' : ''}`} />
-              </button>
-              
-              {/* Dropdown - Solid card style */}
-              {isLangOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -8, scale: 0.95 }}
-                  transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute right-0 top-full mt-2 py-2 bg-[#1a1a1a] rounded-xl border border-white/10 shadow-2xl min-w-[140px] overflow-hidden z-50"
+                <motion.span
+                  animate={{ rotate: 180 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-xs opacity-60"
                 >
-                  <Link
-                    href={`/${otherLang}`}
-                    className="flex items-center gap-3 px-4 py-3 text-sm text-white/80 hover:text-white hover:bg-white/10 transition-colors"
-                    onClick={() => setIsLangOpen(false)}
-                  >
-                    <span className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center text-xs font-bold">
-                      {otherLangLabel}
-                    </span>
-                    <span className="font-medium">{otherLang === 'de' ? 'Deutsch' : 'English'}</span>
-                  </Link>
-                </motion.div>
-              )}
-            </div>
+                  ↔
+                </motion.span>
+                <span className="opacity-80">{otherLang.toUpperCase()}</span>
+              </Link>
+            </motion.div>
           </div>
         </nav>
       </motion.header>

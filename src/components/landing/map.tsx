@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
-import MapGL, { MapRef, Source, Layer, Marker, NavigationControl } from 'react-map-gl';
+import { useEffect, useRef } from 'react';
+import MapGL, { MapRef, Source, Layer, Marker } from 'react-map-gl';
 import type { LayerProps } from 'react-map-gl';
 import { LngLatBounds } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -59,43 +59,10 @@ function AnimatedMarker({ color, delay = 0 }: { color: string; delay?: number })
 
 export function Map({ geometry, hasAnfahrt = false }: MapProps) {
   const mapRef = useRef<MapRef>(null);
-  const [isTerrainLoaded, setIsTerrainLoaded] = useState(false);
   
   const yellowColor = '#ffc400';
   const orangeColor = '#FFA500';
   const lineColor = hasAnfahrt ? orangeColor : yellowColor;
-
-  const routeGlowLayer: LayerProps = {
-    id: 'route-glow',
-    type: 'line',
-    source: 'route',
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round',
-    },
-    paint: {
-      'line-color': lineColor,
-      'line-width': 12,
-      'line-opacity': 0.2,
-      'line-blur': 4,
-    },
-  };
-
-  const routeShadowLayer: LayerProps = {
-    id: 'route-shadow',
-    type: 'line',
-    source: 'route',
-    layout: {
-      'line-join': 'round',
-      'line-cap': 'round',
-    },
-    paint: {
-      'line-color': '#000000',
-      'line-width': 6,
-      'line-opacity': 0.3,
-      'line-offset': 2,
-    },
-  };
 
   const routeLayer: LayerProps = {
     id: 'route',
@@ -108,13 +75,6 @@ export function Map({ geometry, hasAnfahrt = false }: MapProps) {
     paint: {
       'line-color': lineColor,
       'line-width': 4,
-      'line-gradient': [
-        'interpolate',
-        ['linear'],
-        ['line-progress'],
-        0, yellowColor,
-        1, hasAnfahrt ? orangeColor : yellowColor
-      ]
     }
   };
 
@@ -144,48 +104,14 @@ export function Map({ geometry, hasAnfahrt = false }: MapProps) {
       }
       
       map.fitBounds(bounds, {
-        padding: 100,
-        duration: 1500,
+        padding: 80,
+        duration: 1000,
         maxZoom: 15,
-        pitch: 45, // Tilt for 3D effect
       });
-    }, 200);
+    }, 100);
 
     return () => clearTimeout(timer);
   }, [geometry]);
-
-  // Add terrain on load
-  const handleLoad = () => {
-    const map = mapRef.current?.getMap();
-    if (!map) return;
-
-    // Add terrain source
-    map.addSource('mapbox-dem', {
-      type: 'raster-dem',
-      url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
-      tileSize: 512,
-      maxzoom: 14
-    });
-
-    // Enable 3D terrain with exaggeration
-    map.setTerrain({ 
-      source: 'mapbox-dem', 
-      exaggeration: 1.5 
-    });
-
-    // Add sky layer for better 3D visuals
-    map.addLayer({
-      id: 'sky',
-      type: 'sky',
-      paint: {
-        'sky-type': 'atmosphere',
-        'sky-atmosphere-sun': [0.0, 90.0],
-        'sky-atmosphere-sun-intensity': 15
-      }
-    });
-
-    setIsTerrainLoaded(true);
-  };
 
   return (
     <MapGL
@@ -194,25 +120,21 @@ export function Map({ geometry, hasAnfahrt = false }: MapProps) {
       initialViewState={{
         longitude: 7.166,
         latitude: 50.146,
-        zoom: 12,
-        pitch: 45,
-        bearing: 0,
+        zoom: 12
       }}
       style={{ width: '100%', height: '100%' }}
-      mapStyle="mapbox://styles/mapbox/outdoors-v12" // Outdoors style for terrain
-      scrollZoom={false}
-      dragPan={true}
-      dragRotate={true}
-      attributionControl={false}
-      onLoad={handleLoad}
-      terrain={isTerrainLoaded ? { source: 'mapbox-dem', exaggeration: 1.5 } : undefined}
+      mapStyle="mapbox://styles/mapbox/streets-v12" // Simple streets style - fast loading
+      scrollZoom={true}  // Enable scroll zoom
+      dragPan={true}     // Enable drag with finger/mouse
+      dragRotate={false} // Disable rotation (keep it simple)
+      touchZoomRotate={true} // Enable pinch zoom on mobile
+      doubleClickZoom={true}
+      attributionControl={false} // Remove attribution for cleaner look
     >
-      <NavigationControl position="top-right" visualizePitch={true} />
+      {/* NO NavigationControl - removed for cleaner UI */}
       
       {routeGeoJSON && (
         <Source id="route" type="geojson" data={routeGeoJSON}>
-          <Layer {...routeGlowLayer} />
-          <Layer {...routeShadowLayer} />
           <Layer {...routeLayer} />
         </Source>
       )}

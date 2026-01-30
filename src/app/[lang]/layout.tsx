@@ -4,6 +4,8 @@ import { getDictionary } from '@/lib/dictionaries'
 import { Footer } from '@/components/landing/footer';
 import { Header } from '@/components/landing/header';
 import { BottomNav } from '@/components/landing/bottom-nav';
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }))
@@ -75,6 +77,8 @@ export default async function RootLayout({
         </main>
         <Footer dict={dict.footer} lang={lang} />
         <BottomNav />
+        <SpeedInsights />
+        <Analytics />
     </div>
   )
 }

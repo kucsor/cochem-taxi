@@ -95,8 +95,11 @@
     "openingHoursTitle": "Öffnungszeiten",
     "openingHoursContent": "24 Stunden / 7 Tage\nAuch an Sonn- und Feiertagen",
     "copyright": "© {year} Cochem Taxi. Alle Rechte vorbehalten.",
-    "tagline": "",
-    "legalLink": "Impressum & Datenschutz"
+    "tagline": "Ihr zuverlässiger Partner für Fahrten in, um und ab Cochem. Egal welches Ziel, wir sind für Sie da.",
+    "legalLink": "Impressum & Datenschutz",
+    "quickContact": "Schneller Kontakt",
+    "email": "E-Mail",
+    "rights": "Alle Rechte vorbehalten"
   },
   "legalPage": {
     "title": "Impressum & Datenschutz",

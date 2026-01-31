@@ -10,6 +10,10 @@ type Dictionary = {
   openingHoursContent: string;
   copyright: string;
   legalLink: string;
+  tagline: string;
+  quickContact: string;
+  email: string;
+  rights: string;
 };
 
 export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
@@ -34,8 +38,7 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
               <span className="font-bold text-lg text-white">{dict.companyName}</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Ihr zuverlässiger Partner für Fahrten in, um und ab Cochem. 
-              Egal welches Ziel, wir sind für Sie da.
+              {dict.tagline || "Your reliable partner for trips in, around and from Cochem. Whatever your destination, we are here for you."}
             </p>
           </div>
 
@@ -54,7 +57,7 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
 
           {/* Quick Contact */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-white">Schneller Kontakt</h3>
+            <h3 className="font-semibold text-white">{dict.quickContact || "Quick Contact"}</h3>
             <motion.a
               href="mailto:contact@cochem-taxi.de"
               whileHover={{ scale: 1.02 }}
@@ -65,7 +68,7 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
                 <Mail className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <div className="text-sm text-muted-foreground">E-Mail</div>
+                <div className="text-sm text-muted-foreground">{dict.email || "E-Mail"}</div>
                 <div className="text-sm font-semibold text-white">contact@cochem-taxi.de</div>
               </div>
             </motion.a>
@@ -83,7 +86,7 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span>© {currentYear} {dict.companyName}</span>
             <span className="hidden md:inline">•</span>
-            <span className="hidden md:inline">Alle Rechte vorbehalten</span>
+            <span className="hidden md:inline">{dict.rights || "All rights reserved"}</span>
           </div>
 
           <div className="flex items-center gap-6">

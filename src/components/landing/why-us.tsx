@@ -5,7 +5,14 @@ import { Check, Users, Car, Package, HeartPulse, Award, Zap } from "lucide-react
 
 type Dictionary = {
   title: string;
+  badge: string;
   features: string[];
+  stats: {
+    experience: string;
+    availability: string;
+    reliability: string;
+  };
+  cta: string;
 };
 
 export function WhyUs({ dict }: { dict: Dictionary }) {
@@ -17,9 +24,9 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
   ];
 
   const stats = [
-    { value: "10+", label: "Jahre Erfahrung" },
-    { value: "24/7", label: "Verfügbarkeit" },
-    { value: "100%", label: "Zuverlässig" },
+    { value: "10+", label: dict.stats?.experience || "Years experience" },
+    { value: "24/7", label: dict.stats?.availability || "Availability" },
+    { value: "100%", label: dict.stats?.reliability || "Reliable" },
   ];
 
   return (
@@ -39,7 +46,7 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6"
           >
             <Award className="w-4 h-4 text-primary" />
-            <span className="text-sm text-muted-foreground">Warum wir?</span>
+            <span className="text-sm text-muted-foreground">{dict.badge || "Why us?"}</span>
           </motion.div>
           
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -125,7 +132,7 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
         >
           <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass border border-primary/20">
             <Zap className="w-5 h-5 text-primary" />
-            <span className="text-white font-medium">Jetzt anrufen und losfahren!</span>
+            <span className="text-white font-medium">{dict.cta || "Call now and let's go!"}</span>
           </div>
         </motion.div>
       </motion.div>

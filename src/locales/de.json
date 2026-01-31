@@ -72,12 +72,19 @@
   },
   "whyUs": {
     "title": "Warum Cochem Taxi?",
+    "badge": "Warum wir?",
     "features": [
       "Ortskundige und mehrsprachige Fahrer",
       "Klimatisierte & moderne Fahrzeuge",
       "Kurier- & Botenfahrten",
       "Krankenfahrten für alle Kassen (sitzend)"
-    ]
+    ],
+    "stats": {
+      "experience": "Jahre Erfahrung",
+      "availability": "Verfügbarkeit",
+      "reliability": "Zuverlässig"
+    },
+    "cta": "Jetzt anrufen und losfahren!"
   },
   "serviceRegion": {
     "title": "Wir fahren in der gesamten Region",

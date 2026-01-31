@@ -72,12 +72,19 @@
   },
   "whyUs": {
     "title": "Why Cochem Taxi?",
+    "badge": "Why us?",
     "features": [
       "Local and multilingual drivers",
       "Air-conditioned & modern vehicles",
       "Courier & messenger services",
       "Patient transport for all health insurances (seated)"
-    ]
+    ],
+    "stats": {
+      "experience": "Years experience",
+      "availability": "Availability",
+      "reliability": "Reliable"
+    },
+    "cta": "Call now and let's go!"
   },
   "serviceRegion": {
     "title": "We operate in the entire region",

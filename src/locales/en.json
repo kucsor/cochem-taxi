@@ -22,6 +22,7 @@
   },
   "fareCalculator": {
     "title": "Calculate Fare",
+    "subtitle": "Calculate the estimated price for your trip",
     "startLabel": "From (Start)",
     "startPlaceholder": "e.g., Cochem Station",
     "endLabel": "To (Destination)",
@@ -33,6 +34,9 @@
     "resultDistance": "Based on an estimated distance of {distance} km.",
     "routeMapTitle": "Route on the map",
     "anfahrtInfo": "Price includes an approach fee of ~{anfahrtPrice}.",
+    "hideMap": "Hide map",
+    "showMap": "Show map",
+    "mapHidden": "Map hidden",
     "errorMessages": {
       "generic": "An unexpected error occurred.",
       "geocoding_both": "Start and destination address could not be found.",
@@ -98,7 +102,8 @@
     "tagline": "Your reliable partner for trips in, around and from Cochem. Whatever your destination, we are here for you.",
     "legalLink": "Imprint & Privacy",
     "quickContact": "Quick Contact",
-    "email": "E-Mail"
+    "email": "E-Mail",
+    "rights": "All rights reserved"
   },
   "legalPage": {
     "title": "Imprint & Privacy Policy",

@@ -32,18 +32,18 @@ export function Hero({ dict }: { dict: Dictionary }) {
 
   return (
     <section className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center px-4 pt-4 pb-8 overflow-hidden">
-      {/* Animated background elements - simplified for mobile */}
+      {/* Animated background elements - simplified for better performance */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-primary/10 rounded-full blur-[80px] md:blur-[100px] animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-80 md:h-80 bg-orange-500/10 rounded-full blur-[60px] md:blur-[80px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-primary/5 rounded-full blur-[60px] md:blur-[80px] animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-80 md:h-80 bg-orange-500/5 rounded-full blur-[40px] md:blur-[60px] animate-pulse" style={{ animationDelay: '1s' }} />
       </div>
 
       <div className="relative z-10 text-center max-w-4xl mx-auto pt-8 md:pt-12">
         {/* Badge - moved higher */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0.5, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.4 }}
           className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full glass mb-4 md:mb-6"
         >
           <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary" />
@@ -52,9 +52,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
 
         {/* Main title with gradient - smaller on mobile */}
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1 }}
+          initial={{ opacity: 1, y: 0 }}
           className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-3 md:mb-4"
         >
           <span className="text-white">{dict.mainTitle}</span>
@@ -66,18 +64,14 @@ export function Hero({ dict }: { dict: Dictionary }) {
 
         {/* Subtitle - smaller on mobile */}
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          initial={{ opacity: 1, y: 0 }}
           className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto mb-2 md:mb-3 leading-relaxed px-2"
         >
           {dict.subtitle}
         </motion.p>
 
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
+          initial={{ opacity: 1 }}
           className="text-xs md:text-sm text-primary/80 mb-8 md:mb-12"
         >
           {dict.features}
@@ -85,9 +79,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
 
         {/* CTA Buttons - stacked on mobile */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
+          initial={{ opacity: 1, y: 0 }}
           className="flex flex-col gap-3 md:flex-row md:gap-4 justify-center items-center px-4"
         >
           <Button

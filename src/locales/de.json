@@ -47,6 +47,9 @@
   "services": {
     "title": "Ihr lokaler Taxi-Service in Cochem",
     "description": "Willkommen bei Cochem Taxi. Wir sind Ihr zuverlässiger Partner für Fahrten in, um und ab Cochem. Egal welches Ziel, wir sind für Sie da.",
+    "badge": "Unsere Leistungen",
+    "subtitle": "Ihr Taxi-Service in Cochem",
+    "learnMore": "Mehr erfahren",
     "items": {
       "hotel": {
         "title": "Hotel-Transfer",
@@ -60,7 +63,12 @@
         "title": "Flughafen-Transfer",
         "description": "Starten Sie entspannt in den Urlaub mit unserem Transfer zum Flughafen Hahn."
       }
-    }
+    },
+    "features": [
+      "Versicherte Fahrten",
+      "Pünktliche Abholung",
+      "5-Sterne Service"
+    ]
   },
   "whyUs": {
     "title": "Warum Cochem Taxi?",

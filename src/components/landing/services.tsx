@@ -6,11 +6,15 @@ import { Hotel, Castle, Plane, Shield, Clock, Star, ArrowUpRight } from "lucide-
 type Dictionary = {
   title: string;
   description: string;
+  badge: string;
+  subtitle: string;
+  learnMore: string;
   items: {
     hotel: { title: string; description: string };
     castle: { title: string; description: string };
     airport: { title: string; description: string };
   };
+  features: string[];
 };
 
 export function Services({ dict }: { dict: Dictionary }) {
@@ -38,10 +42,15 @@ export function Services({ dict }: { dict: Dictionary }) {
     },
   ] as const;
 
-  const features = [
-    { icon: Shield, text: "Versicherte Fahrten" },
-    { icon: Clock, text: "Pünktliche Abholung" },
-    { icon: Star, text: "5-Sterne Service" },
+  // Use features from dict if available, otherwise fallback
+  const features = dict.features ? [
+    { icon: Shield, text: dict.features[0] || "Versicherte Fahrten" },
+    { icon: Clock, text: dict.features[1] || "Pünktliche Abholung" },
+    { icon: Star, text: dict.features[2] || "5-Sterne Service" },
+  ] : [
+    { icon: Shield, text: "Insured Trips" },
+    { icon: Clock, text: "Punctual Pickup" },
+    { icon: Star, text: "5-Star Service" },
   ];
 
   return (
@@ -61,13 +70,11 @@ export function Services({ dict }: { dict: Dictionary }) {
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6"
           >
             <Star className="w-4 h-4 text-primary" />
-            <span className="text-sm text-muted-foreground">Unsere Leistungen</span>
+            <span className="text-sm text-muted-foreground">{dict.badge || "Our Services"}</span>
           </motion.div>
           
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="text-white">Ihr </span>
-            <span className="text-gradient-gold">Taxi-Service</span>
-            <span className="text-white"> in Cochem</span>
+            <span className="text-white">{dict.subtitle || "Your Taxi Service"}</span>
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             {dict.description}
@@ -108,7 +115,7 @@ export function Services({ dict }: { dict: Dictionary }) {
                   </p>
                   
                   <div className="mt-4 flex items-center gap-1 text-primary text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span>Mehr erfahren</span>
+                    <span>{dict.learnMore || "Learn more"}</span>
                     <ArrowUpRight className="w-4 h-4" />
                   </div>
                 </div>

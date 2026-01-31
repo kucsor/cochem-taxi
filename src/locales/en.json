@@ -47,6 +47,9 @@
   "services": {
     "title": "Your Local Taxi Service in Cochem",
     "description": "Welcome to Cochem Taxi. We are your reliable partner for trips in, around, and from Cochem. Whatever your destination, we are here for you.",
+    "badge": "Our Services",
+    "subtitle": "Your Taxi Service in Cochem",
+    "learnMore": "Learn more",
     "items": {
       "hotel": {
         "title": "Hotel Transfer",
@@ -60,7 +63,12 @@
         "title": "Airport Transfer",
         "description": "Start your vacation relaxed with our transfer to Hahn Airport."
       }
-    }
+    },
+    "features": [
+      "Insured Trips",
+      "Punctual Pickup",
+      "5-Star Service"
+    ]
   },
   "whyUs": {
     "title": "Why Cochem Taxi?",
@@ -80,8 +88,10 @@
     "openingHoursTitle": "Opening Hours",
     "openingHoursContent": "24 hours / 7 days\nAlso on Sundays and public holidays",
     "copyright": "© {year} Cochem Taxi. All rights reserved.",
-    "tagline": "",
-    "legalLink": "Imprint & Privacy"
+    "tagline": "Your reliable partner for trips in, around and from Cochem. Whatever your destination, we are here for you.",
+    "legalLink": "Imprint & Privacy",
+    "quickContact": "Quick Contact",
+    "email": "E-Mail"
   },
   "legalPage": {
     "title": "Imprint & Privacy Policy",

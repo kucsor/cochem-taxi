@@ -46,13 +46,25 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-color: hsl(0 0% 4%);
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
     background: 
       radial-gradient(ellipse at 0% 0%, rgba(255, 215, 0, 0.08) 0%, transparent 50%),
       radial-gradient(ellipse at 100% 0%, rgba(255, 140, 0, 0.05) 0%, transparent 50%),
       radial-gradient(ellipse at 100% 100%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
       radial-gradient(ellipse at 0% 100%, rgba(255, 140, 0, 0.03) 0%, transparent 50%),
       linear-gradient(180deg, hsl(0 0% 4%) 0%, hsl(0 0% 6%) 100%);
-    background-attachment: fixed;
+    pointer-events: none;
+    transform: translate3d(0, 0, 0); /* Force GPU acceleration */
   }
   html {
     scroll-behavior: smooth;
@@ -82,14 +94,14 @@
 /* Glassmorphism utility */
 @layer utilities {
   .glass {
-    @apply backdrop-blur-xl bg-white/5 border border-white/10;
+    @apply backdrop-blur-lg bg-white/5 border border-white/10;
     box-shadow: 
       0 4px 30px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
   
   .glass-card {
-    @apply backdrop-blur-xl bg-black/40 border border-white/10 rounded-2xl;
+    @apply backdrop-blur-lg bg-black/40 border border-white/10 rounded-2xl;
     box-shadow: 
       0 8px 32px rgba(0, 0, 0, 0.4),
       inset 0 1px 0 rgba(255, 255, 255, 0.08),

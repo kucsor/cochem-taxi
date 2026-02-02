@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/tracking";
 import { motion } from "framer-motion";
 import { Phone, ArrowDown, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
 
 type Dictionary = {
     title: string;
@@ -24,12 +23,6 @@ type Dictionary = {
 }
 
 export function Hero({ dict }: { dict: Dictionary }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <section className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center px-4 pt-4 pb-8 overflow-hidden">
       {/* Animated background elements - simplified for better performance */}
@@ -51,8 +44,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
         </motion.div>
 
         {/* Main title with gradient - smaller on mobile */}
-        <motion.h1
-          initial={{ opacity: 1, y: 0 }}
+        <h1
           className="text-3xl sm:text-4xl md:text-6xl lg:text-8xl font-bold tracking-tight mb-3 md:mb-4"
         >
           <span className="text-white">{dict.mainTitle}</span>
@@ -60,26 +52,23 @@ export function Hero({ dict }: { dict: Dictionary }) {
           <span className="text-gradient-gold animate-gradient-text">
             {dict.mainTitleAccent}
           </span>
-        </motion.h1>
+        </h1>
 
         {/* Subtitle - smaller on mobile */}
-        <motion.p
-          initial={{ opacity: 1, y: 0 }}
+        <p
           className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto mb-2 md:mb-3 leading-relaxed px-2"
         >
           {dict.subtitle}
-        </motion.p>
+        </p>
 
-        <motion.p
-          initial={{ opacity: 1 }}
+        <p
           className="text-xs md:text-sm text-primary/80 mb-8 md:mb-12"
         >
           {dict.features}
-        </motion.p>
+        </p>
 
         {/* CTA Buttons - stacked on mobile */}
-        <motion.div
-          initial={{ opacity: 1, y: 0 }}
+        <div
           className="flex flex-col gap-3 md:flex-row md:gap-4 justify-center items-center px-4"
         >
           <Button
@@ -117,7 +106,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
             <span>{dict.calculateButton}</span>
             <ArrowDown className="w-4 h-4 ml-2 group-hover:translate-y-1 transition-transform" />
           </Button>
-        </motion.div>
+        </div>
 
         {/* Trust indicators - smaller on mobile */}
         <motion.div

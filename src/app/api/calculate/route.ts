@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
 import mbxDirections from "@mapbox/mapbox-sdk/services/directions";
+import { z } from "zod";
 
 const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 const geocodingService = mbxGeocoding({ accessToken: mapboxToken });
@@ -23,6 +24,18 @@ const COCHEM_POLYGON: [number, number][] = [
   [7.1820, 50.1320], [7.1668, 50.1175], [7.1400, 50.1200],
   [7.1250, 50.1300], [7.1320, 50.1420], [7.1400, 50.1480], [7.1580, 50.1590]
 ];
+
+// Input validation schema
+const calculateSchema = z.object({
+  startAddress: z.string().min(1, "Start address is required").max(200, "Start address is too long"),
+  endAddress: z.string().min(1, "End address is required").max(200, "End address is too long"),
+  pickupTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format (HH:MM)"),
+  startLat: z.string().optional(),
+  startLon: z.string().optional(),
+  endLat: z.string().optional(),
+  endLon: z.string().optional(),
+  errorMessages: z.record(z.string()).optional(),
+});
 
 type FareState = {
   price: number | null;
@@ -111,15 +124,20 @@ async function getRoute(startCoords: { lat: number; lon: number }, endCoords: { 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { startAddress, endAddress, pickupTime, startLat, startLon, endLat, endLon, errorMessages } = body;
+
+    // Validate input
+    const validationResult = calculateSchema.safeParse(body);
 
     const initialState: FareState = {
       price: null, distance: null, message: null, geometry: null, hasAnfahrt: false, anfahrtFee: null,
     };
 
-    if (!startAddress || !endAddress || !pickupTime) {
-      return NextResponse.json({ ...initialState, message: errorMessages?.missing_input || "Missing input" });
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.issues.map(i => i.message).join(", ");
+      return NextResponse.json({ ...initialState, message: errorMessage });
     }
+
+    const { startAddress, endAddress, pickupTime, startLat, startLon, endLat, endLon, errorMessages } = validationResult.data;
 
     let startCoords: { lat: number; lon: number } | null = null;
     if (startLat && startLon) {

@@ -26,13 +26,13 @@ export function middleware(request: NextRequest) {
   if (pathnameIsMissingLocale) {
     const locale = i18n.defaultLocale
 
-    // e.g. incoming request is /products
-    // The new URL is now /de/products
+    // Use 308 Permanent Redirect for SEO
     return NextResponse.redirect(
       new URL(
-        `/${locale}${pathname.startsWith('/') ? '' : '/'}${pathname}`,
+        `/${locale}${pathname === '/' ? '' : pathname}`,
         request.url
-      )
+      ),
+      308
     )
   }
 }

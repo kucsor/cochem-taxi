@@ -1,6 +1,6 @@
-import { redirect } from 'next/navigation'
+import { permanentRedirect } from 'next/navigation'
 import { i18n } from '@/i18n-config'
 
 export default function RootPage() {
-  redirect(i18n.defaultLocale)
+  permanentRedirect(i18n.defaultLocale)
 }

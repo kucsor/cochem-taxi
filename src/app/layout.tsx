@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import Script from 'next/script';
 import { i18n } from '@/i18n-config';
 import { Inter, Poppins } from 'next/font/google';
+import type { Metadata, Viewport } from 'next';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -19,6 +20,22 @@ const poppins = Poppins({
 
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '';
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: '#1f1f1f',
+};
+
+export const metadata: Metadata = {
+  manifest: '/manifest.json',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/android-chrome-192x192.png',
+  },
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -26,15 +43,6 @@ export default function RootLayout({
 }) {
   return (
     <html className={`dark ${inter.variable} ${poppins.variable}`}>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#1f1f1f" />
-        <link rel="sitemap" type="application/xml" title="Sitemap" href="/sitemap.xml" />
-        <link rel="robots" type="text/plain" href="/robots.txt" />
-      </head>
       <body className="font-body antialiased">
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}

@@ -54,16 +54,62 @@ export default async function RootLayout({
   const jsonLd = {
       '@context': 'https://schema.org',
       '@type': 'TaxiService',
-      name: dict.footer.companyName,
+      name: 'Cochem Taxi',
       description: dict.metadata.description,
       telephone: formattedTelephone,
-      areaServed: {
-        '@type': 'City',
-        name: 'Cochem',
+      url: 'https://cochem-taxi.de',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: 'Bergstrasse 18',
+        addressLocality: 'Cochem',
+        postalCode: '56812',
+        addressCountry: 'DE',
       },
+      openingHoursSpecification: {
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday',
+          'Saturday',
+          'Sunday'
+        ],
+        opens: '00:00',
+        closes: '23:59'
+      },
+      areaServed: [
+        {
+          '@type': 'City',
+          name: 'Cochem',
+        },
+        {
+          '@type': 'City',
+          name: 'Cochem an der Mosel',
+        },
+        {
+          '@type': 'City',
+          name: 'Treis-Karden',
+        },
+        {
+          '@type': 'City',
+          name: 'Kaisersesch',
+        }
+      ],
       provider: {
-        '@type': 'Organization',
-        name: dict.footer.companyName,
+        '@type': 'LocalBusiness',
+        name: 'Cochem Taxi',
+        image: 'https://cochem-taxi.de/android-chrome-512x512.png',
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Bergstrasse 18',
+          addressLocality: 'Cochem',
+          postalCode: '56812',
+          addressCountry: 'DE',
+        },
+        priceRange: '€€',
+        telephone: formattedTelephone,
       },
     };
   

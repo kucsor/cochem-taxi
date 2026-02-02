@@ -19,6 +19,7 @@ export async function generateMetadata({
   const { lang } = await params;
   const dictionary = await getDictionary(lang)
   return {
+    metadataBase: new URL('https://cochem-taxi.de'),
     title: {
       template: `%s | Cochem-Taxi.de`,
       default: dictionary.metadata.title,
@@ -29,6 +30,7 @@ export async function generateMetadata({
       languages: {
         'de-DE': '/de',
         'en-US': '/en',
+        'x-default': '/de',
       },
     },
   }

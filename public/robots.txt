@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.cochem-taxi.de/sitemap.xml
+Sitemap: https://cochem-taxi.de/sitemap.xml

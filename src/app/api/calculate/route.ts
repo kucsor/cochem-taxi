@@ -122,6 +122,16 @@ async function getRoute(startCoords: { lat: number; lon: number }, endCoords: { 
 }
 
 export async function POST(request: NextRequest) {
+  // Security: Check Origin to prevent CSRF/Hotlinking
+  const origin = request.headers.get('origin');
+  if (origin) {
+    const requestOrigin = new URL(request.url).origin;
+    if (origin !== requestOrigin) {
+      console.warn(`[Security] Blocked request from invalid origin: ${origin}`);
+      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
+    }
+  }
+
   try {
     const body = await request.json();
 

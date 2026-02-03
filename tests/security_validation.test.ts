@@ -58,6 +58,59 @@ async function test() {
   } catch (e) {
     console.log("❌ Test 2 Exception:", e);
   }
+
+  // Case 3: Origin Validation
+  try {
+      // Create a request with a malicious Origin
+      const req3 = new NextRequest('http://localhost/api/calculate', {
+          method: 'POST',
+          headers: {
+              'origin': 'http://evil.com',
+              'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+              startAddress: 'Cochem',
+              endAddress: 'Berlin',
+              pickupTime: '12:00'
+          })
+      });
+
+      const res3 = await POST(req3);
+      if (res3.status === 403) {
+           console.log("✅ Test 3 Passed: Origin check blocked invalid origin.");
+      } else {
+           const data = await res3.json();
+           console.log("❌ Test 3 Failed: Expected 403, got", res3.status, data);
+      }
+  } catch (e) {
+      // In the current broken environment, this might catch the mapbox crash
+      console.log("❌ Test 3 Exception:", e);
+  }
+
+  // Case 4: Valid Origin
+  try {
+      const req4 = new NextRequest('http://localhost/api/calculate', {
+          method: 'POST',
+          headers: {
+              'origin': 'http://localhost', // Matches request URL origin
+              'content-type': 'application/json'
+          },
+          body: JSON.stringify({
+              startAddress: 'Cochem',
+              endAddress: 'Berlin',
+              pickupTime: '12:00'
+          })
+      });
+
+      const res4 = await POST(req4);
+      if (res4.status !== 403) {
+           console.log("✅ Test 4 Passed: Valid origin allowed.");
+      } else {
+           console.log("❌ Test 4 Failed: Valid origin blocked.");
+      }
+  } catch (e) {
+      console.log("❌ Test 4 Exception:", e);
+  }
 }
 
 test();

@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/tracking";
-import { motion } from "framer-motion";
 import { Phone, ArrowDown, Sparkles } from "lucide-react";
 
 type Dictionary = {
@@ -32,16 +31,13 @@ export function Hero({ dict }: { dict: Dictionary }) {
       </div>
 
       <div className="relative z-10 text-center max-w-4xl mx-auto pt-8 md:pt-12">
-        {/* Badge - moved higher */}
-        <motion.div
-          initial={{ opacity: 0.5, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
+        {/* Badge - moved higher - Static for LCP optimization */}
+        <div
           className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full glass mb-4 md:mb-6"
         >
           <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary" />
           <span className="text-xs md:text-sm text-muted-foreground">{dict.badge}</span>
-        </motion.div>
+        </div>
 
         {/* Main title with gradient - smaller on mobile */}
         <h1
@@ -81,12 +77,11 @@ export function Hero({ dict }: { dict: Dictionary }) {
               onClick={() => trackEvent('click_call_now')}
               className="flex items-center justify-center gap-3"
             >
-              <motion.div
-                animate={{ rotate: [0, -10, 10, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
+              <div
+                className="animate-wiggle-subtle"
               >
                 <Phone className="w-5 h-5" />
-              </motion.div>
+              </div>
               <span>{dict.callButton}</span>
               <span className="text-sm font-normal opacity-80 border-l border-primary-foreground/30 pl-3 hidden sm:inline">
                 {dict.phoneNumber}
@@ -109,11 +104,9 @@ export function Hero({ dict }: { dict: Dictionary }) {
         </div>
 
         {/* Trust indicators - smaller on mobile */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.7 }}
-          className="mt-8 md:mt-16 flex flex-wrap justify-center gap-4 md:gap-8 text-muted-foreground text-xs md:text-sm"
+        <div
+          className="mt-8 md:mt-16 flex flex-wrap justify-center gap-4 md:gap-8 text-muted-foreground text-xs md:text-sm reveal-up opacity-0"
+          style={{ animationDelay: '0.7s' }}
         >
           <div className="flex items-center gap-1.5 md:gap-2">
             <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-green-500 rounded-full animate-pulse" />
@@ -127,28 +120,22 @@ export function Hero({ dict }: { dict: Dictionary }) {
             <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-primary rounded-full" />
             <span>{dict.trustIndicators.prices}</span>
           </div>
-        </motion.div>
+        </div>
       </div>
 
       {/* Scroll indicator - smaller on mobile */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.6, delay: 1 }}
-        className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2"
+      <div
+        className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 reveal-up opacity-0"
+        style={{ animationDelay: '1s' }}
       >
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="w-5 h-8 md:w-6 md:h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-1.5 md:p-2"
+        <div
+          className="w-5 h-8 md:w-6 md:h-10 rounded-full border-2 border-white/20 flex items-start justify-center p-1.5 md:p-2 animate-bounce-scroll"
         >
-          <motion.div
-            animate={{ y: [0, 8, 0], opacity: [1, 0, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            className="w-1 md:w-1.5 h-1 md:h-1.5 bg-primary rounded-full"
+          <div
+            className="w-1 md:w-1.5 h-1 md:h-1.5 bg-primary rounded-full animate-scroll-dot"
           />
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </section>
   );
 }

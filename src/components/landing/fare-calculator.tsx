@@ -16,7 +16,6 @@ import dynamic from "next/dynamic";
 import { Skeleton } from "../ui/skeleton";
 import { trackEvent } from "@/lib/tracking";
 import { motion, AnimatePresence } from "framer-motion";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 const Map = dynamic(() => import('@/components/landing/map').then(mod => mod.Map), {
   ssr: false,
@@ -154,9 +153,9 @@ function MapResult({ state, pending }: { state: FareState; pending: boolean }) {
   );
 }
 
+// Optimized: Replaced useIsMobile JS hook with CSS media queries (md:hidden/md:block)
+// to prevent hydration mismatch and reduce re-renders.
 export function FareCalculator({ dict }: { dict: Dictionary }) {
-  const isMobile = useIsMobile();
-  
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
   const [pickupTime, setPickupTime] = useState("");
@@ -466,24 +465,22 @@ export function FareCalculator({ dict }: { dict: Dictionary }) {
                       {dict.routeMapTitle}
                     </h3>
                     {/* Mobile toggle map button */}
-                    {isMobile && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowMap(!showMap)}
-                        className="text-xs text-primary lg:hidden"
-                      >
-                        {showMap ? 'Karte ausblenden' : 'Karte anzeigen'}
-                      </Button>
-                    )}
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowMap(!showMap)}
+                      className="text-xs text-primary md:hidden"
+                    >
+                      {showMap ? 'Karte ausblenden' : 'Karte anzeigen'}
+                    </Button>
                   </div>
-                  <div className={`flex-grow ${isMobile && !showMap ? 'hidden' : 'block'}`}>
+                  <div className={`flex-grow ${!showMap ? 'hidden md:block' : 'block'}`}>
                     <MapResult state={state} pending={pending} />
                   </div>
                   {/* Mobile map placeholder when hidden */}
-                  {isMobile && !showMap && (
-                    <div className="h-[100px] rounded-xl glass flex items-center justify-center">
+                  {!showMap && (
+                    <div className="h-[100px] rounded-xl glass flex items-center justify-center md:hidden">
                       <p className="text-xs text-muted-foreground">Karte ausgeblendet</p>
                     </div>
                   )}

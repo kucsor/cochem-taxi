@@ -58,6 +58,60 @@ async function test() {
   } catch (e) {
     console.log("❌ Test 2 Exception:", e);
   }
+
+  // Case 3: Invalid Origin
+  const req3 = new NextRequest('http://localhost:9002/api/calculate', {
+    method: 'POST',
+    body: JSON.stringify({
+      startAddress: 'Cochem',
+      endAddress: 'Berlin',
+      pickupTime: '12:00',
+    }),
+    headers: {
+      'origin': 'http://evil-site.com'
+    }
+  });
+
+  try {
+    const res3 = await POST(req3);
+    const data3 = await res3.json();
+    console.log("Test 3 (Invalid Origin) Result:", data3);
+    if (res3.status === 403 && data3.message === "Forbidden: Invalid Origin") {
+        console.log("✅ Test 3 Passed: Invalid origin rejected.");
+    } else {
+        console.log(`❌ Test 3 Failed: Expected 403 Forbidden, got ${res3.status} ${data3.message}`);
+    }
+  } catch (e) {
+    console.log("❌ Test 3 Exception:", e);
+  }
+
+  // Case 4: Valid Origin
+  const req4 = new NextRequest('http://localhost:9002/api/calculate', {
+    method: 'POST',
+    body: JSON.stringify({
+      startAddress: 'Cochem',
+      endAddress: 'Berlin',
+      pickupTime: '12:00',
+    }),
+    headers: {
+      'origin': 'http://localhost:9002'
+    }
+  });
+
+  // Note: This might fail further down due to missing API keys or validation,
+  // but we only care that it is NOT 403 Forbidden.
+  try {
+    const res4 = await POST(req4);
+    // It might return 200 or validation error, just not 403
+    if (res4.status !== 403) {
+         console.log(`✅ Test 4 Passed: Valid origin allowed (Status: ${res4.status}).`);
+    } else {
+         const data4 = await res4.json();
+         console.log(`❌ Test 4 Failed: Valid origin was blocked. ${data4.message}`);
+    }
+  } catch (e) {
+    console.log("❌ Test 4 Exception:", e);
+  }
 }
 
 test();

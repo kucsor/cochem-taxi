@@ -123,6 +123,22 @@ async function getRoute(startCoords: { lat: number; lon: number }, endCoords: { 
 
 export async function POST(request: NextRequest) {
   try {
+    const origin = request.headers.get('origin');
+
+    // Strict Same-Origin Policy:
+    // Only allow requests where the Origin header matches the request's own origin.
+    // This dynamically supports localhost, preview URLs, and production domains.
+    if (origin && origin !== request.nextUrl.origin) {
+      return NextResponse.json({
+        price: null,
+        distance: null,
+        message: "Forbidden: Invalid Origin",
+        geometry: null,
+        hasAnfahrt: false,
+        anfahrtFee: null
+      }, { status: 403 });
+    }
+
     const body = await request.json();
 
     // Validate input

@@ -160,8 +160,8 @@ function MapResult({ state, pending }: { state: FareState; pending: boolean }) {
 
 // Optimized: Replaced useIsMobile JS hook with CSS media queries (md:hidden/md:block)
 // to prevent hydration mismatch and reduce re-renders.
-export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { dict: Dictionary; lang?: string; showDetailsLink?: boolean }) {
-  const [startAddress, setStartAddress] = useState("");
+export function FareCalculator({ dict, lang = "de", showDetailsLink = true, initialStartAddress = "" }: { dict: Dictionary; lang?: string; showDetailsLink?: boolean; initialStartAddress?: string }) {
+  const [startAddress, setStartAddress] = useState(initialStartAddress);
   const [endAddress, setEndAddress] = useState("");
   const [pickupTime, setPickupTime] = useState("");
   const [passengers, setPassengers] = useState<"1-4" | "5-8">("1-4");

@@ -46,7 +46,18 @@
       "missing_input": "Please enter start, destination, and time."
     },
     "locationPrefix": "Location:",
-    "locating": "Locating"
+    "locating": "Locating",
+    "detailsLink": "More details on price calculation"
+  },
+  "rechnerPage": {
+    "metaTitle": "Taxi Calculator Cochem | Calculate Taxi Fare for Free",
+    "metaDescription": "Calculate your taxi fare in Cochem for free with our online calculator. Transparent cost estimate for trips in Cochem and the surrounding area.",
+    "h1": "Taxi Calculator Cochem",
+    "intro": "Planning your trip in Cochem and the surrounding area? Use our free fare calculator to get a non-binding estimate of your taxi costs.",
+    "h2_1": "Calculate Taxi Costs: How it works",
+    "content_1": "<p>Our <strong>Taxi Calculator Cochem</strong> uses current tariff data and state-of-the-art mapping technology to give you a realistic estimate of your travel costs. Simply enter your starting point (e.g. Hotel, Cochem Station) and your destination (e.g. Reichsburg, Hahn Airport).</p><p>The calculator considers:</p><ul><li>The basic fee for taxis in the Cochem-Zell region.</li><li>The price per kilometer for the calculated route.</li><li>Any approach costs for pick-ups outside the city area.</li></ul>",
+    "h2_2": "Taxi Price Cochem: Transparent & Fair",
+    "content_2": "<p>Please note that the calculated price is an estimate. The final <strong>taxi price</strong> is always determined by the calibrated taximeter in the vehicle. Traffic conditions, waiting times, or surcharges (e.g. for large taxis or night trips) can influence the final price.</p><p>Our goal is to offer you maximum transparency so you can plan your trip in a relaxed manner.</p>"
   },
   "services": {
     "title": "Your Local Taxi Service in Cochem",

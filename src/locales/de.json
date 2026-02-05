@@ -42,7 +42,18 @@
       "missing_input": "Bitte geben Sie Start, Ziel und Uhrzeit ein."
     },
     "locationPrefix": "Standort:",
-    "locating": "Wird gesucht"
+    "locating": "Wird gesucht",
+    "detailsLink": "Mehr Details zur Preisberechnung"
+  },
+  "rechnerPage": {
+    "metaTitle": "Taxi Rechner Cochem | Kostenlos Taxikosten berechnen",
+    "metaDescription": "Berechnen Sie Ihren Taxi-Preis in Cochem kostenlos mit unserem Online-Rechner. Transparente Kostenschätzung für Fahrten in Cochem und Umgebung.",
+    "h1": "Taxi Rechner Cochem",
+    "intro": "Planen Sie Ihre Fahrt in Cochem und Umgebung? Nutzen Sie unseren kostenlosen Fahrpreisrechner, um eine unverbindliche Schätzung Ihrer Taxikosten zu erhalten.",
+    "h2_1": "Taxikosten berechnen: So funktioniert's",
+    "content_1": "<p>Unser <strong>Taxi Rechner Cochem</strong> nutzt aktuelle Tarifdaten und die modernste Kartentechnologie, um Ihnen eine realistische Einschätzung Ihrer Fahrtkosten zu geben. Geben Sie einfach Ihren Startpunkt (z.B. Hotel, Bahnhof Cochem) und Ihr Ziel (z.B. Reichsburg, Flughafen Hahn) ein.</p><p>Der Rechner berücksichtigt:</p><ul><li>Die Grundgebühr für Taxis in der Region Cochem-Zell.</li><li>Den Kilometerpreis für die berechnete Strecke.</li><li>Eventuelle Anfahrtskosten bei Abholungen außerhalb des Stadtgebiets.</li></ul>",
+    "h2_2": "Taxi Preis Cochem: Transparent & Fair",
+    "content_2": "<p>Bitte beachten Sie, dass es sich bei dem berechneten Preis um eine Schätzung handelt. Der endgültige <strong>Taxi Preis</strong> wird stets durch das geeichte Taxameter im Fahrzeug ermittelt. Verkehrslage, Wartezeiten oder Zuschläge (z.B. für Großraumtaxis oder Nachtfahrten) können den Endpreis beeinflussen.</p><p>Unser Ziel ist es, Ihnen maximale Transparenz zu bieten, damit Sie Ihre Reise entspannt planen können.</p>"
   },
   "services": {
     "title": "Ihr lokaler Taxi-Service in Cochem",

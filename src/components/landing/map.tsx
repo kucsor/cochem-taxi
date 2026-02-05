@@ -28,17 +28,8 @@ function AnimatedMarker({ color, delay = 0 }: { color: string; delay?: number })
       className="relative"
     >
       {/* Pulse animation */}
-      <motion.div
-        animate={{ 
-          scale: [1, 1.5, 1],
-          opacity: [0.8, 0, 0.8]
-        }}
-        transition={{ 
-          duration: 2, 
-          repeat: Infinity, 
-          ease: "easeInOut" 
-        }}
-        className={`absolute inset-0 rounded-full ${color === 'green' ? 'bg-green-500' : 'bg-red-500'}`}
+      <div
+        className={`absolute inset-0 rounded-full animate-marker-pulse ${color === 'green' ? 'bg-green-500' : 'bg-red-500'}`}
       />
       {/* Core marker */}
       <div 

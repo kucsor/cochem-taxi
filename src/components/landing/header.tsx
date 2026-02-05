@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type Dictionary = {
   companyName: string;
@@ -11,6 +12,18 @@ type Dictionary = {
 export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
   const isDE = lang === 'de';
   const isEN = lang === 'en';
+  const pathname = usePathname();
+
+  const getLanguagePath = (targetLang: string) => {
+    if (!pathname) return `/${targetLang}`;
+    const segments = pathname.split('/');
+    // segments[1] is the locale (e.g., 'de' or 'en')
+    if (segments.length > 1) {
+      segments[1] = targetLang;
+      return segments.join('/');
+    }
+    return `/${targetLang}`;
+  };
 
   return (
     <>
@@ -36,7 +49,7 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
             {/* Language Toggle Switch */}
             <div className="flex items-center gap-1 p-1 rounded-xl bg-white/10 border border-white/10">
               {/* DE Button */}
-              <Link href="/de">
+              <Link href={getLanguagePath('de')}>
                 <motion.button
                   whileHover={{ scale: isDE ? 1 : 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -51,7 +64,7 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
               </Link>
 
               {/* EN Button */}
-              <Link href="/en">
+              <Link href={getLanguagePath('en')}>
                 <motion.button
                   whileHover={{ scale: isEN ? 1 : 1.05 }}
                   whileTap={{ scale: 0.95 }}

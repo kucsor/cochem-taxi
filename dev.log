@@ -26,3 +26,7 @@ https://nextjs.org/telemetry
  ○ Compiling /sitemap.xml ...
  ✓ Compiled /sitemap.xml in 661ms
  GET /sitemap.xml 200 in 1019ms
+ GET /de/taxi-ernst 200 in 6040ms
+ GET /de/taxi-ernst 200 in 504ms
+ GET /en/taxi-ernst 200 in 310ms
+ GET /de/taxi-ernst 200 in 227ms

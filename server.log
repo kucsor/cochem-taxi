@@ -5,13 +5,25 @@
  ✓ Starting...
 > [PWA] PWA support is disabled
 > [PWA] PWA support is disabled
- ✓ Ready in 4.2s
+ ✓ Ready in 4.1s
  ○ Compiling /middleware ...
- ✓ Compiled /middleware in 1211ms (160 modules)
+ ✓ Compiled /middleware in 1306ms (160 modules)
  ○ Compiling /[lang] ...
- ✓ Compiled /[lang] in 16.3s (1773 modules)
- ✓ Compiled in 1233ms (767 modules)
- GET /de 200 in 20405ms
+ ✓ Compiled /[lang] in 15.7s (1773 modules)
+ ✓ Compiled in 954ms (767 modules)
+ GET /de 200 in 19264ms
  ○ Compiling /[lang]/rechner ...
- ✓ Compiled /[lang]/rechner in 4.5s (1733 modules)
- GET /de/rechner 200 in 5693ms
+ ✓ Compiled /[lang]/rechner in 4.2s (1733 modules)
+ GET /de/rechner 200 in 5345ms
+ ✓ Compiled in 941ms (1747 modules)
+BottomNav Rendered { pathname: '/de' }
+ GET /de 200 in 896ms
+ GET /de/rechner 200 in 114ms
+BottomNav Rendered { pathname: '/de' }
+ GET /de 200 in 354ms
+ GET /de/rechner 200 in 110ms
+ ✓ Compiled in 1374ms (1747 modules)
+ GET /de 200 in 876ms
+ GET /de/rechner 200 in 141ms
+ GET /de 200 in 390ms
+ GET /de/rechner 200 in 111ms

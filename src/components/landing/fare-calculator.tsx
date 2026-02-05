@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation, Loader2 } from "lucide-react";
+import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation, Loader2, Users } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -32,6 +32,9 @@ type Dictionary = {
   endLabel: string;
   endPlaceholder: string;
   timeLabel: string;
+  passengersLabel: string;
+  passengersStandard: string;
+  passengersLarge: string;
   submitButton: string;
   locateMeAriaLabel: string;
   resultTitle: string;
@@ -161,6 +164,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
   const [pickupTime, setPickupTime] = useState("");
+  const [passengers, setPassengers] = useState<"1-4" | "5-8">("1-4");
   const [startSuggestions, setStartSuggestions] = useState<any[]>([]);
   const [endSuggestions, setEndSuggestions] = useState<any[]>([]);
   const [isStartFocused, setIsStartFocused] = useState(false);
@@ -304,6 +308,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
           startAddress,
           endAddress,
           pickupTime,
+          passengers,
           startLat: startCoords?.lat.toString() || '',
           startLon: startCoords?.lon.toString() || '',
           endLat: endCoords?.lat.toString() || '',
@@ -461,21 +466,47 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
                     </AnimatePresence>
                   </div>
 
-                  {/* Time */}
-                  <div className="space-y-1.5 md:space-y-2">
-                    <Label htmlFor="time" className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm text-muted-foreground">
-                      <Clock className="w-3 h-3 md:w-4 md:h-4 text-primary" />
-                      {dict.timeLabel}
-                    </Label>
-                    <Input 
-                      id="time" 
-                      name="pickupTime" 
-                      type="time" 
-                      required 
-                      value={pickupTime} 
-                      onChange={(e) => setPickupTime(e.target.value)} 
-                      className="h-11 md:h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:ring-primary/20 rounded-lg md:rounded-xl transition-all duration-300 w-auto text-sm" 
-                    />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
+                    {/* Passengers */}
+                    <div className="space-y-1.5 md:space-y-2">
+                      <Label className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm text-muted-foreground">
+                        <Users className="w-3 h-3 md:w-4 md:h-4 text-primary" />
+                        {dict.passengersLabel}
+                      </Label>
+                      <div className="grid grid-cols-2 gap-2 h-11 md:h-12 bg-white/5 p-1 rounded-lg md:rounded-xl border border-white/10">
+                        <button
+                          type="button"
+                          onClick={() => setPassengers("1-4")}
+                          className={`rounded-md md:rounded-lg text-xs md:text-sm font-medium transition-all ${passengers === "1-4" ? "bg-primary text-black shadow-lg" : "text-muted-foreground hover:text-white"}`}
+                        >
+                          {dict.passengersStandard}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setPassengers("5-8")}
+                          className={`rounded-md md:rounded-lg text-xs md:text-sm font-medium transition-all ${passengers === "5-8" ? "bg-primary text-black shadow-lg" : "text-muted-foreground hover:text-white"}`}
+                        >
+                          {dict.passengersLarge}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Time */}
+                    <div className="space-y-1.5 md:space-y-2">
+                      <Label htmlFor="time" className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm text-muted-foreground">
+                        <Clock className="w-3 h-3 md:w-4 md:h-4 text-primary" />
+                        {dict.timeLabel}
+                      </Label>
+                      <Input
+                        id="time"
+                        name="pickupTime"
+                        type="time"
+                        required
+                        value={pickupTime}
+                        onChange={(e) => setPickupTime(e.target.value)}
+                        className="h-11 md:h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:ring-primary/20 rounded-lg md:rounded-xl transition-all duration-300 w-full text-sm"
+                      />
+                    </div>
                   </div>
                 </CardContent>
 

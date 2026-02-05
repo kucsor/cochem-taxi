@@ -1,0 +1,3 @@
+## 2025-02-18 - Async Input Loading States
+**Learning:** Async search inputs (like address autocomplete) create user uncertainty when they lack immediate visual feedback. Users may think the input is broken or the network is down if suggestions don't appear immediately.
+**Action:** Always implement a dedicated loading indicator (spinner) inside the input field that activates immediately when the async operation is triggered, even during debounce periods if possible, or at least when the fetch begins. Replacing a static action icon (like "Locate Me") with a spinner is a space-efficient way to show this state without shifting layout.

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation } from "lucide-react";
+import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation, Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -172,6 +172,10 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
   const [state, setState] = useState<FareState>(initialState);
   const [pending, setPending] = useState(false);
 
+  // New loading states for suggestions
+  const [isStartLoading, setIsStartLoading] = useState(false);
+  const [isEndLoading, setIsEndLoading] = useState(false);
+
   const formatPlaceName = (suggestion: any): string => {
     const isAddress = suggestion.place_type.includes('address');
     if (isAddress && suggestion.context) {
@@ -193,11 +197,16 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
     );
   }, []);
 
-  const fetchSuggestions = async (query: string, setter: React.Dispatch<React.SetStateAction<any[]>>) => {
+  const fetchSuggestions = async (
+    query: string,
+    setter: React.Dispatch<React.SetStateAction<any[]>>,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
     if (query.length < 2) {
       setter([]);
       return;
     }
+    setLoading(true);
     try {
       const response = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${MAPBOX_TOKEN}&country=DE&limit=5&proximity=7.1667,50.15&types=poi,address,place,locality`
@@ -210,6 +219,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
       }
     } catch (error) {
       setter([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -218,7 +229,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
       if (startSuggestions.length > 0) setStartSuggestions([]);
       return;
     }
-    const handler = setTimeout(() => fetchSuggestions(startAddress, setStartSuggestions), 300);
+    // Added setIsStartLoading
+    const handler = setTimeout(() => fetchSuggestions(startAddress, setStartSuggestions, setIsStartLoading), 300);
     return () => clearTimeout(handler);
   }, [startAddress, isStartFocused]);
 
@@ -227,7 +239,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
       if (endSuggestions.length > 0) setEndSuggestions([]);
       return;
     }
-    const handler = setTimeout(() => fetchSuggestions(endAddress, setEndSuggestions), 300);
+    // Added setIsEndLoading
+    const handler = setTimeout(() => fetchSuggestions(endAddress, setEndSuggestions, setIsEndLoading), 300);
     return () => clearTimeout(handler);
   }, [endAddress, isEndFocused]);
 
@@ -357,17 +370,24 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
                         onFocus={() => setIsStartFocused(true)} 
                         onBlur={() => setTimeout(() => setIsStartFocused(false), 150)} 
                         autoComplete="off" 
+                        aria-busy={isStartLoading}
                         className="pr-10 md:pr-12 h-11 md:h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:ring-primary/20 rounded-lg md:rounded-xl transition-all duration-300 text-sm" 
                       />
-                      <button 
-                        type="button" 
-                        onClick={handleLocateMe} 
-                        className="absolute right-2 md:right-3 h-full text-muted-foreground hover:text-primary transition-colors" 
-                        aria-label={dict.locateMeAriaLabel}
-                      >
-                        <Navigation className="h-4 w-4 md:hidden" />
-                        <Locate className="h-5 w-5 hidden md:block" />
-                      </button>
+                      {isStartLoading ? (
+                        <div className="absolute right-2 md:right-3 h-full flex items-center justify-center pointer-events-none">
+                          <Loader2 className="h-4 w-4 md:h-5 md:w-5 animate-spin text-muted-foreground" />
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={handleLocateMe}
+                          className="absolute right-2 md:right-3 h-full text-muted-foreground hover:text-primary transition-colors"
+                          aria-label={dict.locateMeAriaLabel}
+                        >
+                          <Navigation className="h-4 w-4 md:hidden" />
+                          <Locate className="h-5 w-5 hidden md:block" />
+                        </button>
+                      )}
                     </div>
                     <AnimatePresence>
                       {isStartFocused && startSuggestions.length > 0 && (
@@ -398,18 +418,26 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { 
                       <MapPin className="w-3 h-3 md:w-4 md:h-4 text-primary/70" />
                       {dict.endLabel}
                     </Label>
-                    <Input 
-                      id="end" 
-                      name="endAddress" 
-                      placeholder={dict.endPlaceholder} 
-                      required 
-                      value={endAddress} 
-                      onChange={(e) => { setEndAddress(e.target.value); setEndCoords(null); }} 
-                      onFocus={() => setIsEndFocused(true)} 
-                      onBlur={() => setTimeout(() => setIsEndFocused(false), 150)} 
-                      autoComplete="off" 
-                      className="h-11 md:h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:ring-primary/20 rounded-lg md:rounded-xl transition-all duration-300 text-sm" 
-                    />
+                    <div className="relative flex items-center">
+                      <Input
+                        id="end"
+                        name="endAddress"
+                        placeholder={dict.endPlaceholder}
+                        required
+                        value={endAddress}
+                        onChange={(e) => { setEndAddress(e.target.value); setEndCoords(null); }}
+                        onFocus={() => setIsEndFocused(true)}
+                        onBlur={() => setTimeout(() => setIsEndFocused(false), 150)}
+                        autoComplete="off"
+                        aria-busy={isEndLoading}
+                        className="pr-10 md:pr-12 h-11 md:h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:ring-primary/20 rounded-lg md:rounded-xl transition-all duration-300 text-sm"
+                      />
+                      {isEndLoading && (
+                        <div className="absolute right-2 md:right-3 h-full flex items-center justify-center pointer-events-none">
+                          <Loader2 className="h-4 w-4 md:h-5 md:w-5 animate-spin text-muted-foreground" />
+                        </div>
+                      )}
+                    </div>
                     <AnimatePresence>
                       {isEndFocused && endSuggestions.length > 0 && (
                         <motion.ul

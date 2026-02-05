@@ -1,10 +1,11 @@
 import { MetadataRoute } from 'next'
+import { locations } from '@/lib/locations'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://cochem-taxi.de'
   const date = new Date()
 
-  return [
+  const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: `${baseUrl}/de`,
       lastModified: date,
@@ -42,4 +43,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.5,
     },
   ]
+
+  const locationRoutes: MetadataRoute.Sitemap = locations.flatMap((loc) => [
+    {
+      url: `${baseUrl}/de/${loc.slug}`,
+      lastModified: date,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/en/${loc.slug}`,
+      lastModified: date,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
+  ])
+
+  return [...staticRoutes, ...locationRoutes]
 }

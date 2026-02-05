@@ -12,9 +12,17 @@ const getDirectionsService = () => mbxDirections({ accessToken: mapboxToken });
 // Tarif constants
 const NIGHT_START_HOUR = 22;
 const NIGHT_END_HOUR = 6;
+
+// Standard (1-4 pax)
 const BASE_FEE = 4.1;
 const RATE_PER_KM_DAY = 2.6;
 const RATE_PER_KM_NIGHT = 2.8;
+
+// Large (5-8 pax)
+const LARGE_BASE_FEE = 5.50;
+const LARGE_RATE_PER_KM_DAY = 3.60;
+const LARGE_RATE_PER_KM_NIGHT = 3.80;
+
 const ANFAHRT_FEE_PERCENTAGE = 0.40;
 
 // Cochem central point
@@ -36,6 +44,7 @@ const calculateSchema = z.object({
   startLon: z.string().optional(),
   endLat: z.string().optional(),
   endLon: z.string().optional(),
+  passengers: z.enum(["1-4", "5-8"]).optional().default("1-4"),
   errorMessages: z.record(z.string()).optional(),
 });
 
@@ -156,7 +165,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ ...initialState, message: errorMessage });
     }
 
-    const { startAddress, endAddress, pickupTime, startLat, startLon, endLat, endLon, errorMessages } = validationResult.data;
+    const { startAddress, endAddress, pickupTime, startLat, startLon, endLat, endLon, errorMessages, passengers } = validationResult.data;
 
     let startCoords: { lat: number; lon: number } | null = null;
     if (startLat && startLon) {
@@ -188,10 +197,17 @@ export async function POST(request: NextRequest) {
     }
 
     const { distance, geometry } = mainRoute;
+
+    // Select tariff based on passengers
+    const isLarge = passengers === "5-8";
+    const currentBaseFee = isLarge ? LARGE_BASE_FEE : BASE_FEE;
+    const currentRateDay = isLarge ? LARGE_RATE_PER_KM_DAY : RATE_PER_KM_DAY;
+    const currentRateNight = isLarge ? LARGE_RATE_PER_KM_NIGHT : RATE_PER_KM_NIGHT;
+
     const [hour] = pickupTime.split(":").map(Number);
     const isNightTariff = hour >= NIGHT_START_HOUR || hour < NIGHT_END_HOUR;
-    const ratePerKm = isNightTariff ? RATE_PER_KM_NIGHT : RATE_PER_KM_DAY;
-    const mainPrice = (BASE_FEE + distance * ratePerKm);
+    const ratePerKm = isNightTariff ? currentRateNight : currentRateDay;
+    const mainPrice = (currentBaseFee + distance * ratePerKm);
 
     let anfahrtFee = 0;
     let hasAnfahrt = false;
@@ -208,7 +224,7 @@ export async function POST(request: NextRequest) {
       // Simplified anfahrt calculation - use haversine as estimate
       const anfahrtDistance = Math.min(distStartToCenter, distEndToCenter);
       if (anfahrtDistance > 0) {
-        const anfahrtPriceFull = (BASE_FEE + anfahrtDistance * ratePerKm);
+        const anfahrtPriceFull = (currentBaseFee + anfahrtDistance * ratePerKm);
         anfahrtFee = anfahrtPriceFull * ANFAHRT_FEE_PERCENTAGE;
       }
     }

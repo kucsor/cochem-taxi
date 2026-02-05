@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { SubmitButton } from "./submit-button";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { trackEvent } from "@/lib/tracking";
 import { motion, AnimatePresence } from "framer-motion";
@@ -40,6 +41,7 @@ type Dictionary = {
   errorMessages: Record<string, string>;
   locationPrefix: string;
   locating: string;
+  detailsLink?: string;
 };
 
 type FareState = {
@@ -155,7 +157,7 @@ function MapResult({ state, pending }: { state: FareState; pending: boolean }) {
 
 // Optimized: Replaced useIsMobile JS hook with CSS media queries (md:hidden/md:block)
 // to prevent hydration mismatch and reduce re-renders.
-export function FareCalculator({ dict }: { dict: Dictionary }) {
+export function FareCalculator({ dict, lang = "de", showDetailsLink = true }: { dict: Dictionary; lang?: string; showDetailsLink?: boolean }) {
   const [startAddress, setStartAddress] = useState("");
   const [endAddress, setEndAddress] = useState("");
   const [pickupTime, setPickupTime] = useState("");
@@ -454,6 +456,17 @@ export function FareCalculator({ dict }: { dict: Dictionary }) {
                 </CardFooter>
 
                 <PriceResult state={state} pending={pending} dict={dict} />
+
+                {showDetailsLink && dict.detailsLink && (
+                  <div className="mt-4 text-center">
+                    <Link
+                      href={`/${lang}/rechner`}
+                      className="text-xs text-muted-foreground hover:text-primary hover:underline underline-offset-4 transition-all"
+                    >
+                      {dict.detailsLink}
+                    </Link>
+                  </div>
+                )}
               </div>
 
               {/* Right side - Map */}

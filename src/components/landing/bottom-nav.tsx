@@ -3,18 +3,18 @@
 import { motion } from "framer-motion";
 import { Phone, Calculator, Menu, Home, ChevronUp } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export function BottomNav() {
+  const pathname = usePathname();
+
+  // Extract lang from pathname or default to 'de'
+  const lang = pathname?.split('/')[1] || 'de';
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     trackEvent('click_scroll_top');
-  };
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   return (
@@ -27,26 +27,25 @@ export function BottomNav() {
         className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
       >
         <div className="mx-2 mb-2 glass rounded-2xl px-2 py-2 flex items-center justify-around shadow-2xl">
-          {/* Home / Scroll to Top */}
-          <button
-            onClick={scrollToTop}
+          {/* Home */}
+          <Link
+            href={`/${lang}`}
+            onClick={() => trackEvent('click_home_nav')}
             className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-white/5 transition-colors min-w-[60px]"
           >
             <Home className="w-5 h-5 text-muted-foreground" />
             <span className="text-[10px] text-muted-foreground">Home</span>
-          </button>
+          </Link>
 
           {/* Calculator */}
-          <button
-            onClick={() => {
-              scrollToSection('rechner');
-              trackEvent('click_calculator');
-            }}
+          <Link
+            href={`/${lang}#rechner`}
+            onClick={() => trackEvent('click_calculator')}
             className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-white/5 transition-colors min-w-[60px]"
           >
             <Calculator className="w-5 h-5 text-muted-foreground" />
             <span className="text-[10px] text-muted-foreground">Preis</span>
-          </button>
+          </Link>
 
           {/* Call Button - Prominent */}
           <motion.a
@@ -62,13 +61,14 @@ export function BottomNav() {
           </motion.a>
 
           {/* Services */}
-          <button
-            onClick={() => scrollToSection('services')}
+          <Link
+            href={`/${lang}#services`}
+            onClick={() => trackEvent('click_services_nav')}
             className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-white/5 transition-colors min-w-[60px]"
           >
             <Menu className="w-5 h-5 text-muted-foreground" />
             <span className="text-[10px] text-muted-foreground">Service</span>
-          </button>
+          </Link>
 
           {/* Back to Top */}
           <button

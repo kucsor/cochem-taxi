@@ -19,9 +19,9 @@ export default async function Home({
       <ScrollToTop />
       <Hero dict={dict.hero} />
       
-      <section id="rechner" className="py-8">
-        <FareCalculator dict={dict.fareCalculator} />
-      </section>
+      <div className="py-8">
+        <FareCalculator dict={dict.fareCalculator} lang={lang} />
+      </div>
       
       <section id="services" className="py-8">
         <Services dict={dict.services} />

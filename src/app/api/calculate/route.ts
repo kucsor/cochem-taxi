@@ -4,8 +4,10 @@ import mbxDirections from "@mapbox/mapbox-sdk/services/directions";
 import { z } from "zod";
 
 const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
-const geocodingService = mbxGeocoding({ accessToken: mapboxToken });
-const directionsService = mbxDirections({ accessToken: mapboxToken });
+
+// Initialize services lazily to prevent build-time errors
+const getGeocodingService = () => mbxGeocoding({ accessToken: mapboxToken });
+const getDirectionsService = () => mbxDirections({ accessToken: mapboxToken });
 
 // Tarif constants
 const NIGHT_START_HOUR = 22;
@@ -59,9 +61,16 @@ function isPointInPolygon(point: { lon: number, lat: number }, polygon: [number,
   return isInside;
 }
 
-function routePassesThroughCochemZone(geometry: { type: string, coordinates: [number, number][] }): boolean {
+function routePassesThroughCochemZone(geometry: any): boolean {
   if (!geometry?.coordinates) return false;
-  for (const coord of geometry.coordinates) {
+
+  const points: [number, number][] = geometry.type === 'LineString'
+    ? geometry.coordinates
+    : geometry.type === 'MultiLineString'
+      ? geometry.coordinates.flat()
+      : [];
+
+  for (const coord of points) {
     if (isPointInPolygon({ lon: coord[0], lat: coord[1] }, COCHEM_POLYGON)) return true;
   }
   return false;
@@ -80,7 +89,7 @@ function getHaversineDistance(coords1: { lat: number; lon: number }, coords2: { 
 
 async function geocodeAddress(address: string): Promise<{ lat: number; lon: number } | null> {
   try {
-    const response = await geocodingService.forwardGeocode({
+    const response = await getGeocodingService().forwardGeocode({
       query: address,
       limit: 1,
       countries: ['DE'],
@@ -100,7 +109,7 @@ async function geocodeAddress(address: string): Promise<{ lat: number; lon: numb
 
 async function getRoute(startCoords: { lat: number; lon: number }, endCoords: { lat: number; lon: number }) {
   try {
-    const response = await directionsService.getDirections({
+    const response = await getDirectionsService().getDirections({
       profile: 'driving',
       waypoints: [
         { coordinates: [startCoords.lon, startCoords.lat] },

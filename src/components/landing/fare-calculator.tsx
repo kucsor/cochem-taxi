@@ -16,7 +16,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { trackEvent } from "@/lib/tracking";
-import { motion, AnimatePresence } from "framer-motion";
+import { Reveal } from "@/components/ui/reveal";
 
 const Map = dynamic(() => import('@/components/landing/map').then(mod => mod.Map), {
   ssr: false,
@@ -78,66 +78,55 @@ function PriceResult({ state, pending, dict }: { state: FareState; pending: bool
     }
   }, [state.message, pending]);
 
-  return (
-    <AnimatePresence mode="wait">
-      {pending ? (
-        <motion.div
-          key="loading"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="w-full text-center p-4 md:p-6 mt-4 md:mt-6 rounded-2xl glass space-y-2 md:space-y-3"
+  if (pending) {
+      return (
+        <div
+          className="w-full text-center p-4 md:p-6 mt-4 md:mt-6 rounded-2xl glass space-y-2 md:space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300"
         >
           <Skeleton className="h-3 md:h-4 w-20 md:w-24 mx-auto bg-white/10" />
           <Skeleton className="h-10 md:h-12 w-32 md:w-40 mx-auto bg-white/10" />
           <Skeleton className="h-2 md:h-3 w-36 md:w-48 mx-auto bg-white/10" />
-        </motion.div>
-      ) : state.message ? (
-        <motion.p
-          key="error"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.95 }}
-          className="mt-4 md:mt-6 text-xs md:text-sm text-red-400 text-center p-3 md:p-4 rounded-xl bg-red-500/10 border border-red-500/20"
+        </div>
+      );
+  }
+
+  if (state.message) {
+      return (
+        <p
+          className="mt-4 md:mt-6 text-xs md:text-sm text-red-400 text-center p-3 md:p-4 rounded-xl bg-red-500/10 border border-red-500/20 animate-in fade-in zoom-in-95 duration-300"
         >
           {state.message}
-        </motion.p>
-      ) : state.price !== null && state.distance !== null ? (
-        <motion.div
-          key="result"
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ type: "spring", damping: 20, stiffness: 300 }}
-          className="w-full text-center p-4 md:p-6 mt-4 md:mt-6 rounded-2xl bg-primary/10 border border-primary/30 space-y-2 md:space-y-3 glow-gold-subtle"
+        </p>
+      );
+  }
+
+  if (state.price !== null && state.distance !== null) {
+      return (
+        <div
+          key={state.price} // Force re-animation on price change
+          className="w-full text-center p-4 md:p-6 mt-4 md:mt-6 rounded-2xl bg-primary/10 border border-primary/30 space-y-2 md:space-y-3 glow-gold-subtle animate-in fade-in slide-in-from-bottom-4 zoom-in-95 duration-500"
         >
           <p className="text-xs md:text-sm text-muted-foreground">{dict.resultTitle}</p>
-          <motion.p
-            initial={{ scale: 0.5 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", damping: 15, stiffness: 200, delay: 0.1 }}
-            className="text-3xl md:text-5xl font-bold text-gradient-gold"
+          <p
+            className="text-3xl md:text-5xl font-bold text-gradient-gold animate-in zoom-in duration-500 delay-100 fill-mode-forwards"
           >
             ~{state.price.toLocaleString("de-DE", { style: "currency", currency: "EUR" })}
-          </motion.p>
+          </p>
           <p className="text-[10px] md:text-xs text-muted-foreground">
             {dict.resultDistance.replace('{distance}', state.distance.toFixed(1))}
           </p>
           {state.hasAnfahrt && state.anfahrtFee !== null && (
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="text-[10px] md:text-xs text-primary/70 italic mt-1 md:mt-2"
+            <p
+              className="text-[10px] md:text-xs text-primary/70 italic mt-1 md:mt-2 animate-in fade-in delay-300 fill-mode-forwards"
             >
               {dict.anfahrtInfo.replace('{anfahrtPrice}', state.anfahrtFee.toLocaleString("de-DE", { style: "currency", currency: "EUR" }))}
-            </motion.p>
+            </p>
           )}
-        </motion.div>
-      ) : (
-        <div className="mt-4 md:mt-6 h-[80px] md:h-[120px]" />
-      )}
-    </AnimatePresence>
-  );
+        </div>
+      );
+  }
+
+  return <div className="mt-4 md:mt-6 h-[80px] md:h-[120px]" />;
 }
 
 function MapResult({ state, pending }: { state: FareState; pending: boolean }) {
@@ -158,8 +147,6 @@ function MapResult({ state, pending }: { state: FareState; pending: boolean }) {
   );
 }
 
-// Optimized: Replaced useIsMobile JS hook with CSS media queries (md:hidden/md:block)
-// to prevent hydration mismatch and reduce re-renders.
 export function FareCalculator({ dict, lang = "de", showDetailsLink = true, initialStartAddress = "" }: { dict: Dictionary; lang?: string; showDetailsLink?: boolean; initialStartAddress?: string }) {
   const [startAddress, setStartAddress] = useState(initialStartAddress);
   const [endAddress, setEndAddress] = useState("");
@@ -233,7 +220,6 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
       if (startSuggestions.length > 0) setStartSuggestions([]);
       return;
     }
-    // Added setIsStartLoading
     const handler = setTimeout(() => fetchSuggestions(startAddress, setStartSuggestions, setIsStartLoading), 300);
     return () => clearTimeout(handler);
   }, [startAddress, isStartFocused]);
@@ -243,7 +229,6 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
       if (endSuggestions.length > 0) setEndSuggestions([]);
       return;
     }
-    // Added setIsEndLoading
     const handler = setTimeout(() => fetchSuggestions(endAddress, setEndSuggestions, setIsEndLoading), 300);
     return () => clearTimeout(handler);
   }, [endAddress, isEndFocused]);
@@ -333,12 +318,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
 
   return (
     <section id="rechner" className="w-full max-w-5xl mx-auto scroll-mt-28 md:scroll-mt-32 px-4 md:px-6 py-8 md:py-12">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
+      <Reveal duration={0.6}>
         <Card className="glass-card overflow-hidden border-white/10">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-5 lg:gap-0">
@@ -394,13 +374,9 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                         </button>
                       )}
                     </div>
-                    <AnimatePresence>
                       {isStartFocused && startSuggestions.length > 0 && (
-                        <motion.ul
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute z-20 w-full bg-black/95 backdrop-blur-xl border border-white/10 rounded-lg md:rounded-xl mt-1 shadow-2xl text-xs md:text-sm overflow-hidden max-h-[200px] overflow-y-auto"
+                        <ul
+                          className="absolute z-20 w-full bg-black/95 backdrop-blur-xl border border-white/10 rounded-lg md:rounded-xl mt-1 shadow-2xl text-xs md:text-sm overflow-hidden max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200"
                         >
                           {startSuggestions.map((s) => (
                             <li 
@@ -412,9 +388,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                               <span className="truncate">{formatPlaceName(s)}</span>
                             </li>
                           ))}
-                        </motion.ul>
+                        </ul>
                       )}
-                    </AnimatePresence>
                   </div>
 
                   {/* End Location */}
@@ -443,13 +418,9 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                         </div>
                       )}
                     </div>
-                    <AnimatePresence>
                       {isEndFocused && endSuggestions.length > 0 && (
-                        <motion.ul
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="absolute z-10 w-full bg-black/95 backdrop-blur-xl border border-white/10 rounded-lg md:rounded-xl mt-1 shadow-2xl text-xs md:text-sm overflow-hidden max-h-[200px] overflow-y-auto"
+                        <ul
+                          className="absolute z-10 w-full bg-black/95 backdrop-blur-xl border border-white/10 rounded-lg md:rounded-xl mt-1 shadow-2xl text-xs md:text-sm overflow-hidden max-h-[200px] overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200"
                         >
                           {endSuggestions.map((s) => (
                             <li 
@@ -461,9 +432,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                               <span className="truncate">{formatPlaceName(s)}</span>
                             </li>
                           ))}
-                        </motion.ul>
+                        </ul>
                       )}
-                    </AnimatePresence>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
@@ -562,7 +532,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
             </div>
           </form>
         </Card>
-      </motion.div>
+      </Reveal>
     </section>
   );
 }

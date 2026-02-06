@@ -81,7 +81,7 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
 
         {/* Stats Row - Smaller text */}
         <div
-          className="grid grid-cols-3 gap-3 md:gap-4"
+          className="grid grid-cols-3 gap-4"
         >
           {stats.map((stat, index) => (
             <Reveal

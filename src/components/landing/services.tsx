@@ -125,7 +125,7 @@ export function Services({ dict }: { dict: Dictionary }) {
                 key={index}
                 delay={0.4 + index * 0.1}
                 duration={0.5}
-                className="flex items-center gap-3 px-5 py-3 rounded-full glass"
+                className="flex items-center gap-3 px-6 py-3 rounded-full glass"
               >
                 <Icon className="w-4 h-4 text-primary" />
                 <span className="text-sm text-muted-foreground">{feature.text}</span>

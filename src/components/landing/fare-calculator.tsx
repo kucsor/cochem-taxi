@@ -339,8 +339,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                 
                 <CardContent className="p-0 space-y-3 md:space-y-5 flex-grow">
                   {/* Start Location */}
-                  <div className="space-y-1.5 md:space-y-2 relative group">
-                    <Label htmlFor="start" className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm text-muted-foreground">
+                  <div className="space-y-2 relative group">
+                    <Label htmlFor="start" className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
                       <MapPin className="w-3 h-3 md:w-4 md:h-4 text-primary" />
                       {dict.startLabel}
                     </Label>
@@ -393,8 +393,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                   </div>
 
                   {/* End Location */}
-                  <div className="space-y-1.5 md:space-y-2 relative">
-                    <Label htmlFor="end" className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm text-muted-foreground">
+                  <div className="space-y-2 relative">
+                    <Label htmlFor="end" className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
                       <MapPin className="w-3 h-3 md:w-4 md:h-4 text-primary/70" />
                       {dict.endLabel}
                     </Label>
@@ -436,10 +436,10 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                       )}
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5">
                     {/* Passengers */}
-                    <div className="space-y-1.5 md:space-y-2">
-                      <Label className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm text-muted-foreground">
+                    <div className="space-y-2">
+                      <Label className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
                         <Users className="w-3 h-3 md:w-4 md:h-4 text-primary" />
                         {dict.passengersLabel}
                       </Label>
@@ -462,8 +462,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                     </div>
 
                     {/* Time */}
-                    <div className="space-y-1.5 md:space-y-2">
-                      <Label htmlFor="time" className="flex items-center gap-1.5 md:gap-2 text-xs md:text-sm text-muted-foreground">
+                    <div className="space-y-2">
+                      <Label htmlFor="time" className="flex items-center gap-2 text-xs md:text-sm text-muted-foreground">
                         <Clock className="w-3 h-3 md:w-4 md:h-4 text-primary" />
                         {dict.timeLabel}
                       </Label>
@@ -502,7 +502,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
               <div className="lg:col-span-2 p-4 md:p-6 lg:p-8 lg:pl-0 border-t lg:border-t-0 lg:border-l border-white/5 bg-black/20">
                 <div className="h-full flex flex-col">
                   <div className="flex items-center justify-between mb-3 md:mb-4">
-                    <h3 className="text-xs md:text-sm font-medium text-muted-foreground flex items-center gap-1.5 md:gap-2">
+                    <h3 className="text-xs md:text-sm font-medium text-muted-foreground flex items-center gap-2">
                       <Sparkles className="w-3 h-3 md:w-4 md:h-4 text-primary/70" />
                       {dict.routeMapTitle}
                     </h3>

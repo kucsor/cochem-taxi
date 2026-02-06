@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { Reveal } from "@/components/ui/reveal";
 import { Check, Users, Car, Package, HeartPulse, Award, Zap } from "lucide-react";
 
 type Dictionary = {
@@ -31,23 +31,15 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
 
   return (
     <section className="w-full max-w-5xl mx-auto px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
+      <Reveal duration={0.6}>
         {/* Section Header */}
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+          <div
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6"
           >
             <Award className="w-4 h-4 text-primary" />
             <span className="text-sm text-muted-foreground">{dict.badge || "Why us?"}</span>
-          </motion.div>
+          </div>
           
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             <span className="text-gradient-gold">{dict.title}</span>
@@ -59,14 +51,11 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <motion.div
+              <Reveal
                 key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -30 : 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                className="group relative overflow-hidden rounded-2xl glass-card glass-card-hover p-6"
+                delay={index * 0.1}
+                duration={0.5}
+                className={`group relative overflow-hidden rounded-2xl glass-card glass-card-hover p-6 transition-transform duration-300 hover:scale-[1.02]`}
               >
                 {/* Background gradient */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -85,57 +74,44 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
                     <div className="h-1 w-12 bg-gradient-to-r from-primary/50 to-transparent rounded-full group-hover:w-24 transition-all duration-500" />
                   </div>
                 </div>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>
 
         {/* Stats Row - Smaller text */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+        <div
           className="grid grid-cols-3 gap-3 md:gap-4"
         >
           {stats.map((stat, index) => (
-            <motion.div
+            <Reveal
               key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
-              whileHover={{ y: -3 }}
-              className="text-center p-3 md:p-4 rounded-xl glass-card"
+              delay={0.4 + index * 0.1}
+              duration={0.5}
+              className="text-center p-3 md:p-4 rounded-xl glass-card transition-transform duration-300 hover:-translate-y-1"
             >
-              <motion.div
-                initial={{ scale: 0 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ type: "spring", damping: 15, stiffness: 200, delay: 0.6 + index * 0.1 }}
+              <div
                 className="text-xl md:text-2xl font-bold text-gradient-gold mb-1"
               >
                 {stat.value}
-              </motion.div>
+              </div>
               <div className="text-xs md:text-sm text-muted-foreground leading-tight">{stat.label}</div>
-            </motion.div>
+            </Reveal>
           ))}
-        </motion.div>
+        </div>
 
         {/* Bottom CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.7 }}
+        <Reveal
+          delay={0.7}
+          duration={0.5}
           className="mt-12 text-center"
         >
           <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full glass border border-primary/20">
             <Zap className="w-5 h-5 text-primary" />
             <span className="text-white font-medium">{dict.cta || "Call now and let's go!"}</span>
           </div>
-        </motion.div>
-      </motion.div>
+        </Reveal>
+      </Reveal>
     </section>
   );
 }

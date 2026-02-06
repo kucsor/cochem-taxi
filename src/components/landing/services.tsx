@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { Reveal } from "@/components/ui/reveal";
 import { Hotel, Castle, Plane, Shield, Clock, Star, ArrowUpRight } from "lucide-react";
 
 type Dictionary = {
@@ -55,23 +55,13 @@ export function Services({ dict }: { dict: Dictionary }) {
 
   return (
     <section className="w-full max-w-5xl mx-auto px-4">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-      >
+      <Reveal duration={0.6}>
         {/* Section Header */}
         <div className="text-center mb-12">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6"
-          >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
             <Star className="w-4 h-4 text-primary" />
             <span className="text-sm text-muted-foreground">{dict.badge || "Our Services"}</span>
-          </motion.div>
+          </div>
           
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             <span className="text-white">{dict.subtitle || "Your Taxi Service"}</span>
@@ -88,14 +78,11 @@ export function Services({ dict }: { dict: Dictionary }) {
             const item = dict.items[service.key as keyof typeof dict.items];
             
             return (
-              <motion.div
+              <Reveal
                 key={service.key}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                whileHover={{ y: -5, scale: 1.02 }}
-                className={`group relative overflow-hidden rounded-2xl glass-card glass-card-hover p-6 cursor-pointer ${service.size}`}
+                delay={index * 0.1}
+                duration={0.5}
+                className={`group relative overflow-hidden rounded-2xl glass-card glass-card-hover p-6 cursor-pointer ${service.size} transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.02]`}
               >
                 {/* Gradient background */}
                 <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -122,37 +109,31 @@ export function Services({ dict }: { dict: Dictionary }) {
 
                 {/* Decorative corner */}
                 <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>
 
         {/* Features Row */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
+        <div
           className="flex flex-wrap justify-center gap-4"
         >
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
-              <motion.div
+              <Reveal
                 key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: 0.5 + index * 0.1 }}
+                delay={0.4 + index * 0.1}
+                duration={0.5}
                 className="flex items-center gap-3 px-5 py-3 rounded-full glass"
               >
                 <Icon className="w-4 h-4 text-primary" />
                 <span className="text-sm text-muted-foreground">{feature.text}</span>
-              </motion.div>
+              </Reveal>
             );
           })}
-        </motion.div>
-      </motion.div>
+        </div>
+      </Reveal>
     </section>
   );
 }

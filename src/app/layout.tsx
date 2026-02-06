@@ -49,10 +49,10 @@ export default async function RootLayout({
       <body className="font-body antialiased">
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           nonce={nonce}
         />
-        <Script id="google-analytics" strategy="afterInteractive" nonce={nonce}>
+        <Script id="google-analytics" strategy="lazyOnload" nonce={nonce}>
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

@@ -1,9 +1,9 @@
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import Script from 'next/script';
-import { i18n } from '@/i18n-config';
 import { Inter, Poppins } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
+import { headers } from 'next/headers';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -36,19 +36,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const headersList = await headers();
+  const nonce = headersList.get('x-nonce') || '';
+
   return (
     <html className={`dark ${inter.variable} ${poppins.variable}`}>
       <body className="font-body antialiased">
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
           strategy="afterInteractive"
+          nonce={nonce}
         />
-        <Script id="google-analytics" strategy="afterInteractive">
+        <Script id="google-analytics" strategy="afterInteractive" nonce={nonce}>
           {`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}

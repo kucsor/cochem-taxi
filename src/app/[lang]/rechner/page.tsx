@@ -2,6 +2,7 @@ import { FareCalculator } from '@/components/landing/fare-calculator'
 import { getDictionary } from '@/lib/dictionaries'
 import { Locale } from '@/i18n-config'
 import { Metadata } from 'next'
+import { sanitizeHtml } from '@/lib/sanitize'
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }): Promise<Metadata> {
   const { lang } = await params
@@ -72,13 +73,13 @@ export default async function RechnerPage({
         {/* SEO Content Block 1 */}
         <section className="prose prose-invert max-w-none glass p-8 rounded-2xl">
           <h2 className="text-2xl font-bold text-primary mb-4">{dict.rechnerPage.h2_1}</h2>
-          <div dangerouslySetInnerHTML={{ __html: dict.rechnerPage.content_1 }} />
+          <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(dict.rechnerPage.content_1) }} />
         </section>
 
         {/* SEO Content Block 2 */}
         <section className="prose prose-invert max-w-none glass p-8 rounded-2xl">
           <h2 className="text-2xl font-bold text-primary mb-4">{dict.rechnerPage.h2_2}</h2>
-          <div dangerouslySetInnerHTML={{ __html: dict.rechnerPage.content_2 }} />
+          <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(dict.rechnerPage.content_2) }} />
         </section>
       </div>
     </main>

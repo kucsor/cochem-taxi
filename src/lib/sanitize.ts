@@ -18,20 +18,24 @@ tagsAllowingClassAndStyle.forEach(tag => {
   if (!whiteList[tag]) {
       whiteList[tag] = [];
   }
-  // Add 'class' and 'style' if not already present
-  if (!whiteList[tag].includes('class')) whiteList[tag].push('class');
-  if (!whiteList[tag].includes('style')) whiteList[tag].push('style');
+  const tagAttrs = whiteList[tag];
+  if (tagAttrs) {
+    // Add 'class' and 'style' if not already present
+    if (!tagAttrs.includes('class')) tagAttrs.push('class');
+    if (!tagAttrs.includes('style')) tagAttrs.push('style');
+  }
 });
 
 // For images, allow src, alt, width, height
-if (whiteList.img) {
+const imgAttrs = whiteList.img;
+if (imgAttrs) {
   ['src', 'alt', 'width', 'height', 'title'].forEach(attr => {
-    if (!whiteList.img.includes(attr)) whiteList.img.push(attr);
+    if (!imgAttrs.includes(attr)) imgAttrs.push(attr);
   });
 }
 
 const options = {
-  whiteList,
+  whiteList: whiteList as any,
   css: {
     whiteList: {
        // Allow common CSS properties if needed, or leave default (which is fairly strict)

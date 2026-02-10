@@ -1,8 +1,8 @@
 
 {
   "metadata": {
-    "title": "Taxi Cochem | Ihr zuverlässiges Taxi in Cochem an der Mosel",
-    "description": "Brauchen Sie ein Taxi in Cochem? Cochem Taxi ist 24/7 für Sie da. Zuverlässige Fahrten in Cochem an der Mosel, Hotel-Transfers & Flughafentransfer. Jetzt anrufen!"
+    "title": "Taxi Cochem Rechner 📱 | Your Fair Price & Transfer",
+    "description": "Ihr Taxi für Cochem & Mosel (Ernst, Poltersdorf). Airport Transfer & Burg Eltz. Kennen Sie den Preis vorher? 🚖 Jetzt Fahrpreis berechnen!"
   },
   "hero": {
     "title": "Brauchen Sie ein Taxi in Cochem?",
@@ -103,6 +103,10 @@
   "serviceRegion": {
     "title": "Wir fahren in der gesamten Region",
     "andMore": "... und mehr"
+  },
+  "serviceArea": {
+    "title": "Unser Fahrgebiet an der Mosel",
+    "content": "<p>Suchen Sie ein Taxi außerhalb von Cochem? Kein Problem! Wir sind Ihr zuverlässiger Partner für die gesamte Region. Unser Taxi-Service holt Sie schnell und pünktlich in den Nachbarorten ab, darunter <strong>Ediger-Eller</strong>, <strong>Ellenz-Poltersdorf</strong>, <strong>Klotten</strong>, <strong>Ernst</strong>, <strong>Valwig</strong> und <strong>Bruttig-Fankel</strong>.</p><p>Egal ob Sie zum Bahnhof Cochem müssen, einen Ausflug zur Burg Eltz planen oder einen Transfer zum Flughafen Hahn/Frankfurt benötigen – nutzen Sie unseren <strong>Online-Preisrechner</strong>, um Ihren Fahrpreis vorab zu prüfen. Transparenz und faire Preise sind für uns selbstverständlich, egal wo an der Mosel wir Sie abholen.</p>"
   },
   "footer": {
     "companyName": "Cochem Taxi",

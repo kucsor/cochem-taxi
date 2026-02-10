@@ -1,8 +1,8 @@
 
 {
   "metadata": {
-    "title": "Taxi Cochem | Your Reliable Taxi in Cochem an der Mosel",
-    "description": "Looking for a taxi in Cochem? Cochem Taxi is available 24/7. Reliable transfers in Cochem an der Mosel, hotel shuttles, and airport transfers to Hahn. Call now!"
+    "title": "Taxi Cochem Rechner 📱 | Your Fair Price & Transfer",
+    "description": "Your Taxi for Cochem & Mosel (Ernst, Poltersdorf). Airport Transfer & Eltz Castle. Know the price in advance? 🚖 Calculate fare now!"
   },
   "hero": {
     "title": "Need a Taxi in Cochem?",
@@ -107,6 +107,10 @@
   "serviceRegion": {
     "title": "We operate in the entire region",
     "andMore": "... and more"
+  },
+  "serviceArea": {
+    "title": "Our Service Area on the Moselle",
+    "content": "<p>Looking for a taxi outside of Cochem? No problem! We are your reliable partner for the entire region. Our taxi service picks you up quickly and punctually in neighboring villages, including <strong>Ediger-Eller</strong>, <strong>Ellenz-Poltersdorf</strong>, <strong>Klotten</strong>, <strong>Ernst</strong>, <strong>Valwig</strong> and <strong>Bruttig-Fankel</strong>.</p><p>Whether you need to get to Cochem train station, plan a trip to Eltz Castle, or need a transfer to Hahn/Frankfurt Airport – use our <strong>online price calculator</strong> to check your fare in advance. Transparency and fair prices are a matter of course for us, no matter where on the Moselle we pick you up.</p>"
   },
   "footer": {
     "companyName": "Cochem Taxi",

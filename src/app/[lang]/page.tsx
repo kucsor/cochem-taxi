@@ -1,5 +1,6 @@
 import { FareCalculator } from '@/components/landing/fare-calculator'
 import { Hero } from '@/components/landing/hero'
+import { ServiceArea } from '@/components/landing/service-area'
 import { ServiceRegion } from '@/components/landing/service-region'
 import { Services } from '@/components/landing/services'
 import { WhyUs } from '@/components/landing/why-us'
@@ -23,6 +24,8 @@ export default async function Home({
         <FareCalculator dict={dict.fareCalculator} lang={lang} />
       </div>
       
+      <ServiceArea dict={dict.serviceArea} />
+
       <section id="services" className="py-8">
         <Services dict={dict.services} />
       </section>

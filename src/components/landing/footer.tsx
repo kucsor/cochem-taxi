@@ -86,7 +86,7 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
             <a
               href={`/${lang}/legal`}
               onClick={() => trackEvent('view_legal')}
-              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-white transition-colors"
+              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-white transition-colors p-3 min-h-[44px]"
             >
               {dict.legalLink}
               <ExternalLink className="w-3 h-3" />

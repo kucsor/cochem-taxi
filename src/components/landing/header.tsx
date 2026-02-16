@@ -43,29 +43,27 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
             {/* Language Toggle Switch */}
             <div className="flex items-center gap-1 p-1 rounded-xl bg-white/10 border border-white/10">
               {/* DE Button */}
-              <Link href={getLanguagePath('de')}>
-                <button
-                  className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 ${
-                    isDE 
-                      ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' 
-                      : 'text-white/50 hover:text-white/80'
-                  }`}
-                >
-                  DE
-                </button>
+              <Link
+                href={getLanguagePath('de')}
+                className={`relative px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center min-h-[44px] ${
+                  isDE
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
+                    : 'text-white/50 hover:text-white/80'
+                }`}
+              >
+                DE
               </Link>
 
               {/* EN Button */}
-              <Link href={getLanguagePath('en')}>
-                <button
-                  className={`relative px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 ${
-                    isEN 
-                      ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30' 
-                      : 'text-white/50 hover:text-white/80'
-                  }`}
-                >
-                  EN
-                </button>
+              <Link
+                href={getLanguagePath('en')}
+                className={`relative px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center min-h-[44px] ${
+                  isEN
+                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
+                    : 'text-white/50 hover:text-white/80'
+                }`}
+              >
+                EN
               </Link>
             </div>
           </div>

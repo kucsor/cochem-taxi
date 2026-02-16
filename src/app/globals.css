@@ -99,6 +99,13 @@
       0 4px 30px rgba(0, 0, 0, 0.3),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
+
+  .glass-nav {
+    @apply backdrop-blur-xl bg-black/85 border border-white/10;
+    box-shadow:
+      0 4px 30px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
   
   .glass-card {
     @apply backdrop-blur-lg bg-black/40 border border-white/10 rounded-2xl;

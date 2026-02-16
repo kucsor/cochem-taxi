@@ -16,7 +16,6 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { trackEvent } from "@/lib/tracking";
-import { Reveal } from "@/components/ui/reveal";
 import Image from "next/image";
 
 const Map = dynamic(() => import('@/components/landing/map').then(mod => mod.Map), {
@@ -161,7 +160,8 @@ function MapResult({ state, pending, isLoaded, setIsLoaded }: { state: FareState
                 src={staticMapUrl}
                 alt="Map Preview"
                 className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-300"
-                loading="lazy"
+                width="800"
+                height="600"
             />
         </div>
 
@@ -357,7 +357,6 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
 
   return (
     <section id="rechner" className="w-full max-w-5xl mx-auto scroll-mt-28 md:scroll-mt-32 px-4 md:px-6 py-8 md:py-12">
-      <Reveal duration={0.6}>
         <Card className="glass-card overflow-hidden border-white/10">
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-5 lg:gap-0">
@@ -571,7 +570,6 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
             </div>
           </form>
         </Card>
-      </Reveal>
     </section>
   );
 }

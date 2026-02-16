@@ -26,8 +26,8 @@ export function Hero({ dict }: { dict: Dictionary }) {
     <section className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center px-4 pt-4 pb-8 overflow-hidden">
       {/* Animated background elements - simplified for better performance */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-primary/5 rounded-full blur-[60px] md:blur-[80px] animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-80 md:h-80 bg-orange-500/5 rounded-full blur-[40px] md:blur-[60px] animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-primary/5 rounded-full blur-[40px] md:blur-[60px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-80 md:h-80 bg-orange-500/5 rounded-full blur-[30px] md:blur-[50px]" />
       </div>
 
       <div className="relative z-10 text-center max-w-4xl mx-auto pt-8 md:pt-12">

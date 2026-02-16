@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation, Loader2, Users } from "lucide-react";
+import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation, Loader2, Users, Map as MapIcon } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -17,6 +17,7 @@ import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { trackEvent } from "@/lib/tracking";
 import { Reveal } from "@/components/ui/reveal";
+import Image from "next/image";
 
 const Map = dynamic(() => import('@/components/landing/map').then(mod => mod.Map), {
   ssr: false,
@@ -129,13 +130,48 @@ function PriceResult({ state, pending, dict }: { state: FareState; pending: bool
   return <div className="mt-4 md:mt-6 h-[80px] md:h-[120px]" />;
 }
 
-function MapResult({ state, pending }: { state: FareState; pending: boolean }) {
-  const mapContainerClass = "h-[250px] md:h-[300px] lg:h-full w-full rounded-xl md:rounded-2xl overflow-hidden glass min-h-[200px] md:min-h-[300px]";
+function MapResult({ state, pending, isLoaded, setIsLoaded }: { state: FareState; pending: boolean; isLoaded: boolean; setIsLoaded: (v: boolean) => void }) {
+  const mapContainerClass = "h-[250px] md:h-[300px] lg:h-full w-full rounded-xl md:rounded-2xl overflow-hidden glass min-h-[200px] md:min-h-[300px] relative";
+
+  // Static Map Image URL
+  const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/7.166,50.146,12,0/800x600?access_token=${MAPBOX_TOKEN}&attribution=false&logo=false`;
 
   if (pending) {
     return (
       <div className={mapContainerClass}>
         <Skeleton className="h-full w-full bg-white/5" />
+      </div>
+    );
+  }
+
+  if (!isLoaded) {
+    return (
+      <div
+        className={mapContainerClass + " group cursor-pointer"}
+        onClick={() => {
+          setIsLoaded(true);
+          trackEvent('load_map_click');
+        }}
+      >
+        {/* Static Map Image */}
+        <div className="absolute inset-0">
+            {/* Using regular img for external URL if not configured in next.config, but better use next/image with unoptimized if strict */}
+            {/* Since domain is external, we need to allow it in next.config or use unoptimized */}
+            <img
+                src={staticMapUrl}
+                alt="Map Preview"
+                className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-300"
+                loading="lazy"
+            />
+        </div>
+
+        {/* Overlay */}
+        <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
+          <Button variant="secondary" className="gap-2 shadow-lg hover:scale-105 transition-transform">
+            <MapIcon className="w-4 h-4" />
+            Interaktive Karte laden
+          </Button>
+        </div>
       </div>
     );
   }
@@ -162,6 +198,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
   
   const [state, setState] = useState<FareState>(initialState);
   const [pending, setPending] = useState(false);
+  const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   // New loading states for suggestions
   const [isStartLoading, setIsStartLoading] = useState(false);
@@ -284,6 +321,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setPending(true);
+    setIsMapLoaded(true); // Load map on submit
+    if (!showMap) setShowMap(true); // Show map container on mobile
     
     try {
       const response = await fetch('/api/calculate', {
@@ -518,7 +557,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                     </Button>
                   </div>
                   <div className={`flex-grow ${!showMap ? 'hidden md:block' : 'block'}`}>
-                    <MapResult state={state} pending={pending} />
+                    <MapResult state={state} pending={pending} isLoaded={isMapLoaded} setIsLoaded={setIsMapLoaded} />
                   </div>
                   {/* Mobile map placeholder when hidden */}
                   {!showMap && (

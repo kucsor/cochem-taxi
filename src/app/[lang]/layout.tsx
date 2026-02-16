@@ -14,10 +14,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ lang: Locale }>
+  params: Promise<{ lang: string }>
 }): Promise<Metadata> {
   const { lang } = await params;
-  const dictionary = await getDictionary(lang)
+  const dictionary = await getDictionary(lang as Locale)
   return {
     metadataBase: new URL('https://cochem-taxi.de'),
     title: {
@@ -41,10 +41,10 @@ export default async function RootLayout({
   params,
 }: Readonly<{
   children: React.ReactNode
-  params: Promise<{ lang: Locale }>
+  params: Promise<{ lang: string }>
 }>) {
   const { lang } = await params;
-  const dict = await getDictionary(lang);
+  const dict = await getDictionary(lang as Locale);
   
   const telephoneNumber = dict.hero.phoneNumber.replace(/\s/g, '');
   const formattedTelephone = telephoneNumber.startsWith('0') 

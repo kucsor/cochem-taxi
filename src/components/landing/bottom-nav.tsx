@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Phone, Calculator, Menu, Home, ChevronUp } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
 import { usePathname } from "next/navigation";
@@ -20,11 +19,8 @@ export function BottomNav() {
   return (
     <>
       {/* Bottom Navigation Bar - Mobile Only */}
-      <motion.nav
-        initial={{ y: 100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
-        className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
+      <nav
+        className="fixed bottom-0 left-0 right-0 z-50 md:hidden animate-in slide-in-from-bottom duration-500 delay-500 fill-mode-forwards"
       >
         <div className="mx-2 mb-2 glass rounded-2xl px-2 py-2 flex items-center justify-around shadow-2xl">
           {/* Home */}
@@ -48,17 +44,16 @@ export function BottomNav() {
           </Link>
 
           {/* Call Button - Prominent */}
-          <motion.a
+          <a
             href="tel:026718080"
-            whileTap={{ scale: 0.95 }}
             onClick={() => trackEvent('click_call_now')}
-            className="flex flex-col items-center justify-center -mt-6"
+            className="flex flex-col items-center justify-center -mt-6 active:scale-95 transition-transform duration-200"
           >
             <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30 glow-gold">
               <Phone className="w-6 h-6 text-primary-foreground" />
             </div>
             <span className="text-[10px] text-primary mt-1 font-medium">Anrufen</span>
-          </motion.a>
+          </a>
 
           {/* Services */}
           <Link
@@ -79,7 +74,7 @@ export function BottomNav() {
             <span className="text-[10px] text-muted-foreground">Top</span>
           </button>
         </div>
-      </motion.nav>
+      </nav>
 
       {/* Spacer for bottom nav on mobile */}
       <div className="h-20 md:hidden" />

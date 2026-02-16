@@ -5,7 +5,6 @@ import MapGL, { MapRef, Source, Layer, Marker } from 'react-map-gl';
 import type { LayerProps } from 'react-map-gl';
 import { LngLatBounds } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { motion } from 'framer-motion';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
@@ -16,16 +15,9 @@ type MapProps = {
 
 function AnimatedMarker({ color, delay = 0 }: { color: string; delay?: number }) {
   return (
-    <motion.div
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ 
-        type: "spring", 
-        stiffness: 260, 
-        damping: 20, 
-        delay 
-      }}
-      className="relative"
+    <div
+      className="relative animate-in zoom-in duration-500 fill-mode-forwards"
+      style={{ animationDelay: `${delay}s` }}
     >
       {/* Pulse animation */}
       <div
@@ -44,7 +36,7 @@ function AnimatedMarker({ color, delay = 0 }: { color: string; delay?: number })
           <div className={`w-2 h-2 rounded-full bg-white`} />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 

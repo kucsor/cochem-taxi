@@ -15,7 +15,10 @@ export function trackEvent(
     | 'calculator_error'
     | 'click_locate_me'
     | 'change_language'
-    | 'view_legal',
+    | 'view_legal'
+    | 'click_home_nav'
+    | 'click_services_nav'
+    | 'load_map_click',
   params?: Record<string, string | number | undefined>
 ) {
   const eventParams = {

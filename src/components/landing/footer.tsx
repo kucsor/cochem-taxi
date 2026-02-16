@@ -1,8 +1,8 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Mail, Clock, MapPin, ExternalLink, Heart } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
+import { Reveal } from "@/components/ui/reveal";
 
 type Dictionary = {
   companyName: string;
@@ -22,12 +22,9 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
   return (
     <footer className="w-full mt-20 border-t border-white/5">
       <div className="max-w-6xl mx-auto px-4 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <Reveal
           className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
+          duration={0.6}
         >
           {/* Company Info */}
           <div className="space-y-4">
@@ -58,11 +55,9 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
           {/* Quick Contact */}
           <div className="space-y-4">
             <h3 className="font-semibold text-white">{dict.quickContact || "Quick Contact"}</h3>
-            <motion.a
+            <a
               href="mailto:contact@cochem-taxi.de"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="flex items-center gap-3 p-4 rounded-xl glass-card hover:bg-primary/10 transition-colors group"
+              className="flex items-center gap-3 p-4 rounded-xl glass-card hover:bg-primary/10 transition-colors group hover:scale-105 active:scale-95 duration-200"
             >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                 <Mail className="w-5 h-5 text-primary" />
@@ -71,17 +66,15 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
                 <div className="text-sm text-muted-foreground">{dict.email || "E-Mail"}</div>
                 <div className="text-sm font-semibold text-white">contact@cochem-taxi.de</div>
               </div>
-            </motion.a>
+            </a>
           </div>
-        </motion.div>
+        </Reveal>
 
         {/* Bottom Bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+        <Reveal
           className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4"
+          duration={0.6}
+          delay={0.2}
         >
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span>© {currentYear} {dict.companyName}</span>
@@ -105,7 +98,7 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
             <Heart className="w-4 h-4 text-red-500 fill-red-500 animate-pulse" />
             <span>in Cochem</span>
           </div>
-        </motion.div>
+        </Reveal>
       </div>
     </footer>
   );

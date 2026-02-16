@@ -1,9 +1,8 @@
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
-import Script from 'next/script';
 import { Inter, Poppins } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
-import { headers } from 'next/headers';
+import { Analytics } from '@/components/analytics';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -36,32 +35,15 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = await headers();
-  const nonce = headersList.get('x-nonce') || '';
-
   return (
     <html className={`dark ${inter.variable} ${poppins.variable}`}>
       <body className="font-body antialiased">
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="lazyOnload"
-          nonce={nonce}
-        />
-        <Script id="google-analytics" strategy="lazyOnload" nonce={nonce}>
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_path: window.location.pathname,
-            });
-          `}
-        </Script>
+        <Analytics GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />
         {children}
         <Toaster />
       </body>

@@ -6,14 +6,12 @@ import { i18n } from './i18n-config'
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
-  // CSP: Generate nonce
-  // Using btoa(crypto.randomUUID()) for Edge compatibility
-  const nonce = btoa(crypto.randomUUID())
-
-  // CSP: Construct header
+  // CSP: Construct header without nonce for SSG compatibility
+  // Removing 'strict-dynamic' to allow 'unsafe-inline' to work for inline scripts
+  // This is a trade-off for static site generation performance.
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https: http: 'unsafe-inline';
+    script-src 'self' https: http: 'unsafe-inline';
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https:;
     font-src 'self' https://fonts.gstatic.com;
@@ -22,6 +20,7 @@ export function middleware(request: NextRequest) {
     form-action 'self';
     frame-ancestors 'none';
     connect-src 'self' https://api.mapbox.com https://events.mapbox.com https://www.google-analytics.com https://www.googletagmanager.com;
+    worker-src 'self' blob:;
     block-all-mixed-content;
     upgrade-insecure-requests;
   `
@@ -31,7 +30,6 @@ export function middleware(request: NextRequest) {
     .trim()
 
   const requestHeaders = new Headers(request.headers)
-  requestHeaders.set('x-nonce', nonce)
   requestHeaders.set('Content-Security-Policy', contentSecurityPolicyHeaderValue)
 
   // `/_next/` and `/api/` are ignored by the watcher, but we need to ignore files in `public`

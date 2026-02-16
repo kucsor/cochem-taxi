@@ -35,6 +35,14 @@ const COCHEM_POLYGON: [number, number][] = [
   [7.1250, 50.1300], [7.1320, 50.1420], [7.1400, 50.1480], [7.1580, 50.1590]
 ];
 
+// Optimization: Bounding box for Cochem Polygon to filter points quickly
+const COCHEM_BBOX = {
+  minLon: 7.1250,
+  maxLon: 7.1850,
+  minLat: 50.1175,
+  maxLat: 50.1590
+};
+
 // Input validation schema
 const calculateSchema = z.object({
   startAddress: z.string().min(1, "Start address is required").max(200, "Start address is too long"),
@@ -80,6 +88,11 @@ function routePassesThroughCochemZone(geometry: any): boolean {
       : [];
 
   for (const coord of points) {
+    // Optimization: Check bounding box first
+    if (coord[0] < COCHEM_BBOX.minLon || coord[0] > COCHEM_BBOX.maxLon ||
+        coord[1] < COCHEM_BBOX.minLat || coord[1] > COCHEM_BBOX.maxLat) {
+      continue;
+    }
     if (isPointInPolygon({ lon: coord[0], lat: coord[1] }, COCHEM_POLYGON)) return true;
   }
   return false;

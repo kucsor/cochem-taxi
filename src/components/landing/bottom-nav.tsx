@@ -22,7 +22,7 @@ export function BottomNav() {
       <nav
         className="fixed bottom-0 left-0 right-0 z-50 md:hidden animate-in slide-in-from-bottom duration-500 delay-500 fill-mode-forwards"
       >
-        <div className="mx-2 mb-2 glass rounded-2xl px-2 py-2 flex items-center justify-around shadow-2xl">
+        <div className="mx-2 mb-2 glass-nav rounded-2xl px-2 py-2 flex items-center justify-around shadow-2xl">
           {/* Home */}
           <Link
             href={`/${lang}`}

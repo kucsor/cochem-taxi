@@ -29,7 +29,7 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
       <header
         className="fixed top-0 left-0 right-0 z-50 px-4 pt-3 md:px-6 md:pt-4 animate-in slide-in-from-top duration-500 ease-out fill-mode-forwards"
       >
-        <nav className="max-w-6xl mx-auto glass rounded-2xl px-4 py-3 md:px-8 md:py-4">
+        <nav className="max-w-6xl mx-auto glass-nav rounded-2xl px-4 py-3 md:px-8 md:py-4">
           <div className="flex items-center justify-between">
             
             {/* Logo - just text in GOLD */}

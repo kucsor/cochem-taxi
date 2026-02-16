@@ -22,8 +22,6 @@ const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '';
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   themeColor: '#1f1f1f',
 };
 
@@ -41,7 +39,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className={`dark ${inter.variable} ${poppins.variable}`}>
+    <html lang="de" className={`dark ${inter.variable} ${poppins.variable}`}>
       <body className="font-body antialiased">
         <Analytics GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />
         {children}

@@ -1,4 +1,5 @@
 import { Clock, MapPin, Wallet } from "lucide-react";
+import { Reveal } from "@/components/ui/reveal";
 import { formatFareEstimate } from "@/lib/fare";
 import type { Locale } from "@/i18n-config";
 
@@ -48,38 +49,42 @@ export function LocationFacts({
   return (
     <section className="w-full max-w-4xl mx-auto">
       {intro && (
-        <p className="text-base md:text-lg leading-relaxed text-muted-foreground mb-8">{intro}</p>
+        <Reveal duration={0.6}>
+          <p className="text-base md:text-lg leading-relaxed text-muted-foreground mb-8">{intro}</p>
+        </Reveal>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <Reveal stagger className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {facts.map((fact) => (
           <div
             key={fact.label}
-            className="glass-card rounded-2xl border border-white/10 p-5 text-center"
+            className="glass-card glass-card-hover rounded-2xl border border-white/10 p-5 text-center hover:-translate-y-1"
           >
             <fact.icon className="w-5 h-5 text-primary mx-auto mb-2" aria-hidden="true" />
             <div className="text-xs uppercase tracking-wide text-muted-foreground">{fact.label}</div>
             <div className="mt-1 text-lg font-semibold text-foreground">{fact.value}</div>
           </div>
         ))}
-      </div>
+      </Reveal>
 
       <p className="mt-3 text-center text-xs text-muted-foreground/80">{dict.disclaimer}</p>
 
       {highlights && highlights.length > 0 && (
-        <div className="mt-8 glass-card rounded-2xl border border-white/10 p-6">
-          {highlightsTitle && (
-            <h2 className="text-xl font-bold font-headline mb-4">{highlightsTitle}</h2>
-          )}
-          <ul className="space-y-2">
-            {highlights.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-muted-foreground">
-                <span className="mt-2 h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <Reveal delay={0.1} className="mt-8">
+          <div className="glass-card rounded-2xl border border-white/10 p-6">
+            {highlightsTitle && (
+              <h2 className="text-xl font-bold font-headline mb-4">{highlightsTitle}</h2>
+            )}
+            <ul className="space-y-2">
+              {highlights.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-muted-foreground">
+                  <span className="mt-2 h-1.5 w-1.5 rounded-full bg-primary shrink-0" aria-hidden="true" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Reveal>
       )}
     </section>
   );

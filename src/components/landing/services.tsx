@@ -1,6 +1,7 @@
 "use client";
 
 import { Reveal } from "@/components/ui/reveal";
+import { trackSpotlight } from "@/lib/spotlight";
 import { Hotel, Castle, Plane, Shield, Clock, Star, ArrowUpRight } from "lucide-react";
 
 type Dictionary = {
@@ -55,84 +56,77 @@ export function Services({ dict }: { dict: Dictionary }) {
 
   return (
     <section className="w-full max-w-5xl mx-auto px-4">
-      <Reveal duration={0.6}>
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
-            <Star className="w-4 h-4 text-primary" />
-            <span className="text-sm text-muted-foreground">{dict.badge || "Our Services"}</span>
-          </div>
-          
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            <span className="text-white">{dict.subtitle || "Your Taxi Service"}</span>
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            {dict.description}
-          </p>
+      {/* Section Header */}
+      <Reveal duration={0.6} className="text-center mb-12">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass mb-6">
+          <Star className="w-4 h-4 text-primary" />
+          <span className="text-sm text-muted-foreground">{dict.badge || "Our Services"}</span>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          {services.map((service, index) => {
-            const Icon = service.icon;
-            const item = dict.items[service.key as keyof typeof dict.items];
-            
-            return (
-              <Reveal
-                key={service.key}
-                delay={index * 0.1}
-                duration={0.5}
-                className={`group relative overflow-hidden rounded-2xl glass-card glass-card-hover p-6 cursor-pointer ${service.size} transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.02]`}
-              >
-                {/* Gradient background */}
-                <div className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
-                
-                {/* Content */}
-                <div className="relative z-10">
-                  <div className={`w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className={`w-6 h-6 ${service.iconColor}`} />
-                  </div>
-                  
-                  <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-primary transition-colors">
-                    {item.title}
-                  </h3>
-                  
-                  <p className="text-muted-foreground text-sm leading-relaxed">
-                    {item.description}
-                  </p>
-                  
-                  <div className="mt-4 flex items-center gap-1 text-primary text-sm opacity-0 group-hover:opacity-100 transition-opacity">
-                    <span>{dict.learnMore || "Learn more"}</span>
-                    <ArrowUpRight className="w-4 h-4" />
-                  </div>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <span className="text-white">{dict.subtitle || "Your Taxi Service"}</span>
+        </h2>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          {dict.description}
+        </p>
+      </Reveal>
+
+      {/* Bento Grid */}
+      <Reveal stagger className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        {services.map((service) => {
+          const Icon = service.icon;
+          const item = dict.items[service.key as keyof typeof dict.items];
+
+          return (
+            <div
+              key={service.key}
+              onMouseMove={trackSpotlight}
+              className={`group relative overflow-hidden rounded-2xl glass-card glass-card-hover spotlight p-6 cursor-pointer ${service.size} hover:-translate-y-1 hover:scale-[1.02]`}
+            >
+              {/* Gradient background */}
+              <div aria-hidden="true" className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+
+              {/* Content */}
+              <div className="relative z-10">
+                <div className={`w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <Icon className={`w-6 h-6 ${service.iconColor}`} />
                 </div>
 
-                {/* Decorative corner */}
-                <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
-              </Reveal>
-            );
-          })}
-        </div>
+                <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-primary transition-colors">
+                  {item.title}
+                </h3>
 
-        {/* Features Row */}
-        <div
-          className="flex flex-wrap justify-center gap-4"
-        >
-          {features.map((feature, index) => {
-            const Icon = feature.icon;
-            return (
-              <Reveal
-                key={index}
-                delay={0.4 + index * 0.1}
-                duration={0.5}
-                className="flex items-center gap-3 px-6 py-3 rounded-full glass"
-              >
-                <Icon className="w-4 h-4 text-primary" />
-                <span className="text-sm text-muted-foreground">{feature.text}</span>
-              </Reveal>
-            );
-          })}
-        </div>
+                <p className="text-muted-foreground text-sm leading-relaxed">
+                  {item.description}
+                </p>
+
+                <div className="mt-4 flex items-center gap-1 text-primary text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span>{dict.learnMore || "Learn more"}</span>
+                  <ArrowUpRight className="w-4 h-4" />
+                </div>
+              </div>
+
+              {/* Decorative corner */}
+              <div aria-hidden="true" className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
+            </div>
+          );
+        })}
+      </Reveal>
+
+      {/* Features Row */}
+      <Reveal stagger className="flex flex-wrap justify-center gap-4">
+        {features.map((feature, index) => {
+          const Icon = feature.icon;
+          return (
+            <div
+              key={index}
+              className="flex items-center gap-3 px-6 py-3 rounded-full glass"
+            >
+              <Icon className="w-4 h-4 text-primary" />
+              <span className="text-sm text-muted-foreground">{feature.text}</span>
+            </div>
+          );
+        })}
       </Reveal>
     </section>
   );

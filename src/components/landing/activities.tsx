@@ -4,6 +4,7 @@ import Script from "next/script";
 import { useEffect, useRef } from "react";
 import { Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/ui/reveal";
 import { useConsent } from "@/components/consent-provider";
 import {
   GYG_WIDGET_SCRIPT,
@@ -80,7 +81,7 @@ export function Activities({
       aria-labelledby="activities-heading"
       className={`w-full max-w-4xl mx-auto ${className}`}
     >
-      <div className="text-center mb-6">
+      <Reveal duration={0.6} className="text-center mb-6">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full glass mb-3">
           <Ticket className="w-3.5 h-3.5 text-primary" />
           <span className="text-xs text-muted-foreground">{dict.badge}</span>
@@ -91,7 +92,7 @@ export function Activities({
         <p className="mt-2 text-sm md:text-base text-muted-foreground max-w-2xl mx-auto">
           {dict.subtitle}
         </p>
-      </div>
+      </Reveal>
 
       {granted ? (
         <>
@@ -119,19 +120,21 @@ export function Activities({
           </div>
         </>
       ) : (
-        <div className="glass-card rounded-2xl border border-white/10 p-6 text-center">
-          <h3 className="text-base font-semibold text-foreground">{dict.consentTitle}</h3>
-          <p className="mt-2 text-sm text-muted-foreground">{dict.consentDescription}</p>
-          <Button
-            className="mt-4 rounded-full bg-primary font-semibold text-primary-foreground hover:bg-primary/90"
-            onClick={() => {
-              accept();
-              trackEvent("consent_accept", { source: "activities" });
-            }}
-          >
-            {dict.consentButton}
-          </Button>
-        </div>
+        <Reveal delay={0.1}>
+          <div className="glass-card glass-card-hover rounded-2xl border border-white/10 p-6 text-center">
+            <h3 className="text-base font-semibold text-foreground">{dict.consentTitle}</h3>
+            <p className="mt-2 text-sm text-muted-foreground">{dict.consentDescription}</p>
+            <Button
+              className="mt-4 rounded-full bg-primary font-semibold text-primary-foreground hover:bg-primary/90 active:scale-95 transition-transform"
+              onClick={() => {
+                accept();
+                trackEvent("consent_accept", { source: "activities" });
+              }}
+            >
+              {dict.consentButton}
+            </Button>
+          </div>
+        </Reveal>
       )}
 
       <p className="mt-4 text-center text-xs text-muted-foreground/80">{dict.disclosure}</p>

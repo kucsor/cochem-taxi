@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Badge } from "../ui/badge";
+import { Reveal } from "@/components/ui/reveal";
 import { locations } from "@/lib/locations";
 import type { Locale } from "@/i18n-config";
 
@@ -15,10 +16,12 @@ type Dictionary = {
 export function ServiceRegion({ dict, lang = 'de' }: { dict: Dictionary; lang?: Locale }) {
   return (
     <section className="w-full max-w-3xl mx-auto py-12 text-center" aria-labelledby="region-heading">
-      <h2 id="region-heading" className="text-3xl font-bold font-headline">
-        {dict.title}
-      </h2>
-      <div className="mt-8 flex flex-wrap justify-center gap-2">
+      <Reveal duration={0.6}>
+        <h2 id="region-heading" className="text-3xl font-bold font-headline">
+          {dict.title}
+        </h2>
+      </Reveal>
+      <Reveal delay={0.1} className="mt-8 flex flex-wrap justify-center gap-2">
         <Badge variant="secondary" className="text-base px-4 py-1">
           Cochem
         </Badge>
@@ -39,7 +42,7 @@ export function ServiceRegion({ dict, lang = 'de' }: { dict: Dictionary; lang?: 
          <Badge variant="outline" className="text-base px-4 py-1">
             {dict.andMore}
         </Badge>
-      </div>
+      </Reveal>
     </section>
   );
 }

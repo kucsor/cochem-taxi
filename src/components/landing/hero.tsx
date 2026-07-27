@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { trackEvent } from "@/lib/tracking";
+import { scrollBehavior } from "@/lib/motion";
 import { Phone, ArrowDown, Sparkles } from "lucide-react";
 
 type Dictionary = {
@@ -24,10 +25,11 @@ type Dictionary = {
 export function Hero({ dict }: { dict: Dictionary }) {
   return (
     <section className="relative min-h-[85vh] md:min-h-[90vh] flex flex-col items-center justify-center px-4 pt-4 pb-8 overflow-hidden">
-      {/* Animated background elements - simplified for better performance */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-primary/5 rounded-full blur-[40px] md:blur-[60px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-80 md:h-80 bg-orange-500/5 rounded-full blur-[30px] md:blur-[50px]" />
+      {/* Animated background elements - transform-only float, GPU composited,
+          painted at load so LCP is unaffected */}
+      <div aria-hidden="true" className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 md:w-96 md:h-96 bg-primary/5 rounded-full blur-[40px] md:blur-[60px] animate-float" />
+        <div className="absolute bottom-1/4 right-1/4 w-48 h-48 md:w-80 md:h-80 bg-orange-500/5 rounded-full blur-[30px] md:blur-[50px] animate-float [animation-delay:-3s]" />
       </div>
 
       <div className="relative z-10 text-center max-w-4xl mx-auto pt-8 md:pt-12">
@@ -70,7 +72,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
           <Button
             asChild
             size="lg"
-            className="group relative overflow-hidden bg-primary text-primary-foreground hover:bg-primary/90 glow-gold-subtle transition-all duration-300 h-14 md:h-16 px-8 md:px-10 rounded-full text-base md:text-lg font-semibold w-full md:w-auto"
+            className="group relative overflow-hidden bg-primary text-primary-foreground hover:bg-primary/90 glow-gold-subtle transition-all duration-300 h-14 md:h-16 px-8 md:px-10 rounded-full text-base md:text-lg font-semibold w-full md:w-auto hover:scale-[1.02] active:scale-[0.98]"
           >
             <a 
               href={`tel:${dict.phoneNumber.replace(/\s/g, '')}`} 
@@ -94,7 +96,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
             size="lg"
             className="group glass-card hover:bg-white/10 transition-all duration-300 h-14 md:h-16 px-6 md:px-8 rounded-full text-base md:text-lg border-white/20 w-full md:w-auto"
             onClick={() => {
-              document.getElementById('rechner')?.scrollIntoView({ behavior: 'smooth' });
+              document.getElementById('rechner')?.scrollIntoView({ behavior: scrollBehavior() });
               trackEvent('click_calculator');
             }}
           >
@@ -125,6 +127,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
 
       {/* Scroll indicator - smaller on mobile */}
       <div
+        aria-hidden="true"
         className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 reveal-up opacity-0"
         style={{ animationDelay: '1s' }}
       >

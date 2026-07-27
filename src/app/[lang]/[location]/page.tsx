@@ -1,13 +1,17 @@
-
 import { FareCalculator } from '@/components/landing/fare-calculator'
 import { Hero } from '@/components/landing/hero'
 import { ServiceRegion } from '@/components/landing/service-region'
 import { Services } from '@/components/landing/services'
 import { WhyUs } from '@/components/landing/why-us'
+import { Activities } from '@/components/landing/activities'
+import { Faq } from '@/components/landing/faq'
+import { LocationFacts } from '@/components/landing/location-facts'
 import { ScrollToTop } from '@/components/scroll-to-top'
 import { getDictionary } from '@/lib/dictionaries'
 import { Locale } from '@/i18n-config'
-import { locations, getLocation } from '@/lib/locations'
+import { locations, getLocation, buildLocationFaq } from '@/lib/locations'
+import { breadcrumbSchema, formatTelephone, taxiRouteSchema } from '@/lib/schema'
+import { absoluteUrl, alternatesForLocale } from '@/lib/site'
 import { notFound } from 'next/navigation'
 import { Metadata } from 'next'
 
@@ -31,14 +35,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   const deTitle = `Taxi ${locData.name} | Preis berechnen & Bestellen | Cochem-Taxi.de`
-  const deDesc = `Suchen Sie ein Taxi in ${locData.name}? Wir kommen aus Cochem zu Ihnen. Nutzen Sie unseren kostenlosen Preisrechner. Sicher & Pünktlich.`
+  const deDesc = `Taxi in ${locData.name} bestellen: ca. ${locData.distanceKm} km ab Cochem, rund ${locData.driveMinutes} Minuten Fahrzeit. Preis vorab berechnen - 24/7 erreichbar.`
 
   const enTitle = `Taxi ${locData.name} | Price Calculator & Booking | Cochem-Taxi.de`
-  const enDesc = `Need a taxi in ${locData.name}? We provide reliable pickup service from Cochem. Calculate your fare online now.`
+  const enDesc = `Book a taxi in ${locData.name}: approx. ${locData.distanceKm} km from Cochem, around ${locData.driveMinutes} minutes. Calculate your fare online - available 24/7.`
 
   return {
     title: lang === 'de' ? deTitle : enTitle,
     description: lang === 'de' ? deDesc : enDesc,
+    // Without explicit alternates every location page would inherit the
+    // layout's canonical (/de) and look like a duplicate of the homepage.
+    alternates: alternatesForLocale(lang, (l) => `/${l}/${locData.slug}`),
   }
 }
 
@@ -51,6 +58,22 @@ export default async function LocationPage({ params }: Props) {
   }
 
   const dict = await getDictionary(lang)
+  const pageUrl = absoluteUrl(`/${lang}/${locData.slug}`)
+  const telephone = formatTelephone(dict.hero.phoneNumber)
+  const faqItems = buildLocationFaq(locData, lang)
+
+  const routeJsonLd = taxiRouteSchema({
+    name: `Taxi Cochem - ${locData.name}`,
+    description: locData.intro[lang],
+    url: pageUrl,
+    destination: locData.name,
+    telephone,
+  })
+
+  const breadcrumbJsonLd = breadcrumbSchema([
+    { name: 'Cochem Taxi', url: absoluteUrl(`/${lang}`) },
+    { name: `Taxi ${locData.name}`, url: pageUrl },
+  ])
 
   // Override Hero content
   const heroDict = { ...dict.hero }
@@ -66,8 +89,28 @@ export default async function LocationPage({ params }: Props) {
 
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(routeJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
       <ScrollToTop />
       <Hero dict={heroDict} />
+
+      <section className="py-8">
+        <LocationFacts
+          dict={dict.locationPage}
+          lang={lang}
+          distanceKm={locData.distanceKm}
+          driveMinutes={locData.driveMinutes}
+          intro={locData.intro[lang]}
+          highlights={locData.highlights[lang]}
+          highlightsTitle={dict.locationPage.highlightsTitle}
+        />
+      </section>
 
       <div className="py-8">
         <FareCalculator
@@ -76,6 +119,14 @@ export default async function LocationPage({ params }: Props) {
           initialStartAddress={locData.name}
         />
       </div>
+
+      <section className="py-8">
+        <Faq title={dict.locationPage.faqTitle} items={faqItems} />
+      </section>
+
+      <section className="py-8">
+        <Activities dict={dict.activities} lang={lang} query="Cochem" />
+      </section>
 
       <section id="services" className="py-8">
         <Services dict={dict.services} />
@@ -86,7 +137,7 @@ export default async function LocationPage({ params }: Props) {
       </section>
 
       <section className="py-8">
-        <ServiceRegion dict={dict.serviceRegion} />
+        <ServiceRegion dict={dict.serviceRegion} lang={lang} />
       </section>
     </>
   )

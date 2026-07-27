@@ -3,6 +3,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { Inter, Poppins } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@/components/analytics';
+import { ConsentProvider } from '@/components/consent-provider';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -41,8 +42,10 @@ export default function RootLayout({
   return (
     <html lang="de" className={`dark ${inter.variable} ${poppins.variable}`}>
       <body className="font-body antialiased">
-        <Analytics GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />
-        {children}
+        <ConsentProvider>
+          <Analytics GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />
+          {children}
+        </ConsentProvider>
         <Toaster />
       </body>
     </html>

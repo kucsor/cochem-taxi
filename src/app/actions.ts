@@ -3,35 +3,22 @@
 
 import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
 import mbxDirections from "@mapbox/mapbox-sdk/services/directions";
+import {
+  ANFAHRT_FEE_PERCENTAGE,
+  BASE_FEE,
+  COCHEM_CENTER_COORDS,
+  COCHEM_POLYGON,
+  PRICE_BUFFER,
+  getHaversineDistance,
+  getRatePerKm,
+  isNightTime,
+  isPointInPolygon,
+  routePassesThroughCochemZone,
+} from "@/lib/fare";
 
 const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 const geocodingService = mbxGeocoding({ accessToken: mapboxToken });
 const directionsService = mbxDirections({ accessToken: mapboxToken });
-
-// Tarif constants
-const NIGHT_START_HOUR = 22;
-const NIGHT_END_HOUR = 6;
-const BASE_FEE = 4.1;
-const RATE_PER_KM_DAY = 2.6;
-const RATE_PER_KM_NIGHT = 2.8;
-const ANFAHRT_FEE_PERCENTAGE = 0.40; // 40%
-
-// Cochem central point for Anfahrt calculation: Pater-Martin-Straße, 56812 Cochem
-const COCHEM_CENTER_COORDS = { lat: 50.1475, lon: 7.1685 };
-
-// Polygon defining the Cochem no-fee zone. Coordinates are [lon, lat].
-const COCHEM_POLYGON: [number, number][] = [
-  [7.1580, 50.1590],
-  [7.1750, 50.1550],
-  [7.1850, 50.1450],
-  [7.1820, 50.1320],
-  [7.1668, 50.1175],
-  [7.1400, 50.1200],
-  [7.1250, 50.1300],
-  [7.1320, 50.1420],
-  [7.1400, 50.1480],
-  [7.1580, 50.1590]
-];
 
 type FareState = {
   price: number | null;
@@ -41,59 +28,6 @@ type FareState = {
   hasAnfahrt: boolean;
   anfahrtFee: number | null;
 };
-
-// Point-in-polygon (ray-casting) algorithm
-function isPointInPolygon(point: { lon: number, lat: number }, polygon: [number, number][]): boolean {
-  const { lon: x, lat: y } = point;
-  let isInside = false;
-
-  for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
-      const xi = polygon[i][0], yi = polygon[i][1];
-      const xj = polygon[j][0], yj = polygon[j][1];
-
-      const intersect = ((yi > y) !== (yj > y))
-          && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-
-      if (intersect) {
-          isInside = !isInside;
-      }
-  }
-  return isInside;
-}
-
-// Helper function to check if any point of the route geometry passes through the Cochem zone
-function routePassesThroughCochemZone(geometry: { type: string, coordinates: [number, number][] }): boolean {
-  if (!geometry || !geometry.coordinates) {
-    return false;
-  }
-  
-  for (const coord of geometry.coordinates) {
-    const point = { lon: coord[0], lat: coord[1] };
-    if (isPointInPolygon(point, COCHEM_POLYGON)) {
-      return true; // The route passes through the zone
-    }
-  }
-
-  return false; // The route does not pass through the zone
-}
-
-// Haversine formula to calculate straight-line distance between two lat/lon points
-function getHaversineDistance(
-  coords1: { lat: number; lon: number },
-  coords2: { lat: number; lon: number }
-): number {
-  const R = 6371; // Radius of the Earth in km
-  const dLat = (coords2.lat - coords1.lat) * (Math.PI / 180);
-  const dLon = (coords2.lon - coords1.lon) * (Math.PI / 180);
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(coords1.lat * (Math.PI / 180)) *
-      Math.cos(coords2.lat * (Math.PI / 180)) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c; // Distance in km
-}
 
 async function geocodeAddress(address: string): Promise<{ lat: number; lon: number } | null> {
   try {
@@ -251,10 +185,9 @@ export async function calculateFare(
 
     const { distance, geometry } = mainRoute;
 
-    const [hour] = pickupTime.split(":").map(Number);
-    const isNightTariff = hour >= NIGHT_START_HOUR || hour < NIGHT_END_HOUR;
-    const ratePerKm = isNightTariff ? RATE_PER_KM_NIGHT : RATE_PER_KM_DAY;
-    
+    const isNightTariff = isNightTime(pickupTime);
+    const ratePerKm = getRatePerKm({ night: isNightTariff });
+
     // Calculate main trip price
     const mainPrice = (BASE_FEE + distance * ratePerKm);
 
@@ -287,8 +220,8 @@ export async function calculateFare(
       }
     }
     
-    // Final price with a 10% buffer applied to the total
-    const finalPrice = (mainPrice + anfahrtFee) * 1.1;
+    // Final price with the shared safety buffer applied to the total
+    const finalPrice = (mainPrice + anfahrtFee) * PRICE_BUFFER;
 
     return {
       price: finalPrice,

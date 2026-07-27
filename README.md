@@ -19,7 +19,12 @@ Editează `.env.local`:
 ```env
 NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1...  # Tokenul tău Mapbox
 NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...  # (Opțional) Google Analytics ID
+NEXT_PUBLIC_GYG_PARTNER_ID=...       # (Opțional) Suprascrie Partner ID-ul GetYourGuide
 ```
+
+**Notă:** Partner ID-ul GetYourGuide are deja o valoare implicită în `src/lib/affiliates.ts`
+(este public, apare oricum în HTML-ul paginii), deci afilierea funcționează fără configurare
+suplimentară. Setează `NEXT_PUBLIC_GYG_PARTNER_ID` doar dacă vrei alt cont de partener.
 
 **Important:** Pentru a obține un token Mapbox gratuit, înregistrează-te pe [https://account.mapbox.com/](https://account.mapbox.com/)
 
@@ -73,5 +78,23 @@ src/
 - ✅ Suport multi-lingv (Germană/Engleză)
 - ✅ Design responsive (mobile-first)
 - ✅ PWA (Progressive Web App)
-- ✅ Google Analytics tracking
-- ✅ SEO optimizat cu metadata dinamică
+- ✅ Google Analytics tracking (doar după consimțământ)
+- ✅ SEO optimizat cu metadata dinamică, canonical + hreflang pe fiecare pagină
+- ✅ 16 pagini de localitate cu conținut unic (`src/lib/locations.ts`)
+- ✅ 4 pagini de transfer: Burg Eltz, Flughafen Hahn, Koblenz, Trier (`src/lib/routes.ts`)
+- ✅ Pagini de activități `/de/aktivitaeten` și `/en/things-to-do`
+- ✅ Monetizare prin afiliere GetYourGuide, blocată până la consimțământ (DSGVO/TDDDG)
+- ✅ Structured data: TaxiService, Service (rute), FAQPage, BreadcrumbList
+
+## 💰 Monetizare & conținut
+
+| Fișier | Rol |
+|--------|-----|
+| `src/lib/fare.ts` | Tarifele și zona Cochem - sursă unică pentru calculator și prețurile estimate de pe pagini |
+| `src/lib/locations.ts` | Datele și textele localităților; adaugă un obiect nou ca să apară o pagină nouă |
+| `src/lib/routes.ts` | Rutele de transfer (Burg Eltz, Hahn, Koblenz, Trier) |
+| `src/lib/affiliates.ts` | Configurarea widget-ului GetYourGuide |
+| `src/components/consent-provider.tsx` | Starea consimțământului; nimic extern nu se încarcă fără el |
+
+Paginile noi apar automat în `sitemap.xml` și în linkurile interne din footer și din secțiunea
+„Wir fahren in der gesamten Region".

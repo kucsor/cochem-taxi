@@ -18,7 +18,12 @@ export function trackEvent(
     | 'view_legal'
     | 'click_home_nav'
     | 'click_services_nav'
-    | 'load_map_click',
+    | 'load_map_click'
+    | 'view_activities'
+    | 'click_activity_widget'
+    | 'click_affiliate_link'
+    | 'consent_accept'
+    | 'consent_reject',
   params?: Record<string, string | number | undefined>
 ) {
   const eventParams = {

@@ -15,6 +15,7 @@ import { SubmitButton } from "./submit-button";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
+import { CountUp } from "@/components/ui/count-up";
 import { trackEvent } from "@/lib/tracking";
 import Image from "next/image";
 
@@ -81,8 +82,9 @@ function PriceResult({ state, pending, dict }: { state: FareState; pending: bool
   if (pending) {
       return (
         <div
-          className="w-full text-center p-4 md:p-6 mt-4 md:mt-6 rounded-2xl glass space-y-2 md:space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300"
+          className="relative overflow-hidden w-full text-center p-4 md:p-6 mt-4 md:mt-6 rounded-2xl glass space-y-2 md:space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300"
         >
+          <div aria-hidden="true" className="absolute inset-0 animate-shimmer" />
           <Skeleton className="h-3 md:h-4 w-20 md:w-24 mx-auto bg-white/10" />
           <Skeleton className="h-10 md:h-12 w-32 md:w-40 mx-auto bg-white/10" />
           <Skeleton className="h-2 md:h-3 w-36 md:w-48 mx-auto bg-white/10" />
@@ -110,7 +112,11 @@ function PriceResult({ state, pending, dict }: { state: FareState; pending: bool
           <p
             className="text-3xl md:text-5xl font-bold text-gradient-gold animate-in zoom-in duration-500 delay-100 fill-mode-forwards"
           >
-            ~{state.price.toLocaleString("de-DE", { style: "currency", currency: "EUR" })}
+            <CountUp
+              end={state.price}
+              durationMs={700}
+              format={(value) => `~${value.toLocaleString("de-DE", { style: "currency", currency: "EUR" })}`}
+            />
           </p>
           <p className="text-[10px] md:text-xs text-muted-foreground">
             {dict.resultDistance.replace('{distance}', state.distance.toFixed(1))}
@@ -126,7 +132,7 @@ function PriceResult({ state, pending, dict }: { state: FareState; pending: bool
       );
   }
 
-  return <div className="mt-4 md:mt-6 h-[80px] md:h-[120px]" />;
+  return null;
 }
 
 function MapResult({ state, pending, isLoaded, setIsLoaded }: { state: FareState; pending: boolean; isLoaded: boolean; setIsLoaded: (v: boolean) => void }) {
@@ -519,10 +525,17 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                 </CardContent>
 
                 <CardFooter className="flex flex-col items-center p-0 pt-4 md:pt-6">
-                  <SubmitButton label={dict.submitButton} />
+                  <SubmitButton label={dict.submitButton} pending={pending} />
                 </CardFooter>
 
-                <PriceResult state={state} pending={pending} dict={dict} />
+                {/* Persistent wrapper: aria-live must exist before content
+                    changes for announcements to fire; min-h reserves the
+                    result card's height so the page below doesn't jump. */}
+                {/* min-h calibrated to the measured result card incl. the
+                    Anfahrt note (mobile 171px / desktop 210px) */}
+                <div aria-live="polite" role="status" className="min-h-[171px] md:min-h-[210px]">
+                  <PriceResult state={state} pending={pending} dict={dict} />
+                </div>
 
                 {showDetailsLink && dict.detailsLink && (
                   <div className="mt-4 text-center">

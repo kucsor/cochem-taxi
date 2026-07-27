@@ -6,6 +6,10 @@ import { Header } from '@/components/landing/header';
 import { BottomNav } from '@/components/landing/bottom-nav';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import { ConsentBanner } from '@/components/consent-banner';
+import { HtmlLang } from '@/components/html-lang';
+import { formatTelephone, taxiServiceSchema } from '@/lib/schema';
+import { SITE_URL } from '@/lib/site';
 
 export async function generateStaticParams() {
   return i18n.locales.map((locale) => ({ lang: locale }))
@@ -19,7 +23,7 @@ export async function generateMetadata({
   const { lang } = await params;
   const dictionary = await getDictionary(lang as Locale)
   return {
-    metadataBase: new URL('https://cochem-taxi.de'),
+    metadataBase: new URL(SITE_URL),
     title: {
       template: `%s | Cochem-Taxi.de`,
       default: dictionary.metadata.title,
@@ -46,85 +50,43 @@ export default async function RootLayout({
   const { lang } = await params;
   const dict = await getDictionary(lang as Locale);
   
-  const telephoneNumber = dict.hero.phoneNumber.replace(/\s/g, '');
-  const formattedTelephone = telephoneNumber.startsWith('0') 
-    ? `+49${telephoneNumber.substring(1)}` 
-    : telephoneNumber;
+  const formattedTelephone = formatTelephone(dict.hero.phoneNumber);
 
-  const jsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'TaxiService',
-      name: 'Cochem Taxi',
-      description: dict.metadata.description,
-      telephone: formattedTelephone,
-      url: 'https://cochem-taxi.de',
-      address: {
-        '@type': 'PostalAddress',
-        streetAddress: 'Bergstrasse 18',
-        addressLocality: 'Cochem',
-        postalCode: '56812',
-        addressCountry: 'DE',
-      },
-      openingHoursSpecification: {
-        '@type': 'OpeningHoursSpecification',
-        dayOfWeek: [
-          'Monday',
-          'Tuesday',
-          'Wednesday',
-          'Thursday',
-          'Friday',
-          'Saturday',
-          'Sunday'
-        ],
-        opens: '00:00',
-        closes: '23:59'
-      },
-      areaServed: [
-        {
-          '@type': 'City',
-          name: 'Cochem',
-        },
-        {
-          '@type': 'City',
-          name: 'Cochem an der Mosel',
-        },
-        {
-          '@type': 'City',
-          name: 'Treis-Karden',
-        },
-        {
-          '@type': 'City',
-          name: 'Kaisersesch',
-        }
-      ],
-      provider: {
-        '@type': 'LocalBusiness',
-        name: 'Cochem Taxi',
-        image: 'https://cochem-taxi.de/android-chrome-512x512.png',
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: 'Bergstrasse 18',
-          addressLocality: 'Cochem',
-          postalCode: '56812',
-          addressCountry: 'DE',
-        },
-        priceRange: '€€',
-        telephone: formattedTelephone,
-      },
-    };
-  
+  const jsonLd = taxiServiceSchema({
+    description: dict.metadata.description,
+    telephone: formattedTelephone,
+    areaServed: [
+      'Cochem',
+      'Cochem an der Mosel',
+      'Treis-Karden',
+      'Kaisersesch',
+      'Beilstein',
+      'Ediger-Eller',
+      'Zell (Mosel)',
+      'Ulmen',
+    ],
+  });
+
   return (
     <div className="flex flex-col items-center min-h-dvh bg-background">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <HtmlLang lang={lang} />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:font-semibold focus:text-primary-foreground"
+        >
+          {dict.common.skipToContent}
+        </a>
         <Header dict={dict.footer} lang={lang} />
-        <main className="container mx-auto px-4 py-6 md:py-12 flex-grow w-full flex flex-col items-center justify-start space-y-12 md:space-y-24 lg:space-y-32">
+        <main id="main" className="container mx-auto px-4 py-6 md:py-12 flex-grow w-full flex flex-col items-center justify-start space-y-12 md:space-y-24 lg:space-y-32">
             {children}
         </main>
         <Footer dict={dict.footer} lang={lang} />
         <BottomNav />
+        <ConsentBanner dict={dict.consent} lang={lang} />
         <SpeedInsights />
         <Analytics />
     </div>

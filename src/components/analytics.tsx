@@ -1,9 +1,13 @@
 "use client";
 
 import Script from "next/script";
+import { useConsent } from "@/components/consent-provider";
 
 export function Analytics({ GA_MEASUREMENT_ID }: { GA_MEASUREMENT_ID: string }) {
-  if (!GA_MEASUREMENT_ID) return null;
+  const { consent } = useConsent();
+
+  // Google Analytics sets cookies, so it may only load after explicit consent.
+  if (!GA_MEASUREMENT_ID || consent !== "granted") return null;
 
   return (
     <>

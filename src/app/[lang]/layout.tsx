@@ -7,6 +7,7 @@ import { BottomNav } from '@/components/landing/bottom-nav';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { ConsentBanner } from '@/components/consent-banner';
+import { HtmlLang } from '@/components/html-lang';
 import { formatTelephone, taxiServiceSchema } from '@/lib/schema';
 import { SITE_URL } from '@/lib/site';
 
@@ -72,8 +73,15 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        <HtmlLang lang={lang} />
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:font-semibold focus:text-primary-foreground"
+        >
+          {dict.common.skipToContent}
+        </a>
         <Header dict={dict.footer} lang={lang} />
-        <main className="container mx-auto px-4 py-6 md:py-12 flex-grow w-full flex flex-col items-center justify-start space-y-12 md:space-y-24 lg:space-y-32">
+        <main id="main" className="container mx-auto px-4 py-6 md:py-12 flex-grow w-full flex flex-col items-center justify-start space-y-12 md:space-y-24 lg:space-y-32">
             {children}
         </main>
         <Footer dict={dict.footer} lang={lang} />

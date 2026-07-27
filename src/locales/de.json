@@ -146,6 +146,9 @@
     "affiliateTitle": "Hinweis zu Partnerlinks (Affiliate)",
     "affiliateContent": "Diese Website zeigt Aktivitäten und Touren unseres Partners <strong>GetYourGuide</strong> an. Wenn Sie über einen dieser Links buchen, erhalten wir eine Provision. <strong>Für Sie entstehen dadurch keine Mehrkosten</strong> - der Preis bleibt derselbe. Diese Einnahmen helfen uns, den Betrieb dieser Website und des kostenlosen Fahrpreisrechners zu finanzieren. Anbieter und Vertragspartner der Touren ist ausschließlich GetYourGuide; wir übernehmen keine Gewähr für deren Angebote."
   },
+  "common": {
+    "skipToContent": "Zum Inhalt springen"
+  },
   "consent": {
     "title": "Cookies & externe Inhalte",
     "description": "Wir nutzen Cookies für die Reichweitenmessung (Google Analytics) und zeigen Ausflugsangebote unseres Partners GetYourGuide. Diese Dienste werden erst nach Ihrer Zustimmung geladen. Der Fahrpreisrechner funktioniert auch ohne.",

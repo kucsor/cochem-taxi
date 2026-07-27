@@ -150,6 +150,9 @@
     "affiliateTitle": "Affiliate Link Disclosure",
     "affiliateContent": "This website displays activities and tours from our partner <strong>GetYourGuide</strong>. If you book through one of these links, we receive a commission. <strong>This does not cost you anything extra</strong> - the price stays the same. These earnings help us cover the running costs of this website and the free fare calculator. The provider and contracting party for the tours is GetYourGuide alone; we accept no liability for their offers."
   },
+  "common": {
+    "skipToContent": "Skip to content"
+  },
   "consent": {
     "title": "Cookies & external content",
     "description": "We use cookies for audience measurement (Google Analytics) and show tours from our partner GetYourGuide. These services load only after you agree. The fare calculator works without them.",

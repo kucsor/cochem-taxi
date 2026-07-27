@@ -166,9 +166,17 @@
     "consentDescription": "Um Angebote von GetYourGuide anzuzeigen, benötigen wir Ihre Zustimmung. Dabei werden Daten an GetYourGuide übertragen.",
     "consentButton": "Aktivitäten anzeigen"
   },
+  "attractions": {
+    "title": "Sehenswürdigkeiten in Cochem - mit Geheimtipps",
+    "subtitle": "Was sich in und um Cochem wirklich lohnt, wie man hinkommt und was die meisten Tagesgäste verpassen.",
+    "tipLabel": "Geheimtipp",
+    "inTown": "im Ort",
+    "fromCochem": "ca. {distance} km ab Cochem",
+    "disclaimer": "Öffnungszeiten, Führungstermine und Preise ändern sich - bitte vor dem Besuch auf den offiziellen Seiten der Anbieter prüfen."
+  },
   "activitiesPage": {
-    "metaTitle": "Ausflüge & Aktivitäten in Cochem an der Mosel",
-    "metaDescription": "Burg Eltz, Reichsburg Cochem, Weinproben und Moselschifffahrt: die beliebtesten Ausflüge rund um Cochem - mit Taxi-Transfer direkt zum Startpunkt.",
+    "metaTitle": "Cochem Sehenswürdigkeiten: Ausflüge & Geheimtipps",
+    "metaDescription": "Reichsburg, Bundesbankbunker, Calmont und Burg Eltz: was sich in Cochem wirklich lohnt - mit Geheimtipps und Taxi-Transfer direkt zum Startpunkt.",
     "h1": "Ausflüge & Aktivitäten in Cochem",
     "intro": "Cochem ist ein guter Ausgangspunkt für Ausflüge an der Mosel: Die Reichsburg thront direkt über der Stadt, die Burg Eltz liegt eine halbe Stunde entfernt im Wald, und rundherum warten Steillagen, Weingüter und Schiffsanleger. Hier finden Sie die beliebtesten Touren der Region - und wir bringen Sie mit dem Taxi zuverlässig zum Startpunkt und wieder zurück.",
     "blocks": [

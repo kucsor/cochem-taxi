@@ -170,9 +170,17 @@
     "consentDescription": "We need your consent to display offers from GetYourGuide. Data will be transmitted to GetYourGuide.",
     "consentButton": "Show activities"
   },
+  "attractions": {
+    "title": "Things to see in Cochem - with insider tips",
+    "subtitle": "What is genuinely worth your time in and around Cochem, how to get there, and what most day visitors miss.",
+    "tipLabel": "Insider tip",
+    "inTown": "in town",
+    "fromCochem": "approx. {distance} km from Cochem",
+    "disclaimer": "Opening hours, tour times and prices change - please check the operators' official pages before visiting."
+  },
   "activitiesPage": {
-    "metaTitle": "Things to Do in Cochem on the Moselle",
-    "metaDescription": "Eltz Castle, Cochem Reichsburg, wine tastings and Moselle cruises: the most popular tours around Cochem - with a taxi transfer to the starting point.",
+    "metaTitle": "Cochem Attractions: Top Sights & Insider Tips",
+    "metaDescription": "Reichsburg, the Bundesbank bunker, the Calmont and Eltz Castle: what is really worth seeing in Cochem - with insider tips and taxi transfers to the trailhead.",
     "h1": "Things to do in Cochem",
     "intro": "Cochem is a natural base for exploring the Moselle: the Reichsburg looms directly above the town, Eltz Castle sits half an hour away in the woods, and all around are steep vineyards, wineries and boat landings. Below are the most popular tours in the region - and we will get you to the starting point and back by taxi.",
     "blocks": [

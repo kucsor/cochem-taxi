@@ -1,5 +1,6 @@
 import { Phone } from 'lucide-react';
 import { Activities } from '@/components/landing/activities';
+import { Attractions } from '@/components/landing/attractions';
 import { Button } from '@/components/ui/button';
 import { getDictionary } from '@/lib/dictionaries';
 import { breadcrumbSchema } from '@/lib/schema';
@@ -34,6 +35,8 @@ export async function ActivitiesPageContent({ lang }: { lang: Locale }) {
           {page.intro}
         </p>
       </section>
+
+      <Attractions dict={dict.attractions} lang={lang} />
 
       {page.blocks.map((block) => (
         <section key={block.query} className="w-full max-w-4xl mx-auto">

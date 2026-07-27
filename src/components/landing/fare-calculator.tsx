@@ -531,7 +531,9 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                 {/* Persistent wrapper: aria-live must exist before content
                     changes for announcements to fire; min-h reserves the
                     result card's height so the page below doesn't jump. */}
-                <div aria-live="polite" role="status" className="min-h-[150px] md:min-h-[190px]">
+                {/* min-h calibrated to the measured result card incl. the
+                    Anfahrt note (mobile 171px / desktop 210px) */}
+                <div aria-live="polite" role="status" className="min-h-[171px] md:min-h-[210px]">
                   <PriceResult state={state} pending={pending} dict={dict} />
                 </div>
 

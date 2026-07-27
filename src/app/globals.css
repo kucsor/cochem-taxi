@@ -104,6 +104,15 @@
       0 4px 30px rgba(0, 0, 0, 0.5),
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
+
+  /* Scrolled header state. Declared after .glass-nav so it wins the cascade
+     without !important. */
+  .glass-nav-scrolled {
+    background-color: rgba(0, 0, 0, 0.95);
+    box-shadow:
+      0 8px 40px rgba(0, 0, 0, 0.6),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
   
   .glass-card {
     @apply backdrop-blur-lg bg-black/40 border border-white/10 rounded-2xl;

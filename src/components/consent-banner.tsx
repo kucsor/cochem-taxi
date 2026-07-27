@@ -23,8 +23,9 @@ export function ConsentBanner({ dict, lang }: { dict: ConsentDictionary; lang: s
       role="dialog"
       aria-live="polite"
       aria-label={dict.title}
-      // Sits above the mobile bottom navigation.
-      className="fixed inset-x-0 bottom-0 z-[60] p-3 pb-24 md:pb-3"
+      // Sits above the mobile bottom navigation. fill-mode-both keeps it
+      // invisible during the entry delay; fixed overlay means zero CLS.
+      className="fixed inset-x-0 bottom-0 z-[60] p-3 pb-24 md:pb-3 animate-in fade-in slide-in-from-bottom-8 duration-500 delay-700 fill-mode-both"
     >
       <div className="mx-auto max-w-3xl glass-card rounded-2xl border border-white/10 p-4 shadow-2xl md:p-5">
         <h2 className="text-sm font-semibold text-foreground md:text-base">{dict.title}</h2>

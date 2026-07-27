@@ -1,8 +1,7 @@
 "use client";
 
-import { Phone, Calculator, Menu, Home, ChevronUp, MessageCircle } from "lucide-react";
+import { Phone, Calculator, Menu, Home, ChevronUp } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
-import { getWhatsAppUrl, hasWhatsApp } from "@/lib/contact";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 
@@ -66,27 +65,14 @@ export function BottomNav() {
             <span className="text-[10px] text-muted-foreground">Service</span>
           </Link>
 
-          {/* WhatsApp when configured, otherwise back to top */}
-          {hasWhatsApp() ? (
-            <a
-              href={getWhatsAppUrl()}
-              target="_blank"
-              rel="noopener"
-              onClick={() => trackEvent('click_whatsapp', { source: 'bottom_nav' })}
-              className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-white/5 transition-colors min-w-[60px]"
-            >
-              <MessageCircle className="w-5 h-5 text-muted-foreground" />
-              <span className="text-[10px] text-muted-foreground">WhatsApp</span>
-            </a>
-          ) : (
-            <button
-              onClick={scrollToTop}
-              className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-white/5 transition-colors min-w-[60px]"
-            >
-              <ChevronUp className="w-5 h-5 text-muted-foreground" />
-              <span className="text-[10px] text-muted-foreground">Top</span>
-            </button>
-          )}
+          {/* Back to Top */}
+          <button
+            onClick={scrollToTop}
+            className="flex flex-col items-center gap-1 p-2 rounded-xl hover:bg-white/5 transition-colors min-w-[60px]"
+          >
+            <ChevronUp className="w-5 h-5 text-muted-foreground" />
+            <span className="text-[10px] text-muted-foreground">Top</span>
+          </button>
         </div>
       </nav>
 

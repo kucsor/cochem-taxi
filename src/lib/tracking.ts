@@ -19,7 +19,6 @@ export function trackEvent(
     | 'click_home_nav'
     | 'click_services_nav'
     | 'load_map_click'
-    | 'click_whatsapp'
     | 'view_activities'
     | 'click_activity_widget'
     | 'click_affiliate_link'

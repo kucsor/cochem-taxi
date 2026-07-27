@@ -17,17 +17,14 @@ cp .env.example .env.local
 
 Editează `.env.local`:
 ```env
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1...      # Tokenul tău Mapbox
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...      # (Opțional) Google Analytics ID
-NEXT_PUBLIC_GYG_PARTNER_ID=...           # (Opțional) Partner ID GetYourGuide
-NEXT_PUBLIC_WHATSAPP_NUMBER=4915112345678 # (Opțional) Număr WhatsApp, format internațional
+NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1...  # Tokenul tău Mapbox
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...  # (Opțional) Google Analytics ID
+NEXT_PUBLIC_GYG_PARTNER_ID=...       # (Opțional) Suprascrie Partner ID-ul GetYourGuide
 ```
 
-**Notă despre variabilele opționale:**
-- `NEXT_PUBLIC_GYG_PARTNER_ID` — fără el, secțiunile de activități GetYourGuide nu se afișează
-  deloc (nu apar widget-uri goale). Se setează în Vercel → Settings → Environment Variables.
-- `NEXT_PUBLIC_WHATSAPP_NUMBER` — fără el, butonul WhatsApp nu apare nicăieri. Folosește doar un
-  număr care chiar are WhatsApp activ (numărul de dispecerat este fix și, de regulă, nu are).
+**Notă:** Partner ID-ul GetYourGuide are deja o valoare implicită în `src/lib/affiliates.ts`
+(este public, apare oricum în HTML-ul paginii), deci afilierea funcționează fără configurare
+suplimentară. Setează `NEXT_PUBLIC_GYG_PARTNER_ID` doar dacă vrei alt cont de partener.
 
 **Important:** Pentru a obține un token Mapbox gratuit, înregistrează-te pe [https://account.mapbox.com/](https://account.mapbox.com/)
 

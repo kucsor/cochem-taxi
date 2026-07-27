@@ -3,11 +3,13 @@ import type { Locale } from '@/i18n-config';
 /**
  * GetYourGuide partner integration.
  *
- * The partner ID lives in the environment so it can be set in Vercel without a
- * code change. When it is missing (local dev, forks), the activities sections
- * simply do not render - no empty widget shells in production.
+ * The partner ID is public - it ends up in the rendered HTML either way - so it
+ * ships as the default and the site works without any Vercel configuration.
+ * Set NEXT_PUBLIC_GYG_PARTNER_ID to override it (e.g. a second partner account).
  */
-export const GYG_PARTNER_ID = process.env.NEXT_PUBLIC_GYG_PARTNER_ID ?? '';
+const DEFAULT_GYG_PARTNER_ID = 'WBG0CKR';
+
+export const GYG_PARTNER_ID = process.env.NEXT_PUBLIC_GYG_PARTNER_ID || DEFAULT_GYG_PARTNER_ID;
 
 export const GYG_WIDGET_SCRIPT = 'https://widget.getyourguide.com/dist/pa.umd.production.min.js';
 

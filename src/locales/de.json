@@ -116,6 +116,7 @@
     "tagline": "Ihr zuverlässiger Partner für Fahrten in, um und ab Cochem. Egal welches Ziel, wir sind für Sie da.",
     "legalLink": "Impressum & Datenschutz",
     "quickContact": "Schneller Kontakt",
+    "exploreTitle": "Transfer & Ausflüge",
     "email": "E-Mail",
     "rights": "Alle Rechte vorbehalten"
   },
@@ -139,6 +140,78 @@
     "linksContent": "Unser Angebot enthält Links zu externen Websites Dritter (z.B. Partnerempfehlungen für Hotels oder Restaurants), auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.",
     "datenschutzTitle": "Datenschutzerklärung (Auszug)",
     "analyticsTitle": "Google Analytics",
-    "analyticsContent": "Diese Website nutzt Funktionen des Webanalysedienstes Google Analytics. Anbieter ist die Google Ireland Limited. Google Analytics verwendet sog. \"Cookies\". Das sind Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie ermöglichen.<br><br><strong>IP-Anonymisierung:</strong> Wir haben auf dieser Website die Funktion IP-Anonymisierung aktiviert. Dadurch wird Ihre IP-Adresse von Google innerhalb von Mitgliedstaaten der Europäischen Union vor der Übermittlung in die USA gekürzt."
+    "analyticsContent": "Diese Website nutzt Funktionen des Webanalysedienstes Google Analytics. Anbieter ist die Google Ireland Limited. Google Analytics verwendet sog. \"Cookies\". Das sind Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie ermöglichen.<br><br><strong>IP-Anonymisierung:</strong> Wir haben auf dieser Website die Funktion IP-Anonymisierung aktiviert. Dadurch wird Ihre IP-Adresse von Google innerhalb von Mitgliedstaaten der Europäischen Union vor der Übermittlung in die USA gekürzt.",
+    "consentTitle": "Einwilligung & Cookies",
+    "consentContent": "Beim ersten Besuch fragen wir Sie, ob Sie Cookies für die Reichweitenmessung (Google Analytics) und externe Inhalte unseres Partners GetYourGuide zulassen möchten. <strong>Ohne Ihre Zustimmung werden diese Dienste nicht geladen</strong> und es werden keine entsprechenden Cookies gesetzt. Ihre Auswahl wird lokal in Ihrem Browser gespeichert und kann jederzeit geändert werden, indem Sie die Websitedaten in Ihrem Browser löschen. Notwendige Funktionen wie der Fahrpreisrechner sind davon nicht betroffen.",
+    "affiliateTitle": "Hinweis zu Partnerlinks (Affiliate)",
+    "affiliateContent": "Diese Website zeigt Aktivitäten und Touren unseres Partners <strong>GetYourGuide</strong> an. Wenn Sie über einen dieser Links buchen, erhalten wir eine Provision. <strong>Für Sie entstehen dadurch keine Mehrkosten</strong> - der Preis bleibt derselbe. Diese Einnahmen helfen uns, den Betrieb dieser Website und des kostenlosen Fahrpreisrechners zu finanzieren. Anbieter und Vertragspartner der Touren ist ausschließlich GetYourGuide; wir übernehmen keine Gewähr für deren Angebote."
+  },
+  "consent": {
+    "title": "Cookies & externe Inhalte",
+    "description": "Wir nutzen Cookies für die Reichweitenmessung (Google Analytics) und zeigen Ausflugsangebote unseres Partners GetYourGuide. Diese Dienste werden erst nach Ihrer Zustimmung geladen. Der Fahrpreisrechner funktioniert auch ohne.",
+    "accept": "Alle akzeptieren",
+    "decline": "Nur notwendige",
+    "moreInfo": "Mehr im Impressum & Datenschutz"
+  },
+  "activities": {
+    "badge": "Ausflüge & Erlebnisse",
+    "title": "Aktivitäten rund um Cochem",
+    "subtitle": "Burgführungen, Weinproben und Moselschifffahrten - buchbar über unseren Partner GetYourGuide.",
+    "seeAll": "Alle Aktivitäten ansehen",
+    "disclosure": "Anzeige: Die Angebote stammen von GetYourGuide. Bei einer Buchung erhalten wir eine Provision - für Sie ändert sich der Preis nicht.",
+    "consentTitle": "Externe Inhalte sind deaktiviert",
+    "consentDescription": "Um Angebote von GetYourGuide anzuzeigen, benötigen wir Ihre Zustimmung. Dabei werden Daten an GetYourGuide übertragen.",
+    "consentButton": "Aktivitäten anzeigen"
+  },
+  "activitiesPage": {
+    "metaTitle": "Ausflüge & Aktivitäten in Cochem an der Mosel",
+    "metaDescription": "Burg Eltz, Reichsburg Cochem, Weinproben und Moselschifffahrt: die beliebtesten Ausflüge rund um Cochem - mit Taxi-Transfer direkt zum Startpunkt.",
+    "h1": "Ausflüge & Aktivitäten in Cochem",
+    "intro": "Cochem ist ein guter Ausgangspunkt für Ausflüge an der Mosel: Die Reichsburg thront direkt über der Stadt, die Burg Eltz liegt eine halbe Stunde entfernt im Wald, und rundherum warten Steillagen, Weingüter und Schiffsanleger. Hier finden Sie die beliebtesten Touren der Region - und wir bringen Sie mit dem Taxi zuverlässig zum Startpunkt und wieder zurück.",
+    "blocks": [
+      {
+        "title": "Beliebte Touren in Cochem",
+        "text": "Führungen durch die Reichsburg, Sesselbahn zum Pinnerkreuz und geführte Stadtrundgänge - die Klassiker direkt vor der Haustür.",
+        "query": "Cochem"
+      },
+      {
+        "title": "Burg Eltz & Umgebung",
+        "text": "Die Burg Eltz ist mit öffentlichen Verkehrsmitteln schwer erreichbar. Mit Taxi und Tour lässt sich der Besuch entspannt planen.",
+        "query": "Burg Eltz"
+      },
+      {
+        "title": "Weinproben & Moselschifffahrt",
+        "text": "Weinproben in den Steillagen, Schifffahrten auf der Mosel und Touren durch die Vulkaneifel - für den Rückweg sind wir für Sie da.",
+        "query": "Mosel Weinprobe"
+      }
+    ],
+    "ctaTitle": "Taxi zum Ausflugsziel?",
+    "ctaText": "Wir bringen Sie direkt zum Startpunkt Ihrer Tour - auch früh morgens, am Wochenende und mit Gepäck.",
+    "callButton": "Jetzt anrufen"
+  },
+  "locationPage": {
+    "distanceLabel": "Entfernung ab Cochem",
+    "durationLabel": "Fahrzeit",
+    "priceLabel": "Preis ca.",
+    "minutes": "Min.",
+    "approx": "ca.",
+    "disclaimer": "Unverbindlicher Schätzwert für die Standardfahrt tagsüber - verbindlich ist der Taxameter.",
+    "highlightsTitle": "Gut zu wissen",
+    "faqTitle": "Häufige Fragen",
+    "calculatorTitle": "Preis für Ihre Fahrt berechnen",
+    "regionTitle": "Weitere Orte in der Region"
+  },
+  "transferPage": {
+    "metaTitle": "Taxi Cochem - {destination} | Preis, Dauer & Transfer",
+    "metaDescription": "Transfer von Cochem nach {destination}: ca. {distance} km, rund {minutes} Minuten Fahrzeit. Preis vorab berechnen und direkt telefonisch bestellen.",
+    "h1": "Taxi Cochem - {destination}",
+    "subtitle": "Direkter Transfer ab Cochem - ohne Umsteigen",
+    "highlightsTitle": "Warum mit dem Taxi?",
+    "faqTitle": "Häufige Fragen",
+    "calculatorTitle": "Preis für Ihre Fahrt berechnen",
+    "ctaTitle": "Fahrt jetzt bestellen",
+    "ctaText": "Für längere Strecken empfehlen wir eine Vorbestellung - dann steht der Wagen pünktlich bereit.",
+    "callButton": "Jetzt anrufen",
+    "otherRoutes": "Weitere beliebte Strecken"
   }
 }

@@ -1,8 +1,10 @@
+import { Activities } from '@/components/landing/activities'
 import { FareCalculator } from '@/components/landing/fare-calculator'
 import { getDictionary } from '@/lib/dictionaries'
 import { Locale } from '@/i18n-config'
 import { Metadata } from 'next'
 import { sanitizeHtml } from '@/lib/sanitize'
+import { alternatesForLocale } from '@/lib/site'
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }): Promise<Metadata> {
   const { lang } = await params
@@ -10,13 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ lang: Loc
   return {
     title: dict.rechnerPage.metaTitle,
     description: dict.rechnerPage.metaDescription,
-    alternates: {
-      canonical: `https://cochem-taxi.de/${lang}/rechner`,
-      languages: {
-        'de': 'https://cochem-taxi.de/de/rechner',
-        'en': 'https://cochem-taxi.de/en/rechner',
-      }
-    }
+    alternates: alternatesForLocale(lang, (l) => `/${l}/rechner`)
   }
 }
 
@@ -69,6 +65,9 @@ export default async function RechnerPage({
         <div className="bg-black/20 rounded-3xl border border-white/5 p-1 md:p-4">
           <FareCalculator dict={dict.fareCalculator} lang={lang} showDetailsLink={false} />
         </div>
+
+        {/* Activities - shown right after the fare result, when intent is highest */}
+        <Activities dict={dict.activities} lang={lang} query="Cochem" className="py-4" />
 
         {/* SEO Content Block 1 */}
         <section className="prose prose-invert max-w-none glass p-8 rounded-2xl">

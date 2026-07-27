@@ -17,9 +17,17 @@ cp .env.example .env.local
 
 Editează `.env.local`:
 ```env
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1...  # Tokenul tău Mapbox
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...  # (Opțional) Google Analytics ID
+NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1...      # Tokenul tău Mapbox
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...      # (Opțional) Google Analytics ID
+NEXT_PUBLIC_GYG_PARTNER_ID=...           # (Opțional) Partner ID GetYourGuide
+NEXT_PUBLIC_WHATSAPP_NUMBER=4915112345678 # (Opțional) Număr WhatsApp, format internațional
 ```
+
+**Notă despre variabilele opționale:**
+- `NEXT_PUBLIC_GYG_PARTNER_ID` — fără el, secțiunile de activități GetYourGuide nu se afișează
+  deloc (nu apar widget-uri goale). Se setează în Vercel → Settings → Environment Variables.
+- `NEXT_PUBLIC_WHATSAPP_NUMBER` — fără el, butonul WhatsApp nu apare nicăieri. Folosește doar un
+  număr care chiar are WhatsApp activ (numărul de dispecerat este fix și, de regulă, nu are).
 
 **Important:** Pentru a obține un token Mapbox gratuit, înregistrează-te pe [https://account.mapbox.com/](https://account.mapbox.com/)
 
@@ -73,5 +81,23 @@ src/
 - ✅ Suport multi-lingv (Germană/Engleză)
 - ✅ Design responsive (mobile-first)
 - ✅ PWA (Progressive Web App)
-- ✅ Google Analytics tracking
-- ✅ SEO optimizat cu metadata dinamică
+- ✅ Google Analytics tracking (doar după consimțământ)
+- ✅ SEO optimizat cu metadata dinamică, canonical + hreflang pe fiecare pagină
+- ✅ 16 pagini de localitate cu conținut unic (`src/lib/locations.ts`)
+- ✅ 4 pagini de transfer: Burg Eltz, Flughafen Hahn, Koblenz, Trier (`src/lib/routes.ts`)
+- ✅ Pagini de activități `/de/aktivitaeten` și `/en/things-to-do`
+- ✅ Monetizare prin afiliere GetYourGuide, blocată până la consimțământ (DSGVO/TDDDG)
+- ✅ Structured data: TaxiService, Service (rute), FAQPage, BreadcrumbList
+
+## 💰 Monetizare & conținut
+
+| Fișier | Rol |
+|--------|-----|
+| `src/lib/fare.ts` | Tarifele și zona Cochem - sursă unică pentru calculator și prețurile estimate de pe pagini |
+| `src/lib/locations.ts` | Datele și textele localităților; adaugă un obiect nou ca să apară o pagină nouă |
+| `src/lib/routes.ts` | Rutele de transfer (Burg Eltz, Hahn, Koblenz, Trier) |
+| `src/lib/affiliates.ts` | Configurarea widget-ului GetYourGuide |
+| `src/components/consent-provider.tsx` | Starea consimțământului; nimic extern nu se încarcă fără el |
+
+Paginile noi apar automat în `sitemap.xml` și în linkurile interne din footer și din secțiunea
+„Wir fahren in der gesamten Region".

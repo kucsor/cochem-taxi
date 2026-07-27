@@ -1,3 +1,4 @@
+import { Activities } from '@/components/landing/activities'
 import { FareCalculator } from '@/components/landing/fare-calculator'
 import { Hero } from '@/components/landing/hero'
 import { ServiceArea } from '@/components/landing/service-area'
@@ -26,6 +27,10 @@ export default async function Home({
       
       <ServiceArea dict={dict.serviceArea} />
 
+      <section className="py-8">
+        <Activities dict={dict.activities} lang={lang} query="Cochem" />
+      </section>
+
       <section id="services" className="py-8">
         <Services dict={dict.services} />
       </section>
@@ -35,7 +40,7 @@ export default async function Home({
       </section>
       
       <section className="py-8">
-        <ServiceRegion dict={dict.serviceRegion} />
+        <ServiceRegion dict={dict.serviceRegion} lang={lang} />
       </section>
     </>
   )

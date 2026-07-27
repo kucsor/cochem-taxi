@@ -1,8 +1,12 @@
 "use client";
 
-import { Mail, Clock, MapPin, ExternalLink, Heart } from "lucide-react";
+import Link from "next/link";
+import { Mail, Clock, MapPin, ExternalLink, Heart, Compass } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
 import { Reveal } from "@/components/ui/reveal";
+import { routes } from "@/lib/routes";
+import { activitiesPath } from "@/lib/site";
+import type { Locale } from "@/i18n-config";
 
 type Dictionary = {
   companyName: string;
@@ -14,6 +18,7 @@ type Dictionary = {
   quickContact: string;
   email: string;
   rights: string;
+  exploreTitle: string;
 };
 
 export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
@@ -23,7 +28,7 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
     <footer className="w-full mt-20 border-t border-white/5">
       <div className="max-w-6xl mx-auto px-4 py-12">
         <Reveal
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12"
           duration={0.6}
         >
           {/* Company Info */}
@@ -67,6 +72,34 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
                 <div className="text-sm font-semibold text-white">contact@cochem-taxi.de</div>
               </div>
             </a>
+          </div>
+
+          {/* Transfers & tours - internal links so these pages get crawled */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Compass className="w-5 h-5 text-primary" />
+              <h3 className="font-semibold text-white">{dict.exploreTitle}</h3>
+            </div>
+            <ul className="space-y-2">
+              {routes.map((route) => (
+                <li key={route.slug}>
+                  <Link
+                    href={`/${lang}/transfer/${route.slug}`}
+                    className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                  >
+                    {`Cochem - ${route.destination[lang as Locale] ?? route.destination.de}`}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  href={activitiesPath(lang as Locale)}
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {dict.exploreTitle}
+                </Link>
+              </li>
+            </ul>
           </div>
         </Reveal>
 

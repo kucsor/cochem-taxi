@@ -1,17 +1,18 @@
 "use client";
-import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Loader2, Car } from "lucide-react";
-import { trackEvent } from "@/lib/tracking";
 
-export function SubmitButton({ label }: { label: string }) {
-  const { pending } = useFormStatus();
+/**
+ * `pending` comes in as a prop: the calculator submits via onSubmit + fetch,
+ * not a form action, so useFormStatus() would never report pending here.
+ */
+export function SubmitButton({ label, pending }: { label: string; pending: boolean }) {
   return (
     <Button
       type="submit"
       disabled={pending}
-      className="w-full"
-      onClick={() => trackEvent('use_calculator')}
+      aria-busy={pending}
+      className="w-full active:scale-[0.98] transition-transform"
     >
       {pending ? (
         <Loader2 className="animate-spin" />

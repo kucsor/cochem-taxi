@@ -121,6 +121,7 @@
     "legalLink": "Imprint & Privacy",
     "quickContact": "Quick Contact",
     "exploreTitle": "Transfers & tours",
+    "pricesLink": "Taxi prices & tariff",
     "email": "E-Mail",
     "rights": "All rights reserved"
   },
@@ -169,6 +170,41 @@
     "consentTitle": "External content is disabled",
     "consentDescription": "We need your consent to display offers from GetYourGuide. Data will be transmitted to GetYourGuide.",
     "consentButton": "Show activities"
+  },
+  "tariffNotice": {
+    "text": "New taxi tariffs apply in Cochem as of 1 August 2026.",
+    "linkLabel": "See all prices",
+    "dismiss": "Dismiss notice"
+  },
+  "tariffTable": {
+    "positionHeader": "Item",
+    "priceHeader": "Price",
+    "tariff1": "Tariff 1 - Taxi (1-4 passengers)",
+    "tariff2": "Tariff 2 - Large taxi (5-8 passengers)",
+    "baseFee": "Base fare",
+    "baseFeeLarge": "Base fare",
+    "perKmDay": "per km - day rate",
+    "perKmNight": "per km - night rate",
+    "waitingFee": "Waiting time",
+    "perHour": "per hour"
+  },
+  "pricesPage": {
+    "metaTitle": "Taxi Prices Cochem 2026 - Current Tariff",
+    "metaDescription": "The official taxi tariff for Cochem, valid since 1 August 2026: base fare, per-kilometre day and night rates, large taxi and waiting time - clearly listed.",
+    "h1": "Taxi prices in Cochem",
+    "validFrom": "Valid since {date}",
+    "intro": "Here is the complete taxi tariff for Cochem and the surrounding area. Prices were adjusted on 1 August 2026 - the table below shows the amounts currently in force.",
+    "noteBufferTitle": "Why does the calculator show slightly more?",
+    "noteBufferText": "Our fare calculator adds a small safety margin to the result. The reason: the road actually driven is usually a little longer than the route measured on the map, and time spent waiting in traffic costs money too. That way the end of your trip brings a pleasant surprise rather than an unpleasant one.",
+    "noteAnfahrtTitle": "Approach fee outside Cochem",
+    "noteAnfahrtText": "If a trip neither passes through Cochem nor starts or ends there, an approach fee applies. It covers the car's journey out to you and amounts to 40 percent of the fare for that approach distance. It does not apply to trips within, to or from Cochem.",
+    "noteMeterTitle": "The taximeter is what counts",
+    "noteMeterText": "Everything on this page and in the calculator is a non-binding estimate. Only the fare shown by the calibrated taximeter in the vehicle is legally binding.",
+    "ctaTitle": "Book a ride",
+    "ctaText": "Give us a call - we are available around the clock. Or work out the approximate price of your trip first.",
+    "callButton": "Call now",
+    "calculatorLink": "Calculate price",
+    "officialTariffLink": "View the official Cochem taxi tariff"
   },
   "attractions": {
     "title": "Things to see in Cochem - with insider tips",

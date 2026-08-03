@@ -117,6 +117,7 @@
     "legalLink": "Impressum & Datenschutz",
     "quickContact": "Schneller Kontakt",
     "exploreTitle": "Transfer & Ausflüge",
+    "pricesLink": "Taxi Preise & Tarif",
     "email": "E-Mail",
     "rights": "Alle Rechte vorbehalten"
   },
@@ -166,9 +167,52 @@
     "consentDescription": "Um Angebote von GetYourGuide anzuzeigen, benötigen wir Ihre Zustimmung. Dabei werden Daten an GetYourGuide übertragen.",
     "consentButton": "Aktivitäten anzeigen"
   },
+  "tariffNotice": {
+    "text": "Seit dem 1. August 2026 gelten neue Taxitarife in Cochem.",
+    "linkLabel": "Alle Preise ansehen",
+    "dismiss": "Hinweis schließen"
+  },
+  "tariffTable": {
+    "positionHeader": "Position",
+    "priceHeader": "Preis",
+    "tariff1": "Tarif 1 - Taxi (1-4 Personen)",
+    "tariff2": "Tarif 2 - Großraumtaxi (5-8 Personen)",
+    "baseFee": "Grundpreis",
+    "baseFeeLarge": "Grundpreis",
+    "perKmDay": "je km - Tagtarif",
+    "perKmNight": "je km - Nachttarif",
+    "waitingFee": "Wartegeld",
+    "perHour": "pro Stunde"
+  },
+  "pricesPage": {
+    "metaTitle": "Taxi Preise Cochem 2026 - Aktueller Taxitarif",
+    "metaDescription": "Der offizielle Taxitarif für Cochem, gültig seit 1. August 2026: Grundpreis, Kilometerpreis bei Tag und Nacht, Großraumtaxi und Wartegeld - übersichtlich aufgelistet.",
+    "h1": "Taxi Preise in Cochem",
+    "validFrom": "Gültig seit {date}",
+    "intro": "Hier finden Sie den vollständigen Taxitarif für Cochem und Umgebung. Zum 1. August 2026 wurden die Preise angepasst - die folgende Übersicht zeigt die aktuell gültigen Beträge.",
+    "noteBufferTitle": "Warum zeigt der Rechner etwas mehr an?",
+    "noteBufferText": "Unser Fahrpreisrechner legt auf das Ergebnis eine kleine Sicherheitsreserve. Der Grund: Die tatsächlich gefahrene Strecke ist meist etwas länger als die auf der Karte berechnete Luftlinie durch den Ort, und Wartezeiten im Verkehr kosten ebenfalls. So erleben Sie am Ende der Fahrt eher eine positive als eine unangenehme Überraschung.",
+    "noteAnfahrtTitle": "Anfahrtspauschale außerhalb von Cochem",
+    "noteAnfahrtText": "Führt eine Fahrt weder durch Cochem noch beginnt oder endet sie dort, wird eine Anfahrtspauschale berechnet. Sie deckt den Weg des Wagens zu Ihnen ab und beträgt 40 Prozent des Fahrpreises für diese Anfahrtsstrecke. Bei Fahrten in, nach oder aus Cochem entfällt sie.",
+    "noteMeterTitle": "Verbindlich ist das Taxameter",
+    "noteMeterText": "Alle Angaben auf dieser Seite und im Rechner sind unverbindliche Schätzungen. Rechtlich bindend ist ausschließlich der Fahrpreis, den das geeichte Taxameter im Fahrzeug anzeigt.",
+    "ctaTitle": "Fahrt bestellen",
+    "ctaText": "Rufen Sie an - wir sind rund um die Uhr erreichbar. Oder berechnen Sie vorher den ungefähren Preis Ihrer Strecke.",
+    "callButton": "Jetzt anrufen",
+    "calculatorLink": "Preis berechnen",
+    "officialTariffLink": "Zum offiziellen Taxitarif für Cochem"
+  },
+  "attractions": {
+    "title": "Sehenswürdigkeiten in Cochem - mit Geheimtipps",
+    "subtitle": "Was sich in und um Cochem wirklich lohnt, wie man hinkommt und was die meisten Tagesgäste verpassen.",
+    "tipLabel": "Geheimtipp",
+    "inTown": "im Ort",
+    "fromCochem": "ca. {distance} km ab Cochem",
+    "disclaimer": "Öffnungszeiten, Führungstermine und Preise ändern sich - bitte vor dem Besuch auf den offiziellen Seiten der Anbieter prüfen."
+  },
   "activitiesPage": {
-    "metaTitle": "Ausflüge & Aktivitäten in Cochem an der Mosel",
-    "metaDescription": "Burg Eltz, Reichsburg Cochem, Weinproben und Moselschifffahrt: die beliebtesten Ausflüge rund um Cochem - mit Taxi-Transfer direkt zum Startpunkt.",
+    "metaTitle": "Cochem Sehenswürdigkeiten: Ausflüge & Geheimtipps",
+    "metaDescription": "Reichsburg, Bundesbankbunker, Calmont und Burg Eltz: was sich in Cochem wirklich lohnt - mit Geheimtipps und Taxi-Transfer direkt zum Startpunkt.",
     "h1": "Ausflüge & Aktivitäten in Cochem",
     "intro": "Cochem ist ein guter Ausgangspunkt für Ausflüge an der Mosel: Die Reichsburg thront direkt über der Stadt, die Burg Eltz liegt eine halbe Stunde entfernt im Wald, und rundherum warten Steillagen, Weingüter und Schiffsanleger. Hier finden Sie die beliebtesten Touren der Region - und wir bringen Sie mit dem Taxi zuverlässig zum Startpunkt und wieder zurück.",
     "blocks": [

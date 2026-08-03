@@ -95,11 +95,14 @@ Funcția `calculateFare` execută următorii pași:
     - Obține distanța în kilometri și geometria rutei (în format geojson).
 4.  **Calcul Preț:**
     - **Tarif de noapte:** Se aplică dacă ora preluării este între 22:00 și 05:59.
-    - **Constante:**
-        - `BASE_FEE = 4.1`
-        - `RATE_PER_KM_DAY = 2.6`
-        - `RATE_PER_KM_NIGHT = 2.8`
-    - **Formula finală:** `price = (BASE_FEE + distance * ratePerKm) * 1.1`
+    - **Constante:** sursa unică de adevăr este `src/lib/fare.ts` — valorile de mai jos sunt doar
+      o copie orientativă (tarif valabil din 01.08.2026):
+        - `BASE_FEE = 4.5` / `RATE_PER_KM_DAY = 3.0` / `RATE_PER_KM_NIGHT = 3.3` (1-4 persoane)
+        - `LARGE_BASE_FEE = 6.0` / `LARGE_RATE_PER_KM_DAY = 4.5` / `LARGE_RATE_PER_KM_NIGHT = 4.8`
+          (5-8 persoane)
+        - `WAITING_FEE_PER_HOUR = 50` (nu intră în calculul pe km)
+    - **Formula finală:** `price = (BASE_FEE + distance * ratePerKm + anfahrtFee) * PRICE_BUFFER`,
+      unde `PRICE_BUFFER = 1.1`, iar `anfahrtFee` se aplică doar când cursa nu atinge zona Cochem.
 5.  **Returnare:** Returnează un obiect de stare care conține `price`, `distance`, `geometry` (pentru hartă) și eventuale mesaje de eroare.
 
 ## 6. Internaționalizare (i18n)

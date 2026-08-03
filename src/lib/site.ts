@@ -12,6 +12,11 @@ export function activitiesPath(lang: Locale): string {
   return lang === 'en' ? '/en/things-to-do' : '/de/aktivitaeten';
 }
 
+/** The official tariff page, likewise with a per-language slug. */
+export function pricesPath(lang: Locale): string {
+  return lang === 'en' ? '/en/prices' : '/de/preise';
+}
+
 /**
  * Canonical + hreflang metadata for a page that exists in both languages.
  * Every page must set this explicitly: without it Next inherits the layout's

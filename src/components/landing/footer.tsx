@@ -5,7 +5,7 @@ import { Mail, Clock, MapPin, ExternalLink, Heart, Compass } from "lucide-react"
 import { trackEvent } from "@/lib/tracking";
 import { Reveal } from "@/components/ui/reveal";
 import { routes } from "@/lib/routes";
-import { activitiesPath } from "@/lib/site";
+import { activitiesPath, pricesPath } from "@/lib/site";
 import type { Locale } from "@/i18n-config";
 
 type Dictionary = {
@@ -19,6 +19,7 @@ type Dictionary = {
   email: string;
   rights: string;
   exploreTitle: string;
+  pricesLink: string;
 };
 
 export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
@@ -97,6 +98,14 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
                   className="text-sm text-muted-foreground transition-colors hover:text-primary"
                 >
                   {dict.exploreTitle}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={pricesPath(lang as Locale)}
+                  className="text-sm text-muted-foreground transition-colors hover:text-primary"
+                >
+                  {dict.pricesLink}
                 </Link>
               </li>
             </ul>

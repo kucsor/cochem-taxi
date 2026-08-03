@@ -6,22 +6,38 @@
  * estimates on the location / transfer pages.
  */
 
+/**
+ * Official tariff in force since this date. Displayed on the prices page and
+ * in the tariff notice - keep it here so the date lives in one place.
+ */
+export const TARIFF_VALID_FROM = '2026-08-01';
+
+export const TARIFF_CURRENCY = 'EUR';
+
 export const NIGHT_START_HOUR = 22;
 export const NIGHT_END_HOUR = 6;
 
-// Standard vehicle (1-4 passengers)
-export const BASE_FEE = 4.1;
-export const RATE_PER_KM_DAY = 2.6;
-export const RATE_PER_KM_NIGHT = 2.8;
+// Standard vehicle (1-4 passengers) - "Tarif 1"
+export const BASE_FEE = 4.5;
+export const RATE_PER_KM_DAY = 3.0;
+export const RATE_PER_KM_NIGHT = 3.3;
 
-// Large vehicle (5-8 passengers)
-export const LARGE_BASE_FEE = 5.5;
-export const LARGE_RATE_PER_KM_DAY = 3.6;
-export const LARGE_RATE_PER_KM_NIGHT = 3.8;
+// Large vehicle (5-8 passengers) - "Tarif 2"
+export const LARGE_BASE_FEE = 6.0;
+export const LARGE_RATE_PER_KM_DAY = 4.5;
+export const LARGE_RATE_PER_KM_NIGHT = 4.8;
+
+/** Waiting time, charged per hour. Not part of the distance calculation. */
+export const WAITING_FEE_PER_HOUR = 50;
 
 export const ANFAHRT_FEE_PERCENTAGE = 0.4; // 40%
 
-/** Safety buffer applied to the total, so the quoted estimate is not too low. */
+/**
+ * Safety buffer applied to the total, so the quoted estimate is not too low:
+ * the road actually driven is usually longer than the routed distance, and
+ * waiting time costs money too. Since the official tariff is published on the
+ * prices page, this margin is disclosed there rather than hidden.
+ */
 export const PRICE_BUFFER = 1.1;
 
 /** Cochem central point for Anfahrt calculation: Pater-Martin-Straße, 56812 Cochem */

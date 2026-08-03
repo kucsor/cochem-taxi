@@ -8,6 +8,11 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { ConsentBanner } from '@/components/consent-banner';
 import { HtmlLang } from '@/components/html-lang';
+import {
+  TariffNotice,
+  TARIFF_NOTICE_SHOW_UNTIL,
+  TARIFF_NOTICE_STORAGE_KEY,
+} from '@/components/tariff-notice';
 import { formatTelephone, taxiServiceSchema } from '@/lib/schema';
 import { SITE_URL } from '@/lib/site';
 
@@ -73,6 +78,13 @@ export default async function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
+        {/* Hides an already-dismissed tariff notice before first paint, so it
+            never flashes in and pushes the page down. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('${TARIFF_NOTICE_STORAGE_KEY}')==='dismissed'||new Date()>new Date('${TARIFF_NOTICE_SHOW_UNTIL}'))document.documentElement.classList.add('tariff-notice-hidden')}catch(e){}`,
+          }}
+        />
         <HtmlLang lang={lang} />
         <a
           href="#main"
@@ -81,6 +93,7 @@ export default async function RootLayout({
           {dict.common.skipToContent}
         </a>
         <Header dict={dict.footer} lang={lang} />
+        <TariffNotice dict={dict.tariffNotice} lang={lang as Locale} />
         <main id="main" className="container mx-auto px-4 py-6 md:py-12 flex-grow w-full flex flex-col items-center justify-start space-y-12 md:space-y-24 lg:space-y-32">
             {children}
         </main>

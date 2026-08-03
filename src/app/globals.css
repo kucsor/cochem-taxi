@@ -335,6 +335,12 @@
   animation: marker-pulse 2s ease-in-out infinite;
 }
 
+/* Set by the inline script in the layout before first paint, so a dismissed
+   tariff notice never flashes in and shifts the page. */
+.tariff-notice-hidden [data-tariff-notice] {
+  display: none;
+}
+
 /* Reduced motion: snap animations to their end state instead of removing them.
    `animation: none` would break everything that relies on fill-mode: forwards
    to become visible (reveal-up, stagger-children) - near-zero duration keeps

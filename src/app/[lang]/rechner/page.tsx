@@ -4,7 +4,9 @@ import { getDictionary } from '@/lib/dictionaries'
 import { Locale } from '@/i18n-config'
 import { Metadata } from 'next'
 import { sanitizeHtml } from '@/lib/sanitize'
-import { alternatesForLocale } from '@/lib/site'
+import { alternatesForLocale, pricesPath } from '@/lib/site'
+import Link from 'next/link'
+import { Receipt } from 'lucide-react'
 
 export async function generateMetadata({ params }: { params: Promise<{ lang: Locale }> }): Promise<Metadata> {
   const { lang } = await params
@@ -64,6 +66,17 @@ export default async function RechnerPage({
         {/* The Calculator Component */}
         <div className="bg-black/20 rounded-3xl border border-white/5 p-1 md:p-4">
           <FareCalculator dict={dict.fareCalculator} lang={lang} showDetailsLink={false} />
+        </div>
+
+        {/* The official tariff behind the estimate */}
+        <div className="text-center">
+          <Link
+            href={pricesPath(lang)}
+            className="inline-flex items-center gap-2 rounded-full glass px-5 py-3 text-sm text-muted-foreground transition-colors hover:text-primary"
+          >
+            <Receipt className="h-4 w-4 text-primary" aria-hidden="true" />
+            {dict.pricesPage.officialTariffLink}
+          </Link>
         </div>
 
         {/* Activities - shown right after the fare result, when intent is highest */}

@@ -18,7 +18,13 @@ const poppins = Poppins({
   variable: '--font-poppins',
 });
 
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '';
+/**
+ * Google Analytics measurement ID. Public by nature - it ends up in the page
+ * source either way - so it ships as the default and needs no Vercel config.
+ * Set NEXT_PUBLIC_GA_MEASUREMENT_ID to point at a different property.
+ * Loads only after cookie consent (see src/components/analytics.tsx).
+ */
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-L53813EW8Y';
 
 export const viewport: Viewport = {
   width: 'device-width',

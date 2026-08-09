@@ -38,15 +38,18 @@ export async function ActivitiesPageContent({ lang }: { lang: Locale }) {
 
       <Attractions dict={dict.attractions} lang={lang} />
 
-      {page.blocks.map((block) => (
-        <section key={block.query} className="w-full max-w-4xl mx-auto">
-          <div className="glass-card rounded-2xl border border-white/10 p-6 mb-6">
-            <h2 className="text-xl md:text-2xl font-bold font-headline">{block.title}</h2>
-            <p className="mt-2 text-muted-foreground">{block.text}</p>
+      {/* Thematic intros, then one set of curated cards - repeating the cards
+          under each block would just show the same six three times over. */}
+      <section className="w-full max-w-4xl mx-auto grid grid-cols-1 gap-4 md:grid-cols-3">
+        {page.blocks.map((block) => (
+          <div key={block.query} className="glass-card rounded-2xl border border-white/10 p-6">
+            <h2 className="text-lg font-bold font-headline">{block.title}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{block.text}</p>
           </div>
-          <Activities dict={dict.activities} lang={lang} query={block.query} />
-        </section>
-      ))}
+        ))}
+      </section>
+
+      <Activities dict={dict.activities} lang={lang} />
 
       <section className="w-full max-w-3xl mx-auto text-center glass-card rounded-2xl border border-white/10 p-8">
         <h2 className="text-2xl font-bold font-headline">{page.ctaTitle}</h2>

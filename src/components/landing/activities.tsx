@@ -1,17 +1,23 @@
 "use client";
 
-import Script from "next/script";
 import { useEffect, useRef } from "react";
-import { Ticket } from "lucide-react";
+import {
+  ArrowUpRight,
+  Castle,
+  Grape,
+  Landmark,
+  Map as MapIcon,
+  Ship,
+  Ticket,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
-import { useConsent } from "@/components/consent-provider";
 import {
-  GYG_WIDGET_SCRIPT,
+  GYG_DEFAULT_ITEM_COUNT,
   getGygSearchUrl,
-  getGygWidgetProps,
   hasAffiliatePartnerId,
 } from "@/lib/affiliates";
+import { orderActivitiesFor, type ActivityCategory } from "@/lib/activities";
 import { trackEvent } from "@/lib/tracking";
 import type { Locale } from "@/i18n-config";
 
@@ -21,34 +27,46 @@ export type ActivitiesDictionary = {
   subtitle: string;
   seeAll: string;
   disclosure: string;
-  consentTitle: string;
-  consentDescription: string;
-  consentButton: string;
+  cardCta: string;
 };
 
 type ActivitiesProps = {
   dict: ActivitiesDictionary;
   lang: Locale;
-  /** Search term for the widget, e.g. "Cochem" or "Burg Eltz". */
+  /** Topic of the surrounding page - matching activities are shown first. */
   query?: string;
   count?: number;
   className?: string;
 };
 
+const CATEGORY_ICON: Record<ActivityCategory, typeof Castle> = {
+  castle: Castle,
+  boat: Ship,
+  wine: Grape,
+  history: Landmark,
+  hike: MapIcon,
+  daytrip: MapIcon,
+};
+
+/**
+ * Hand-picked activities, rendered as our own cards.
+ *
+ * This used to embed the GetYourGuide widget, but that is a cross-origin iframe:
+ * it painted a white slab our CSS could not touch, and offered no way to filter
+ * by rating. Owning the markup fixes the look, lets us choose what appears, and
+ * has two further benefits - the text is server-rendered so Google can index it,
+ * and nothing third-party loads, so the section no longer needs cookie consent.
+ */
 export function Activities({
   dict,
   lang,
-  query = "Cochem",
-  count = 3,
+  query,
+  count = GYG_DEFAULT_ITEM_COUNT,
   className = "",
 }: ActivitiesProps) {
-  const { consent, accept } = useConsent();
   const sectionRef = useRef<HTMLElement>(null);
   const hasTrackedView = useRef(false);
 
-  // Count how often the section is actually seen. Clicks *inside* the widget
-  // iframe are cross-origin and cannot be observed from here - those numbers
-  // come from the GetYourGuide partner dashboard.
   useEffect(() => {
     const node = sectionRef.current;
     if (!node || hasTrackedView.current || typeof IntersectionObserver === "undefined") return;
@@ -58,7 +76,7 @@ export function Activities({
         for (const entry of entries) {
           if (entry.isIntersecting && !hasTrackedView.current) {
             hasTrackedView.current = true;
-            trackEvent("view_activities", { query });
+            trackEvent("view_activities", { query: query ?? "cochem" });
             observer.disconnect();
           }
         }
@@ -70,10 +88,10 @@ export function Activities({
     return () => observer.disconnect();
   }, [query]);
 
-  // No partner ID configured (local dev, forks) - render nothing at all.
+  // Without a partner ID the links would earn nothing - show nothing instead.
   if (!hasAffiliatePartnerId()) return null;
 
-  const granted = consent === "granted";
+  const activities = orderActivitiesFor(query, count);
 
   return (
     <section
@@ -94,48 +112,57 @@ export function Activities({
         </p>
       </Reveal>
 
-      {granted ? (
-        <>
-          <Script id="gyg-widget-script" src={GYG_WIDGET_SCRIPT} strategy="lazyOnload" async />
-          <div
-            {...getGygWidgetProps({ lang, query, count })}
-            // Reserve space so the widget loading does not shift the layout.
-            className="min-h-[320px]"
-          />
-          <div className="mt-4 text-center">
-            <Button
-              asChild
-              variant="outline"
-              className="rounded-full border-white/20 glass-card hover:bg-white/10"
+      <Reveal stagger className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {activities.map((activity) => {
+          const Icon = CATEGORY_ICON[activity.category];
+          return (
+            <a
+              key={activity.slug}
+              href={getGygSearchUrl({ lang, query: activity.query })}
+              target="_blank"
+              rel="noopener sponsored"
+              onClick={() => trackEvent("click_affiliate_link", { query: activity.query })}
+              className="group glass-card glass-card-hover flex flex-col rounded-2xl border border-white/10 p-5 hover:-translate-y-1"
             >
-              <a
-                href={getGygSearchUrl({ lang, query })}
-                target="_blank"
-                rel="noopener sponsored"
-                onClick={() => trackEvent("click_affiliate_link", { query })}
-              >
-                {dict.seeAll}
-              </a>
-            </Button>
-          </div>
-        </>
-      ) : (
-        <Reveal delay={0.1}>
-          <div className="glass-card glass-card-hover rounded-2xl border border-white/10 p-6 text-center">
-            <h3 className="text-base font-semibold text-foreground">{dict.consentTitle}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">{dict.consentDescription}</p>
-            <Button
-              className="mt-4 rounded-full bg-primary font-semibold text-primary-foreground hover:bg-primary/90 active:scale-95 transition-transform"
-              onClick={() => {
-                accept();
-                trackEvent("consent_accept", { source: "activities" });
-              }}
-            >
-              {dict.consentButton}
-            </Button>
-          </div>
-        </Reveal>
-      )}
+              <div className="flex items-start gap-4">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/5 transition-transform duration-300 group-hover:scale-110">
+                  <Icon className="h-5 w-5 text-primary" aria-hidden="true" />
+                </div>
+                <div className="min-w-0 flex-grow">
+                  <h3 className="text-base font-semibold text-white transition-colors group-hover:text-primary">
+                    {activity.title[lang]}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                    {activity.description[lang]}
+                  </p>
+                </div>
+              </div>
+
+              <span className="mt-4 inline-flex items-center gap-1 text-sm text-primary opacity-0 transition-opacity group-hover:opacity-100">
+                {dict.cardCta}
+                <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+              </span>
+            </a>
+          );
+        })}
+      </Reveal>
+
+      <div className="mt-6 text-center">
+        <Button
+          asChild
+          variant="outline"
+          className="rounded-full border-white/20 glass-card hover:bg-white/10"
+        >
+          <a
+            href={getGygSearchUrl({ lang, query: query ?? "Cochem" })}
+            target="_blank"
+            rel="noopener sponsored"
+            onClick={() => trackEvent("click_affiliate_link", { query: query ?? "Cochem" })}
+          >
+            {dict.seeAll}
+          </a>
+        </Button>
+      </div>
 
       <p className="mt-4 text-center text-xs text-muted-foreground/80">{dict.disclosure}</p>
     </section>

@@ -143,7 +143,7 @@
     "analyticsTitle": "Google Analytics",
     "analyticsContent": "Diese Website nutzt Funktionen des Webanalysedienstes Google Analytics. Anbieter ist die Google Ireland Limited. Google Analytics verwendet sog. \"Cookies\". Das sind Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie ermöglichen.<br><br><strong>IP-Anonymisierung:</strong> Wir haben auf dieser Website die Funktion IP-Anonymisierung aktiviert. Dadurch wird Ihre IP-Adresse von Google innerhalb von Mitgliedstaaten der Europäischen Union vor der Übermittlung in die USA gekürzt.",
     "consentTitle": "Einwilligung & Cookies",
-    "consentContent": "Beim ersten Besuch fragen wir Sie, ob Sie Cookies für die Reichweitenmessung (Google Analytics) und externe Inhalte unseres Partners GetYourGuide zulassen möchten. <strong>Ohne Ihre Zustimmung werden diese Dienste nicht geladen</strong> und es werden keine entsprechenden Cookies gesetzt. Ihre Auswahl wird lokal in Ihrem Browser gespeichert und kann jederzeit geändert werden, indem Sie die Websitedaten in Ihrem Browser löschen. Notwendige Funktionen wie der Fahrpreisrechner sind davon nicht betroffen.",
+    "consentContent": "Beim ersten Besuch fragen wir Sie, ob Sie Cookies für die Reichweitenmessung mit Google Analytics zulassen möchten. <strong>Ohne Ihre Zustimmung wird der Dienst nicht geladen</strong> und es werden keine entsprechenden Cookies gesetzt. Unsere Ausflugsempfehlungen sind reine Links - sie laden keine fremden Inhalte und setzen keine Cookies. Ihre Auswahl wird lokal in Ihrem Browser gespeichert und kann jederzeit geändert werden, indem Sie die Websitedaten in Ihrem Browser löschen. Notwendige Funktionen wie der Fahrpreisrechner sind davon nicht betroffen.",
     "affiliateTitle": "Hinweis zu Partnerlinks (Affiliate)",
     "affiliateContent": "Diese Website zeigt Aktivitäten und Touren unseres Partners <strong>GetYourGuide</strong> an. Wenn Sie über einen dieser Links buchen, erhalten wir eine Provision. <strong>Für Sie entstehen dadurch keine Mehrkosten</strong> - der Preis bleibt derselbe. Diese Einnahmen helfen uns, den Betrieb dieser Website und des kostenlosen Fahrpreisrechners zu finanzieren. Anbieter und Vertragspartner der Touren ist ausschließlich GetYourGuide; wir übernehmen keine Gewähr für deren Angebote."
   },
@@ -152,7 +152,7 @@
   },
   "consent": {
     "title": "Cookies & externe Inhalte",
-    "description": "Wir nutzen Cookies für die Reichweitenmessung (Google Analytics) und zeigen Ausflugsangebote unseres Partners GetYourGuide. Diese Dienste werden erst nach Ihrer Zustimmung geladen. Der Fahrpreisrechner funktioniert auch ohne.",
+    "description": "Wir nutzen Cookies für die Reichweitenmessung mit Google Analytics. Der Dienst wird erst nach Ihrer Zustimmung geladen. Alle Inhalte der Seite - auch der Fahrpreisrechner - funktionieren ohne.",
     "accept": "Alle akzeptieren",
     "decline": "Nur notwendige",
     "moreInfo": "Mehr im Impressum & Datenschutz"
@@ -162,10 +162,8 @@
     "title": "Aktivitäten rund um Cochem",
     "subtitle": "Burgführungen, Weinproben und Moselschifffahrten - buchbar über unseren Partner GetYourGuide.",
     "seeAll": "Alle Aktivitäten ansehen",
-    "disclosure": "Anzeige: Die Angebote stammen von GetYourGuide. Bei einer Buchung erhalten wir eine Provision - für Sie ändert sich der Preis nicht.",
-    "consentTitle": "Externe Inhalte sind deaktiviert",
-    "consentDescription": "Um Angebote von GetYourGuide anzuzeigen, benötigen wir Ihre Zustimmung. Dabei werden Daten an GetYourGuide übertragen.",
-    "consentButton": "Aktivitäten anzeigen"
+    "cardCta": "Angebote ansehen",
+    "disclosure": "Anzeige: Die Angebote stammen von GetYourGuide. Bei einer Buchung erhalten wir eine Provision - für Sie ändert sich der Preis nicht."
   },
   "tariffNotice": {
     "text": "Seit dem 1. August 2026 gelten neue Taxitarife in Cochem.",

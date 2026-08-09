@@ -147,7 +147,7 @@
     "analyticsTitle": "Google Analytics",
     "analyticsContent": "This website uses functions of the web analysis service Google Analytics. The provider is Google Ireland Limited. Google Analytics uses so-called \"cookies\". These are text files that are stored on your computer and that allow an analysis of your use of the website.<br><br><strong>IP Anonymization:</strong> We have activated the IP anonymization function on this website. As a result, your IP address will be truncated by Google within member states of the European Union before being transmitted to the USA.",
     "consentTitle": "Consent & Cookies",
-    "consentContent": "On your first visit we ask whether you allow cookies for audience measurement (Google Analytics) and external content from our partner GetYourGuide. <strong>Without your consent these services are not loaded</strong> and no such cookies are set. Your choice is stored locally in your browser and can be changed at any time by clearing the site data in your browser. Essential functions such as the fare calculator are not affected.",
+    "consentContent": "On your first visit we ask whether you allow cookies for audience measurement with Google Analytics. <strong>Without your consent the service is not loaded</strong> and no such cookies are set. Our activity recommendations are plain links - they load no third-party content and set no cookies. Your choice is stored locally in your browser and can be changed at any time by clearing the site data in your browser. Essential functions such as the fare calculator are not affected.",
     "affiliateTitle": "Affiliate Link Disclosure",
     "affiliateContent": "This website displays activities and tours from our partner <strong>GetYourGuide</strong>. If you book through one of these links, we receive a commission. <strong>This does not cost you anything extra</strong> - the price stays the same. These earnings help us cover the running costs of this website and the free fare calculator. The provider and contracting party for the tours is GetYourGuide alone; we accept no liability for their offers."
   },
@@ -156,7 +156,7 @@
   },
   "consent": {
     "title": "Cookies & external content",
-    "description": "We use cookies for audience measurement (Google Analytics) and show tours from our partner GetYourGuide. These services load only after you agree. The fare calculator works without them.",
+    "description": "We use cookies for audience measurement with Google Analytics. The service loads only after you agree. Everything on the site - including the fare calculator - works without it.",
     "accept": "Accept all",
     "decline": "Essential only",
     "moreInfo": "More in Legal Notice & Privacy"
@@ -166,10 +166,8 @@
     "title": "Things to do around Cochem",
     "subtitle": "Castle tours, wine tastings and Moselle river cruises - bookable through our partner GetYourGuide.",
     "seeAll": "See all activities",
-    "disclosure": "Ad: These offers come from GetYourGuide. We earn a commission on bookings - the price stays the same for you.",
-    "consentTitle": "External content is disabled",
-    "consentDescription": "We need your consent to display offers from GetYourGuide. Data will be transmitted to GetYourGuide.",
-    "consentButton": "Show activities"
+    "cardCta": "View offers",
+    "disclosure": "Ad: These offers come from GetYourGuide. We earn a commission on bookings - the price stays the same for you."
   },
   "tariffNotice": {
     "text": "New taxi tariffs apply in Cochem as of 1 August 2026.",

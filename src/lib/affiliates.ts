@@ -29,11 +29,24 @@ export type GygWidgetOptions = {
   count?: number;
 };
 
+/** Default number of activities per section. */
+export const GYG_DEFAULT_ITEM_COUNT = 6;
+
 /**
  * The `data-gyg-*` attributes the GetYourGuide script reads when it initialises
  * a widget container.
+ *
+ * Note on styling: the widget renders inside a cross-origin iframe, so none of
+ * our CSS reaches its contents - it paints its own light surface. The activities
+ * widget also exposes no theme, sort or rating parameter; we only get to choose
+ * the search term and how many results to ask for. That is why the section wraps
+ * it in a deliberately light panel instead of trying to restyle it.
  */
-export function getGygWidgetProps({ lang, query, count = 3 }: GygWidgetOptions) {
+export function getGygWidgetProps({
+  lang,
+  query,
+  count = GYG_DEFAULT_ITEM_COUNT,
+}: GygWidgetOptions) {
   return {
     'data-gyg-href': 'https://widget.getyourguide.com/default/activities.frame',
     'data-gyg-locale-code': gygLocaleCode(lang),

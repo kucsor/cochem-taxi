@@ -20,7 +20,7 @@ export function middleware(request: NextRequest) {
     form-action 'self';
     frame-ancestors 'none';
     frame-src 'self' https://widget.getyourguide.com https://*.getyourguide.com;
-    connect-src 'self' https://api.mapbox.com https://events.mapbox.com https://www.google-analytics.com https://www.googletagmanager.com https://widget.getyourguide.com https://*.getyourguide.com;
+    connect-src 'self' https://api.mapbox.com https://events.mapbox.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com https://widget.getyourguide.com https://*.getyourguide.com;
     worker-src 'self' blob:;
     block-all-mixed-content;
     upgrade-insecure-requests;

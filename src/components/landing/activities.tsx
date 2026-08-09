@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { useConsent } from "@/components/consent-provider";
 import {
+  GYG_DEFAULT_ITEM_COUNT,
   GYG_WIDGET_SCRIPT,
   getGygSearchUrl,
   getGygWidgetProps,
@@ -39,7 +40,7 @@ export function Activities({
   dict,
   lang,
   query = "Cochem",
-  count = 3,
+  count = GYG_DEFAULT_ITEM_COUNT,
   className = "",
 }: ActivitiesProps) {
   const { consent, accept } = useConsent();
@@ -97,11 +98,18 @@ export function Activities({
       {granted ? (
         <>
           <Script id="gyg-widget-script" src={GYG_WIDGET_SCRIPT} strategy="lazyOnload" async />
-          <div
-            {...getGygWidgetProps({ lang, query, count })}
-            // Reserve space so the widget loading does not shift the layout.
-            className="min-h-[320px]"
-          />
+          {/* The widget is a cross-origin iframe painting its own light surface,
+              which our CSS cannot reach. So instead of fighting it, the panel
+              itself is light: the widget blends into it and the whole thing
+              reads as one deliberate card, lifted off the dark page by the gold
+              ring and shadow. */}
+          <div className="overflow-hidden rounded-3xl bg-white p-3 shadow-2xl shadow-black/60 ring-1 ring-primary/30 md:p-4">
+            <div
+              {...getGygWidgetProps({ lang, query, count })}
+              // Reserve space so the widget loading does not shift the layout.
+              className="min-h-[320px]"
+            />
+          </div>
           <div className="mt-4 text-center">
             <Button
               asChild

@@ -44,7 +44,7 @@ export async function ActivitiesPageContent({ lang }: { lang: Locale }) {
             <h2 className="text-xl md:text-2xl font-bold font-headline">{block.title}</h2>
             <p className="mt-2 text-muted-foreground">{block.text}</p>
           </div>
-          <Activities dict={dict.activities} lang={lang} query={block.query} count={4} />
+          <Activities dict={dict.activities} lang={lang} query={block.query} />
         </section>
       ))}
 

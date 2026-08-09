@@ -19,12 +19,14 @@ const poppins = Poppins({
 });
 
 /**
- * Google Analytics measurement ID. Public by nature - it ends up in the page
- * source either way - so it ships as the default and needs no Vercel config.
- * Set NEXT_PUBLIC_GA_MEASUREMENT_ID to point at a different property.
- * Loads only after cookie consent (see src/components/analytics.tsx).
+ * Google Analytics measurement ID for THIS site, from a GA4 property whose web
+ * data stream points at cochem-taxi.de.
+ *
+ * Deliberately has no fallback: an ID belonging to another property would quietly
+ * mix this site's traffic into that project's reports and make both unusable.
+ * Empty simply means Analytics does not load (see src/components/analytics.tsx).
  */
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || 'G-L53813EW8Y';
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || '';
 
 export const viewport: Viewport = {
   width: 'device-width',

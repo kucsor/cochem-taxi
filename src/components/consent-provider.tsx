@@ -12,6 +12,8 @@ type ConsentContextValue = {
   hydrated: boolean;
   accept: () => void;
   decline: () => void;
+  /** Forgets the stored choice so the banner asks again. */
+  reset: () => void;
 };
 
 const ConsentContext = createContext<ConsentContextValue>({
@@ -19,12 +21,12 @@ const ConsentContext = createContext<ConsentContextValue>({
   hydrated: false,
   accept: () => {},
   decline: () => {},
+  reset: () => {},
 });
 
 /**
- * Gate for everything that sets third-party cookies (Google Analytics, the
- * GetYourGuide widget). Nothing loads until the visitor accepts - required by
- * DSGVO / TDDDG in Germany.
+ * Gate for Google Analytics, which sets cookies. Nothing loads until the
+ * visitor accepts - required by DSGVO / TDDDG in Germany.
  */
 export function ConsentProvider({ children }: { children: React.ReactNode }) {
   const [consent, setConsent] = useState<ConsentState>("unset");
@@ -51,14 +53,30 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
     setConsent(value);
   }, []);
 
+  /**
+   * Clears the stored decision so the banner asks again. Without this a visitor
+   * who once chose "essential only" was stuck with it forever - the banner only
+   * shows while the choice is unset - which is both a dead end for them and at
+   * odds with the requirement that consent be as easy to withdraw as to give.
+   */
+  const reset = useCallback(() => {
+    try {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } catch {
+      // Nothing stored to clear; the in-memory reset below still applies.
+    }
+    setConsent("unset");
+  }, []);
+
   const value = useMemo<ConsentContextValue>(
     () => ({
       consent,
       hydrated,
       accept: () => persist("granted"),
       decline: () => persist("denied"),
+      reset,
     }),
-    [consent, hydrated, persist]
+    [consent, hydrated, persist, reset]
   );
 
   return <ConsentContext.Provider value={value}>{children}</ConsentContext.Provider>;

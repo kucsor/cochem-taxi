@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Clock, MapPin, ExternalLink, Heart, Compass } from "lucide-react";
+import { Mail, Clock, MapPin, ExternalLink, Heart, Compass, Cookie } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
 import { Reveal } from "@/components/ui/reveal";
+import { useConsent } from "@/components/consent-provider";
 import { routes } from "@/lib/routes";
 import { activitiesPath, pricesPath } from "@/lib/site";
 import type { Locale } from "@/i18n-config";
@@ -20,10 +21,12 @@ type Dictionary = {
   rights: string;
   exploreTitle: string;
   pricesLink: string;
+  cookieSettings: string;
 };
 
 export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
   const currentYear = new Date().getFullYear();
+  const { reset } = useConsent();
 
   return (
     <footer className="w-full mt-20 border-t border-white/5">
@@ -124,7 +127,7 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
             <span className="hidden md:inline">{dict.rights || "All rights reserved"}</span>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-2">
             <a
               href={`/${lang}/legal`}
               onClick={() => trackEvent('view_legal')}
@@ -133,6 +136,15 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
               {dict.legalLink}
               <ExternalLink className="w-3 h-3" />
             </a>
+            {/* Lets a visitor change their mind - the banner only appears while
+                the choice is unset, so without this "essential only" was final. */}
+            <button
+              onClick={reset}
+              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-white transition-colors p-3 min-h-[44px]"
+            >
+              <Cookie className="w-3.5 h-3.5" />
+              {dict.cookieSettings}
+            </button>
           </div>
 
           <div className="flex items-center gap-1 text-sm text-muted-foreground">

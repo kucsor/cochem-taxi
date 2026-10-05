@@ -1,0 +1,277 @@
+{
+  "metadata": {
+    "title": "Taxi Cochem | Taxiprijs berekenen en telefonisch bestellen",
+    "description": "Taxi in Cochem en de Moezelregio. Bereken een richtprijs en bel om een taxi te bestellen. Vervoer vanuit Cochem naar de luchthaven en Burg Eltz."
+  },
+  "hero": {
+    "title": "Een taxi nodig in Cochem?",
+    "subtitle": "Betrouwbaar en altijd voor u beschikbaar.",
+    "callButton": "BEL NU",
+    "phoneNumber": "02671 8080",
+    "badge": "24/7 bereikbaar in Cochem",
+    "mainTitle": "Een",
+    "mainTitleAccent": "taxi nodig in Cochem?",
+    "features": "Snel • Betrouwbaar • Betaalbaar",
+    "trustIndicators": {
+      "available": "Nu bereikbaar",
+      "drivers": "Lokale chauffeurs",
+      "prices": "Transparante tarieven"
+    },
+    "calculateButton": "Prijs berekenen"
+  },
+  "fareCalculator": {
+    "title": "Taxiprijs berekenen",
+    "subtitle": "Bereken de geschatte prijs van uw rit",
+    "startLabel": "Van (vertrek)",
+    "startPlaceholder": "Bijv. station Cochem",
+    "endLabel": "Naar (bestemming)",
+    "endPlaceholder": "Bijv. Reichsburg Cochem",
+    "timeLabel": "Tijd",
+    "passengersLabel": "Passagiers",
+    "passengersStandard": "1–4 passagiers",
+    "passengersLarge": "5–8 passagiers",
+    "submitButton": "Richtprijs berekenen",
+    "locateMeAriaLabel": "Huidige locatie gebruiken",
+    "resultTitle": "Geschatte prijs",
+    "resultDistance": "Gebaseerd op een geschatte afstand van {distance} km.",
+    "routeMapTitle": "Route op de kaart",
+    "anfahrtInfo": "De prijs bevat voorrijkosten van ongeveer {anfahrtPrice}.",
+    "hideMap": "Kaart verbergen",
+    "showMap": "Kaart tonen",
+    "mapHidden": "Kaart verborgen",
+    "loadMap": "Interactieve kaart laden",
+    "errorMessages": {
+      "generic": "Er is een onverwachte fout opgetreden.",
+      "geocoding_both": "Vertrekadres en bestemming zijn niet gevonden.",
+      "geocoding_start": "Het vertrekadres is niet gevonden.",
+      "geocoding_end": "De bestemming is niet gevonden.",
+      "routing": "Er kon geen route tussen de adressen worden berekend.",
+      "missing_input": "Vul vertrekadres, bestemming en tijd in."
+    },
+    "locationPrefix": "Locatie:",
+    "locating": "Locatie bepalen",
+    "detailsLink": "Meer over de prijsberekening",
+    "callButton": "Taxi bellen"
+  },
+  "rechnerPage": {
+    "metaTitle": "Taxiprijs Cochem | Gratis taxicalculator",
+    "metaDescription": "Bereken gratis een richtprijs voor uw taxirit in Cochem en omgeving. Bestel uw taxi uitsluitend telefonisch.",
+    "h1": "Taxicalculator Cochem",
+    "intro": "Plant u een rit in Cochem of omgeving? Met onze gratis calculator krijgt u een vrijblijvende schatting van de taxikosten.",
+    "h2_1": "Zo berekent u uw taxikosten",
+    "content_1": "<p>Onze <strong>taxicalculator voor Cochem</strong> gebruikt tariefgegevens en een berekende route om uw kosten te schatten. Vul uw vertrekadres en bestemming in, bijvoorbeeld uw hotel, station Cochem of luchthaven Hahn.</p><p>De berekening houdt rekening met:</p><ul><li>Het basistarief in de regio Cochem-Zell.</li><li>De kilometerprijs voor de berekende route.</li><li>Eventuele voorrijkosten buiten Cochem.</li></ul>",
+    "h2_2": "Transparante taxiprijzen",
+    "content_2": "<p>De berekende prijs is een schatting. De uiteindelijke <strong>taxiprijs</strong> wordt bepaald door de geijkte taxameter. Verkeer, wachttijden en toeslagen voor nachtelijke ritten of grote taxi’s kunnen de prijs beïnvloeden.</p><p>Een prijsberekening is geen reservering. Bel om een taxi te bestellen.</p>"
+  },
+  "services": {
+    "title": "Uw lokale taxiservice in Cochem",
+    "description": "Welkom bij Cochem Taxi. Uw betrouwbare vervoer in, rond en vanuit Cochem.",
+    "badge": "Onze diensten",
+    "subtitle": "Uw taxiservice in Cochem",
+    "learnMore": "Meer informatie",
+    "items": {
+      "hotel": {
+        "title": "Hoteltransfer",
+        "description": "Vervoer naar uw hotel of ophalen bij uw accommodatie."
+      },
+      "castle": {
+        "title": "Naar de Reichsburg",
+        "description": "Bezoek het herkenningspunt van Cochem zonder parkeerzorgen."
+      },
+      "airport": {
+        "title": "Naar de luchthaven",
+        "description": "Begin uw reis ontspannen met vervoer vanuit Cochem naar de luchthaven."
+      }
+    },
+    "features": [
+      "Verzekerde ritten",
+      "Op tijd opgehaald",
+      "Uitstekende service"
+    ]
+  },
+  "whyUs": {
+    "title": "Waarom Cochem Taxi?",
+    "badge": "Waarom kiezen voor ons?",
+    "features": [
+      "Lokale en meertalige chauffeurs",
+      "Moderne voertuigen met airconditioning",
+      "Koeriersdiensten",
+      "Zittend ziekenvervoer voor alle zorgverzekeraars"
+    ],
+    "stats": {
+      "experience": "Jaar ervaring",
+      "availability": "Bereikbaarheid",
+      "reliability": "Betrouwbaar"
+    },
+    "cta": "Bel en ga op weg!"
+  },
+  "serviceRegion": {
+    "title": "Actief in de hele regio",
+    "andMore": "… en meer"
+  },
+  "serviceArea": {
+    "title": "Ons werkgebied aan de Moezel",
+    "content": "<p>Ook buiten Cochem kunt u telefonisch een taxi aanvragen. Wij rijden in onder meer <strong>Ediger-Eller</strong>, <strong>Ellenz-Poltersdorf</strong>, <strong>Klotten</strong>, <strong>Ernst</strong>, <strong>Valwig</strong> en <strong>Bruttig-Fankel</strong>.</p><p>Voor een rit naar station Cochem, Burg Eltz of vanuit Cochem naar de luchthaven gebruikt u onze <strong>prijscalculator</strong>. De uitkomst is een vrijblijvende schatting. Bevestig beschikbaarheid en vertrek telefonisch.</p>"
+  },
+  "footer": {
+    "companyName": "Cochem Taxi",
+    "openingHoursTitle": "Openingstijden",
+    "openingHoursContent": "24 uur / 7 dagen\nOok op zon- en feestdagen",
+    "copyright": "© {year} Cochem Taxi. Alle rechten voorbehouden.",
+    "tagline": "Betrouwbaar vervoer in, rond en vanuit Cochem. Bel om een rit aan te vragen.",
+    "legalLink": "Colofon en privacy",
+    "quickContact": "Direct contact",
+    "exploreTitle": "Transfers en bezienswaardigheden",
+    "pricesLink": "Taxiprijzen en tarieven",
+    "cookieSettings": "Cookie-instellingen",
+    "email": "E-mail",
+    "rights": "Alle rechten voorbehouden"
+  },
+  "legalPage": {
+    "title": "Colofon en privacybeleid",
+    "impressumTitle": "Colofon",
+    "angabenTitle": "Informatie volgens § 5 TMG",
+    "betreiber": "<strong>Beheerder van de website:</strong><br>Alexandru Kucsor<br>Bergstrasse 18<br>56812 Cochem<br>Duitsland",
+    "kontaktTitle": "Contact",
+    "kontaktContent": "Telefoon: +49 0151 29616693<br>E-mail: Alexandru.Kucsor@gmail.com",
+    "verantwortlichTitle": "Verantwoordelijk voor de redactie",
+    "verantwortlichContent": "Alexandru Kucsor<br>Bergstrasse 18<br>56812 Cochem<br>Duitsland",
+    "disclaimerTitle": "Aansprakelijkheid",
+    "unabhaengigkeitTitle": "1. Onafhankelijkheid van deze website",
+    "unabhaengigkeitContent": "Deze website (cochem-taxi.de) is een <strong>onafhankelijk informatieportaal</strong> voor taxi’s in Cochem. Wij zijn <strong>niet</strong> de officiële website van Taxco AG of een andere taxionderneming. Via de belknoppen belt u rechtstreeks de taxicentrale op 02671 8080. Wij bieden deze informatie als particulier aan zonder extra kosten voor de gebruiker.",
+    "tarifrechnerTitle": "2. Aansprakelijkheid voor de prijscalculator",
+    "tarifrechnerContent": "De calculator biedt uitsluitend een globale indicatie. De berekende prijzen zijn <strong>vrijblijvende schattingen</strong>. <strong>Alleen de prijs op de geijkte taxameter in het voertuig is bindend.</strong> Wij aanvaarden geen aansprakelijkheid voor de juistheid van berekende afstanden of prijzen.",
+    "inhalteTitle": "3. Aansprakelijkheid voor inhoud",
+    "inhalteContent": "Als aanbieder zijn wij volgens § 7 lid 1 TMG en de algemene wetgeving verantwoordelijk voor onze eigen inhoud. Wij zijn niet verplicht doorgegeven of opgeslagen informatie van derden te controleren. Zodra wij kennis krijgen van een overtreding, verwijderen wij de betreffende inhoud.",
+    "linksTitle": "4. Aansprakelijkheid voor links",
+    "linksContent": "Deze website bevat links naar externe websites. Wij hebben geen invloed op hun inhoud en aanvaarden daarvoor geen aansprakelijkheid. De betreffende aanbieder of beheerder is verantwoordelijk voor de inhoud van de gelinkte pagina’s.",
+    "datenschutzTitle": "Privacybeleid (uittreksel)",
+    "analyticsTitle": "Google Analytics",
+    "analyticsContent": "Deze website gebruikt Google Analytics van Google Ireland Limited. Deze dienst gebruikt cookies: tekstbestanden op uw apparaat waarmee uw gebruik van de website kan worden geanalyseerd.<br><br><strong>IP-anonimisering:</strong> Op deze website is IP-anonimisering geactiveerd. Google verkort uw IP-adres binnen de Europese Unie voordat het naar de Verenigde Staten wordt doorgestuurd.",
+    "consentTitle": "Toestemming en cookies",
+    "consentContent": "Bij uw eerste bezoek vragen wij toestemming voor Google Analytics. <strong>Zonder toestemming wordt deze dienst niet geladen</strong> en worden de bijbehorende cookies niet geplaatst. Uw keuze wordt lokaal in uw browser opgeslagen. U kunt deze wijzigen via de cookie-instellingen onderaan de website. Essentiële functies, zoals de calculator, blijven beschikbaar."
+  },
+  "common": {
+    "skipToContent": "Naar de inhoud"
+  },
+  "consent": {
+    "title": "Cookies en externe inhoud",
+    "description": "Wij gebruiken cookies voor bezoekersstatistieken met Google Analytics. De dienst wordt pas geladen na uw toestemming. De website en calculator werken ook zonder deze cookies.",
+    "accept": "Alles accepteren",
+    "decline": "Alleen noodzakelijk",
+    "moreInfo": "Meer in het colofon en privacybeleid"
+  },
+  "tariffNotice": {
+    "text": "Sinds 1 augustus 2026 gelden nieuwe taxitarieven in Cochem.",
+    "linkLabel": "Alle prijzen bekijken",
+    "dismiss": "Melding sluiten"
+  },
+  "tariffTable": {
+    "positionHeader": "Onderdeel",
+    "priceHeader": "Prijs",
+    "tariff1": "Tarief 1 – taxi (1–4 passagiers)",
+    "tariff2": "Tarief 2 – grote taxi (5–8 passagiers)",
+    "baseFee": "Basistarief",
+    "baseFeeLarge": "Basistarief",
+    "perKmDay": "per km – dagtarief",
+    "perKmNight": "per km – nachttarief",
+    "waitingFee": "Wachttijd",
+    "perHour": "per uur"
+  },
+  "pricesPage": {
+    "metaTitle": "Taxiprijzen Cochem 2026 | Huidige tarieven",
+    "metaDescription": "Taxitarieven in Cochem sinds 1 augustus 2026: basistarief, kilometerprijzen overdag en ’s nachts, grote taxi en wachttijd.",
+    "h1": "Taxiprijzen in Cochem",
+    "validFrom": "Geldig sinds {date}",
+    "intro": "Hier vindt u de taxitarieven voor Cochem en omgeving. De tarieven zijn aangepast op 1 augustus 2026. De onderstaande tabel toont de bedragen.",
+    "noteBufferTitle": "Waarom toont de calculator iets meer?",
+    "noteBufferText": "De calculator voegt een kleine veiligheidsmarge toe. De gereden route kan langer zijn dan de berekende route, en wachten in het verkeer kost ook geld. De uitkomst blijft een schatting.",
+    "noteAnfahrtTitle": "Voorrijkosten buiten Cochem",
+    "noteAnfahrtText": "Als een rit niet door Cochem rijdt en er ook niet begint of eindigt, gelden voorrijkosten. Deze bedragen 40 procent van het tarief voor de aanrijafstand. Ze gelden niet voor ritten binnen, naar of vanuit Cochem.",
+    "noteMeterTitle": "De taxameter is bepalend",
+    "noteMeterText": "De bedragen op deze website en in de calculator zijn vrijblijvende indicaties. Alleen de prijs op de geijkte taxameter in het voertuig is bindend.",
+    "ctaTitle": "Een taxi bestellen",
+    "ctaText": "Bel om een rit aan te vragen of bereken eerst een richtprijs.",
+    "callButton": "Bel nu",
+    "calculatorLink": "Prijs berekenen",
+    "officialTariffLink": "Taxitarieven van Cochem bekijken"
+  },
+  "attractions": {
+    "title": "Bezienswaardigheden in Cochem met lokale tips",
+    "subtitle": "Ontdek Cochem en omgeving en plan hoe u er komt.",
+    "tipLabel": "Lokale tip",
+    "inTown": "in de stad",
+    "fromCochem": "ongeveer {distance} km van Cochem",
+    "disclaimer": "Openingstijden, rondleidingen en prijzen kunnen wijzigen. Controleer vóór uw bezoek de officiële website van de aanbieder."
+  },
+  "activitiesPage": {
+    "metaTitle": "Bezienswaardigheden Cochem | Lokale tips en vervoer",
+    "metaDescription": "Reichsburg, Bundesbankbunker, Calmont en Burg Eltz: ontdek de bezienswaardigheden en plan uw taxirit vanuit Cochem.",
+    "h1": "Wat te doen in Cochem",
+    "intro": "Ontdek de bezienswaardigheden rond Cochem en plan uw vervoer. Deze gids biedt informatie over bestemmingen en taxi’s. Op deze website kunt u geen excursies of toegangsbewijzen boeken. Een taxi bestelt u uitsluitend telefonisch.",
+    "blocks": [
+      {
+        "title": "Bezienswaardigheden in Cochem",
+        "text": "De Reichsburg, de stoeltjeslift naar het Pinnerkreuz en de oude binnenstad liggen dichtbij.",
+        "query": "Cochem"
+      },
+      {
+        "title": "Burg Eltz en omgeving",
+        "text": "Bel om een taxi naar de bezoekersparkeerplaats aan te vragen en spreek de terugrit vooraf af.",
+        "query": "Eltz Castle"
+      },
+      {
+        "title": "Wijn en de Moezel",
+        "text": "Ontdek de wijndorpen en de Moezel. Plan uw lokale taxirit telefonisch.",
+        "query": "Moselle wine tasting"
+      }
+    ],
+    "ctaTitle": "Een taxi naar uw bestemming nodig?",
+    "ctaText": "Bel om vertrek, bestemming en beschikbaarheid af te spreken.",
+    "callButton": "Bel nu"
+  },
+  "locationPage": {
+    "distanceLabel": "Afstand vanaf Cochem",
+    "durationLabel": "Reistijd",
+    "priceLabel": "Richtprijs",
+    "minutes": "min",
+    "approx": "ca.",
+    "disclaimer": "Vrijblijvende schatting voor een gewone rit overdag. De taxameter is bepalend.",
+    "highlightsTitle": "Goed om te weten",
+    "faqTitle": "Veelgestelde vragen",
+    "calculatorTitle": "Bereken de prijs van uw rit",
+    "regionTitle": "Andere plaatsen in de regio"
+  },
+  "transferPage": {
+    "metaTitle": "Taxi Cochem – {destination} | Prijs en reistijd",
+    "metaDescription": "Van Cochem naar {destination}: ongeveer {distance} km en {minutes} minuten rijden. Bereken een richtprijs en vraag uw rit telefonisch aan.",
+    "h1": "Taxi Cochem → {destination}",
+    "subtitle": "Rechtstreeks vanuit Cochem, zonder overstappen",
+    "highlightsTitle": "Waarom een taxi nemen?",
+    "faqTitle": "Veelgestelde vragen",
+    "calculatorTitle": "Bereken de prijs van uw rit",
+    "ctaTitle": "Vraag uw rit telefonisch aan",
+    "ctaText": "Bel voor langere ritten ruim van tevoren om de beschikbaarheid te bevestigen.",
+    "callButton": "Bel nu",
+    "otherRoutes": "Andere populaire routes"
+  },
+  "airportPage": {
+    "sectionTitle": "Vanuit Cochem naar de luchthaven",
+    "callButton": "Luchthaventaxi telefonisch aanvragen",
+    "planningTitle": "Vertrek en reistijd plannen",
+    "planningText": "De calculator berekent een route voor de ingevulde adressen. Reistijd en prijs zijn vrijblijvende schattingen. Houd extra tijd aan voor verkeer, inchecken en veiligheidscontrole en volg het advies van uw luchtvaartmaatschappij.",
+    "departureTitle": "Ophalen in Cochem",
+    "departureText": "Deze luchthaventransfers vertrekken uitsluitend vanuit Cochem. Geef telefonisch uw vertrekadres in Cochem, de luchthaven, uw vlucht en gewenste vertrektijd door. Een prijsberekening bevestigt geen rit.",
+    "luggageTitle": "Gezinnen, groepen en bagage",
+    "luggageText": "Vermeld bij uw telefoontje het aantal passagiers, koffers en benodigde kinderzitjes. Laat beschikbaarheid, voertuigformaat en prijs vooraf bevestigen. Voor lange ritten kan een telefonische prijsafspraak nodig zijn.",
+    "otherAirports": "Andere luchthavens",
+    "metaTitle": "Taxi Cochem → luchthaven {airport} ({code})"
+  },
+  "navigation": {
+    "home": "Home",
+    "price": "Prijs",
+    "call": "Bellen",
+    "services": "Diensten",
+    "top": "Omhoog"
+  }
+}

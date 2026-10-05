@@ -9,16 +9,16 @@ export function absoluteUrl(path: string): string {
 
 /** The activities page uses a keyword-friendly slug per language. */
 export function activitiesPath(lang: Locale): string {
-  return lang === 'en' ? '/en/things-to-do' : '/de/aktivitaeten';
+  return {de:'/de/aktivitaeten',en:'/en/things-to-do',nl:'/nl/bezienswaardigheden'}[lang];
 }
 
 /** The official tariff page, likewise with a per-language slug. */
 export function pricesPath(lang: Locale): string {
-  return lang === 'en' ? '/en/prices' : '/de/preise';
+  return {de:'/de/preise',en:'/en/prices',nl:'/nl/prijzen'}[lang];
 }
 
 /**
- * Canonical + hreflang metadata for a page that exists in both languages.
+ * Canonical + hreflang metadata for a page that exists in all supported languages.
  * Every page must set this explicitly: without it Next inherits the layout's
  * canonical (`/de`), which tells Google the page is a duplicate of the homepage.
  *
@@ -29,7 +29,8 @@ export function localizedAlternates(pathFor: (lang: Locale) => string) {
     canonical: absoluteUrl(pathFor('de')),
     languages: {
       'de-DE': absoluteUrl(pathFor('de')),
-      'en-US': absoluteUrl(pathFor('en')),
+      'en': absoluteUrl(pathFor('en')),
+      'nl-NL': absoluteUrl(pathFor('nl')),
       'x-default': absoluteUrl(pathFor('de')),
     },
   };

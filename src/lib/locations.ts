@@ -1,9 +1,11 @@
+import type { Locale } from '@/i18n-config';
+import { dutchLocations } from '@/lib/dutch-content';
 import { formatFareEstimate } from '@/lib/fare';
 
-export type LocalizedText = { de: string; en: string };
-export type LocalizedList = { de: string[]; en: string[] };
+export type LocalizedText = Record<Locale, string>;
+export type LocalizedList = Record<Locale, string[]>;
 export type FaqItem = { question: string; answer: string };
-export type LocalizedFaq = { de: FaqItem[]; en: FaqItem[] };
+export type LocalizedFaq = Record<Locale, FaqItem[]>;
 
 export interface LocationData {
   slug: string;
@@ -22,7 +24,9 @@ export interface LocationData {
   faq: LocalizedFaq;
 }
 
-export const locations: LocationData[] = [
+type SourceLocation = Omit<LocationData, 'intro' | 'highlights' | 'faq'> & { intro: Pick<LocalizedText, 'de' | 'en'>; highlights: Pick<LocalizedList, 'de' | 'en'>; faq: Pick<LocalizedFaq, 'de' | 'en'> };
+
+const sourceLocations: SourceLocation[] = [
   {
     slug: 'taxi-klotten',
     name: 'Klotten',
@@ -649,6 +653,12 @@ export const locations: LocationData[] = [
   },
 ];
 
+export const locations: LocationData[] = sourceLocations.map(location => {
+  const nl = dutchLocations[location.slug];
+  if (!nl) throw new Error(`Missing Dutch location: ${location.slug}`);
+  return { ...location, intro: {...location.intro, nl: nl.intro}, highlights: {...location.highlights, nl: nl.highlights}, faq: {...location.faq, nl: [{question: `Hoe vraag ik een taxi in ${location.name} aan?`, answer: `Bel 02671 8080 en geef uw exacte adres in ${location.name}, bestemming, tijd en aantal passagiers door. Vraag vooraf naar beschikbaarheid. De prijscalculator bevestigt geen rit.`}]} };
+});
+
 export function getLocation(slug: string): LocationData | undefined {
   return locations.find((loc) => loc.slug === slug);
 }
@@ -658,11 +668,14 @@ export function getLocation(slug: string): LocationData | undefined {
  * duration, unique per village because the numbers differ) plus the entries
  * written specifically for that village.
  */
-export function buildLocationFaq(location: LocationData, lang: 'de' | 'en'): FaqItem[] {
+export function buildLocationFaq(location: LocationData, lang: Locale): FaqItem[] {
   const dayPrice = formatFareEstimate(location.distanceKm, { locale: lang });
   const nightPrice = formatFareEstimate(location.distanceKm, { locale: lang, night: true });
 
-  const generated: FaqItem[] = lang === 'de'
+  const generated: FaqItem[] = lang === 'nl' ? [
+    {question: `Wat kost een taxi van Cochem naar ${location.name}?`, answer: `Voor ongeveer ${location.distanceKm} km is de richtprijs overdag ${dayPrice} en ’s nachts (22–6 uur) ${nightPrice}. De werkelijke route en de taxameter bepalen de uiteindelijke prijs.`},
+    {question: `Hoe lang duurt de rit van Cochem naar ${location.name}?`, answer: `Reken op ongeveer ${location.driveMinutes} minuten rijden, plus de tijd die de taxi nodig heeft om u te bereiken. Vraag de rit tijdig telefonisch aan, vooral in het hoogseizoen.`}
+  ] : lang === 'de'
     ? [
         {
           question: `Was kostet ein Taxi von Cochem nach ${location.name}?`,

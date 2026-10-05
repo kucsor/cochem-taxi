@@ -1,3 +1,4 @@
+import { dutchAttractions } from '@/lib/dutch-content';
 import type { LocalizedText } from '@/lib/locations';
 
 /**
@@ -30,7 +31,8 @@ export interface Attraction {
   source: string;
 }
 
-export const attractions: Attraction[] = [
+type SourceAttraction = Omit<Attraction, 'name' | 'description' | 'secretTip' | 'taxiNote'> & { name: Pick<LocalizedText, 'de' | 'en'>; description: Pick<LocalizedText, 'de' | 'en'>; secretTip: Pick<LocalizedText, 'de' | 'en'>; taxiNote?: Pick<LocalizedText, 'de' | 'en'> };
+const sourceAttractions: SourceAttraction[] = [
   {
     slug: 'reichsburg-cochem',
     name: { de: 'Reichsburg Cochem', en: 'Reichsburg Cochem (Cochem Castle)' },
@@ -183,6 +185,12 @@ export const attractions: Attraction[] = [
     source: 'https://cochem.de/kalender/heimat-und-weinfest-3/',
   },
 ];
+
+export const attractions: Attraction[] = sourceAttractions.map(attraction => {
+  const nl = dutchAttractions[attraction.slug];
+  if (!nl) throw new Error(`Missing Dutch attraction: ${attraction.slug}`);
+  return {...attraction, name:{...attraction.name,nl:nl.name},description:{...attraction.description,nl:nl.description},secretTip:{...attraction.secretTip,nl:nl.secretTip},taxiNote:attraction.taxiNote ? {...attraction.taxiNote,nl:nl.taxiNote ?? ''} : undefined};
+});
 
 export function getAttraction(slug: string): Attraction | undefined {
   return attractions.find((item) => item.slug === slug);

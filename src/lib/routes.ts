@@ -1,3 +1,5 @@
+import type { Locale } from '@/i18n-config';
+import { dutchRoutes } from '@/lib/dutch-content';
 import { formatFareEstimate } from '@/lib/fare';
 import type { FaqItem, LocalizedFaq, LocalizedList, LocalizedText } from '@/lib/locations';
 
@@ -17,17 +19,15 @@ export interface RouteData {
   intro: LocalizedText;
   highlights: LocalizedList;
   faq: LocalizedFaq;
-  /** Search term handed to the GetYourGuide widget on this page. */
-  activitiesQuery: string;
 }
 
-export const routes: RouteData[] = [
+type SourceRoute = Omit<RouteData, 'destination' | 'intro' | 'highlights' | 'faq'> & { destination: Pick<LocalizedText, 'de' | 'en'>; intro: Pick<LocalizedText, 'de' | 'en'>; highlights: Pick<LocalizedList, 'de' | 'en'>; faq: Pick<LocalizedFaq, 'de' | 'en'> };
+const sourceRoutes: SourceRoute[] = [
   {
     slug: 'burg-eltz',
     destination: { de: 'Burg Eltz', en: 'Eltz Castle' },
     distanceKm: 30,
     driveMinutes: 35,
-    activitiesQuery: 'Burg Eltz',
     intro: {
       de: 'Die Burg Eltz gehört zu den bekanntesten Burgen Deutschlands - und ist gleichzeitig eine der am schwersten erreichbaren. Mit öffentlichen Verkehrsmitteln ist die Anreise ab Cochem aufwendig und mit langen Wartezeiten verbunden. Mit dem Taxi fahren Sie direkt bis zum Besucherparkplatz Antoniuskapelle, von dort verkehrt in der Saison ein Pendelbus zur Burg, alternativ laufen Sie rund 30 Minuten durch den Wald.',
       en: 'Eltz Castle is one of the best-known castles in Germany - and also one of the hardest to reach. Getting there from Cochem by public transport is slow and involves long waiting times. By taxi you are driven straight to the Antoniuskapelle visitor car park; from there a shuttle bus runs to the castle in season, or you can walk about 30 minutes through the woods.',
@@ -74,23 +74,22 @@ export const routes: RouteData[] = [
     destination: { de: 'Flughafen Frankfurt-Hahn', en: 'Frankfurt-Hahn Airport' },
     distanceKm: 40,
     driveMinutes: 40,
-    activitiesQuery: 'Mosel',
     intro: {
-      de: 'Der Flughafen Frankfurt-Hahn liegt rund 40 Kilometer von Cochem entfernt im Hunsrück. Für frühe Abflüge und späte Ankünfte ist das Taxi oft die einzige verlässliche Option, da die Busverbindungen nur zu wenigen Zeiten fahren. Wir holen Sie an Ihrer Adresse ab und bringen Sie direkt zum Terminal - mit Gepäck und ohne Umsteigen.',
-      en: 'Frankfurt-Hahn Airport is about 40 kilometres from Cochem, in the Hunsrück hills. For early departures and late arrivals a taxi is often the only reliable option, as buses run only at a few times of day. We collect you at your address and drive you straight to the terminal - with your luggage and without changing.',
+      de: 'Der Flughafen Frankfurt-Hahn liegt rund 40 Kilometer von Cochem entfernt im Hunsrück. Für frühe Abflüge ist eine rechtzeitige telefonische Anfrage sinnvoll. Diese Flughafentransfers starten ausschließlich in Cochem. Wir holen Sie an Ihrer Adresse ab und bringen Sie direkt zum Terminal - mit Gepäck und ohne Umsteigen.',
+      en: 'Frankfurt-Hahn Airport is about 40 kilometres from Cochem, in the Hunsrück hills. For early departures, call well ahead to ask about availability. These airport transfers depart exclusively from Cochem. We collect you at your address and drive you straight to the terminal - with your luggage and without changing.',
     },
     highlights: {
       de: [
         'Direkter Transfer von der Haustür zum Terminal',
         'Auch nachts und am frühen Morgen möglich',
         'Platz für Gepäck, Großraumwagen für 5 bis 8 Personen',
-        'Abholung bei Ankunft - wir beobachten die Landezeit',
+        'Abholung ausschließlich in Cochem - Fahrt zum Flughafen',
       ],
       en: [
         'Door-to-terminal transfer',
         'Available at night and in the early morning',
         'Room for luggage, large vehicles for 5 to 8 passengers',
-        'Arrival pickups - we keep an eye on your landing time',
+        'Pickup exclusively in Cochem - travel to the airport',
       ],
     },
     faq: {
@@ -121,7 +120,6 @@ export const routes: RouteData[] = [
     destination: { de: 'Koblenz', en: 'Koblenz' },
     distanceKm: 55,
     driveMinutes: 50,
-    activitiesQuery: 'Koblenz',
     intro: {
       de: 'Koblenz liegt rund 55 Kilometer moselabwärts von Cochem, dort wo Mosel und Rhein am Deutschen Eck zusammenfließen. Die Bahnverbindung ist gut, aber wer früh morgens, spät abends oder mit viel Gepäck unterwegs ist, fährt mit dem Taxi entspannter. Wir bringen Sie zum Hauptbahnhof, zur Innenstadt oder direkt zu Ihrer Wunschadresse.',
       en: 'Koblenz lies about 55 kilometres downstream from Cochem, where the Moselle meets the Rhine at the Deutsches Eck. Train connections are good, but travelling early, late or with a lot of luggage is more comfortable by taxi. We take you to the main station, the city centre or straight to your address.',
@@ -160,7 +158,6 @@ export const routes: RouteData[] = [
     destination: { de: 'Trier', en: 'Trier' },
     distanceKm: 90,
     driveMinutes: 75,
-    activitiesQuery: 'Trier',
     intro: {
       de: 'Trier, die älteste Stadt Deutschlands, liegt rund 90 Kilometer moselaufwärts von Cochem. Die Fahrt dauert etwa 75 Minuten über die A1 beziehungsweise entlang der Mosel. Wir fahren Sie zur Porta Nigra, zum Hauptbahnhof oder zu Ihrem Hotel - für diese Strecke bitten wir um eine rechtzeitige Vorbestellung.',
       en: 'Trier, the oldest city in Germany, lies about 90 kilometres upstream from Cochem. The drive takes roughly 75 minutes via the A1 motorway or along the Moselle. We take you to the Porta Nigra, the main station or your hotel - please book this route well in advance.',
@@ -196,17 +193,26 @@ export const routes: RouteData[] = [
   },
 ];
 
+export const routes: RouteData[] = sourceRoutes.map(route => {
+  const nl = dutchRoutes[route.slug];
+  if (!nl) throw new Error(`Missing Dutch route: ${route.slug}`);
+  return {...route, destination: {...route.destination, nl: nl.destination}, intro: {...route.intro, nl: nl.intro}, highlights: {...route.highlights, nl: nl.highlights}, faq: {...route.faq, nl: nl.faq}};
+});
+
 export function getRoute(slug: string): RouteData | undefined {
   return routes.find((route) => route.slug === slug);
 }
 
 /** Same idea as `buildLocationFaq`: data-driven price/time entries plus written ones. */
-export function buildRouteFaq(route: RouteData, lang: 'de' | 'en'): FaqItem[] {
+export function buildRouteFaq(route: RouteData, lang: Locale): FaqItem[] {
   const dayPrice = formatFareEstimate(route.distanceKm, { locale: lang });
   const largePrice = formatFareEstimate(route.distanceKm, { locale: lang, large: true });
   const destination = route.destination[lang];
 
-  const generated: FaqItem[] = lang === 'de'
+  const generated: FaqItem[] = lang === 'nl' ? [
+    {question: `Wat kost een taxi van Cochem naar ${destination}?`, answer: `Voor ongeveer ${route.distanceKm} km is de geschatte dagprijs ${dayPrice} in een gewone taxi en ${largePrice} in een grote taxi voor 5–8 personen. De taxameter of een vooraf afgesproken prijs is bepalend.`},
+    {question: `Hoe lang duurt de rit van Cochem naar ${destination}?`, answer: `Reken op ongeveer ${route.driveMinutes} minuten rijden. Verkeer en weer kunnen vertraging veroorzaken. Houd bij afspraken en vluchten extra tijd aan.`}
+  ] : lang === 'de'
     ? [
         {
           question: `Was kostet ein Taxi von Cochem nach ${destination}?`,

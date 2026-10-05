@@ -10,7 +10,9 @@ import { useEffect, useState } from "react";
 
 type Section = "home" | "rechner" | "services";
 
-export function BottomNav() {
+type NavDictionary = {home:string;price:string;call:string;services:string;top:string};
+
+export function BottomNav({dict}: {dict:NavDictionary}) {
   const pathname = usePathname();
   const [active, setActive] = useState<Section>("home");
 
@@ -83,7 +85,7 @@ export function BottomNav() {
             className={itemClass}
           >
             <Home className={iconClass(homeActive)} />
-            <span className={labelClass(homeActive)}>Home</span>
+            <span className={labelClass(homeActive)}>{dict.home}</span>
           </Link>
 
           {/* Calculator */}
@@ -94,19 +96,19 @@ export function BottomNav() {
             className={itemClass}
           >
             <Calculator className={iconClass(rechnerActive)} />
-            <span className={labelClass(rechnerActive)}>Preis</span>
+            <span className={labelClass(rechnerActive)}>{dict.price}</span>
           </Link>
 
           {/* Call Button - Prominent */}
           <a
-            href="tel:026718080"
+            href="tel:+4926718080"
             onClick={() => trackEvent('click_call_now')}
             className="flex flex-col items-center justify-center -mt-6 active:scale-95 transition-transform duration-200"
           >
             <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30 glow-gold animate-pulse-glow">
               <Phone className="w-6 h-6 text-primary-foreground" />
             </div>
-            <span className="text-[10px] text-primary mt-1 font-medium">Anrufen</span>
+            <span className="text-[10px] text-primary mt-1 font-medium">{dict.call}</span>
           </a>
 
           {/* Services */}
@@ -117,7 +119,7 @@ export function BottomNav() {
             className={itemClass}
           >
             <Menu className={iconClass(servicesActive)} />
-            <span className={labelClass(servicesActive)}>Service</span>
+            <span className={labelClass(servicesActive)}>{dict.services}</span>
           </Link>
 
           {/* Back to Top */}
@@ -126,7 +128,7 @@ export function BottomNav() {
             className={itemClass}
           >
             <ChevronUp className="w-5 h-5 text-muted-foreground" />
-            <span className="text-[10px] text-muted-foreground">Top</span>
+            <span className="text-[10px] text-muted-foreground">{dict.top}</span>
           </button>
         </div>
       </nav>

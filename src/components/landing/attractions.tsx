@@ -23,7 +23,7 @@ const CATEGORY_ICON: Record<AttractionCategory, typeof Castle> = {
 
 /**
  * The attraction guide. This is the content that makes the activities pages
- * worth landing on - the affiliate widgets sit alongside it, not instead of it.
+ * useful for planning transport around Cochem.
  */
 export function Attractions({ dict, lang }: { dict: AttractionsDictionary; lang: Locale }) {
   return (

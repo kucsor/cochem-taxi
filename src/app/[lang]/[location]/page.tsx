@@ -3,12 +3,11 @@ import { Hero } from '@/components/landing/hero'
 import { ServiceRegion } from '@/components/landing/service-region'
 import { Services } from '@/components/landing/services'
 import { WhyUs } from '@/components/landing/why-us'
-import { Activities } from '@/components/landing/activities'
 import { Faq } from '@/components/landing/faq'
 import { LocationFacts } from '@/components/landing/location-facts'
 import { ScrollToTop } from '@/components/scroll-to-top'
 import { getDictionary } from '@/lib/dictionaries'
-import { Locale } from '@/i18n-config'
+import { i18n, Locale } from '@/i18n-config'
 import { locations, getLocation, buildLocationFaq } from '@/lib/locations'
 import { breadcrumbSchema, formatTelephone, taxiRouteSchema } from '@/lib/schema'
 import { absoluteUrl, alternatesForLocale } from '@/lib/site'
@@ -20,10 +19,7 @@ type Props = {
 }
 
 export async function generateStaticParams() {
-  return locations.flatMap((loc) => [
-    { lang: 'de', location: loc.slug },
-    { lang: 'en', location: loc.slug },
-  ])
+  return locations.flatMap(loc => i18n.locales.map(lang => ({lang, location: loc.slug})))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -41,8 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const enDesc = `Book a taxi in ${locData.name}: approx. ${locData.distanceKm} km from Cochem, around ${locData.driveMinutes} minutes. Calculate your fare online - available 24/7.`
 
   return {
-    title: lang === 'de' ? deTitle : enTitle,
-    description: lang === 'de' ? deDesc : enDesc,
+    title: lang === 'nl' ? `Taxi ${locData.name} | Prijs berekenen en telefonisch bestellen` : lang === 'de' ? deTitle : enTitle,
+    description: lang === 'nl' ? `Taxi in ${locData.name}: ongeveer ${locData.distanceKm} km vanaf Cochem en ${locData.driveMinutes} minuten rijden. Bereken een richtprijs en bel voor uw rit.` : lang === 'de' ? deDesc : enDesc,
     // Without explicit alternates every location page would inherit the
     // layout's canonical (/de) and look like a duplicate of the homepage.
     alternates: alternatesForLocale(lang, (l) => `/${l}/${locData.slug}`),
@@ -81,6 +77,10 @@ export default async function LocationPage({ params }: Props) {
     heroDict.mainTitle = `Taxi ${locData.name}`
     heroDict.mainTitleAccent = "Zuverlässige Abholung durch Cochem Taxi"
     heroDict.subtitle = "Anfahrt aus Cochem - Bitte rechtzeitig bestellen"
+  } else if (lang === 'nl') {
+    heroDict.mainTitle = `Taxi ${locData.name}`
+    heroDict.mainTitleAccent = 'Betrouwbaar opgehaald vanuit Cochem'
+    heroDict.subtitle = 'Vraag uw rit tijdig telefonisch aan'
   } else {
     heroDict.mainTitle = `Taxi Service ${locData.name}`
     heroDict.mainTitleAccent = "Reliable Pickup from Cochem"
@@ -122,10 +122,6 @@ export default async function LocationPage({ params }: Props) {
 
       <section className="py-8">
         <Faq title={dict.locationPage.faqTitle} items={faqItems} />
-      </section>
-
-      <section className="py-8">
-        <Activities dict={dict.activities} lang={lang} query="Cochem" />
       </section>
 
       <section id="services" className="py-8">

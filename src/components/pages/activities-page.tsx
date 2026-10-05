@@ -1,5 +1,4 @@
 import { Phone } from 'lucide-react';
-import { Activities } from '@/components/landing/activities';
 import { Attractions } from '@/components/landing/attractions';
 import { Button } from '@/components/ui/button';
 import { getDictionary } from '@/lib/dictionaries';
@@ -48,8 +47,6 @@ export async function ActivitiesPageContent({ lang }: { lang: Locale }) {
           </div>
         ))}
       </section>
-
-      <Activities dict={dict.activities} lang={lang} />
 
       <section className="w-full max-w-3xl mx-auto text-center glass-card rounded-2xl border border-white/10 p-8">
         <h2 className="text-2xl font-bold font-headline">{page.ctaTitle}</h2>

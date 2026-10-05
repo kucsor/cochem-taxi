@@ -29,6 +29,8 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
     // segments[1] is the locale (e.g., 'de' or 'en')
     if (segments.length > 1) {
       segments[1] = targetLang;
+      if (['preise','prices','prijzen'].includes(segments[2])) segments[2] = ({de:'preise',en:'prices',nl:'prijzen'} as Record<string,string>)[targetLang];
+      if (['aktivitaeten','things-to-do','bezienswaardigheden'].includes(segments[2])) segments[2] = ({de:'aktivitaeten',en:'things-to-do',nl:'bezienswaardigheden'} as Record<string,string>)[targetLang];
       return segments.join('/');
     }
     return `/${targetLang}`;
@@ -43,7 +45,7 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
             fixed and the layout spacer below is constant, so this never
             shifts page content. */}
         <nav
-          aria-label="Hauptnavigation"
+          aria-label={lang === 'nl' ? 'Hoofdnavigatie' : lang === 'en' ? 'Main navigation' : 'Hauptnavigation'}
           className={cn(
             'max-w-6xl mx-auto glass-nav rounded-2xl px-4 md:px-8 transition-[padding,background-color,box-shadow] duration-300',
             scrolled ? 'py-2 md:py-2.5 glass-nav-scrolled' : 'py-3 md:py-4'
@@ -67,7 +69,7 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
                 hrefLang="de"
                 aria-label="Deutsch"
                 aria-current={isDE ? 'true' : undefined}
-                className={`relative px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center min-h-[44px] ${
+                className={`relative px-3 py-3 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center min-h-[44px] ${
                   isDE
                     ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
                     : 'text-white/50 hover:text-white/80'
@@ -82,7 +84,7 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
                 hrefLang="en"
                 aria-label="English"
                 aria-current={isEN ? 'true' : undefined}
-                className={`relative px-4 py-3 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center min-h-[44px] ${
+                className={`relative px-3 py-3 rounded-lg text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95 flex items-center justify-center min-h-[44px] ${
                   isEN
                     ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/30'
                     : 'text-white/50 hover:text-white/80'
@@ -90,6 +92,8 @@ export function Header({ dict, lang }: { dict: Dictionary; lang: string }) {
               >
                 EN
               </Link>
+              <Link href={getLanguagePath('nl')} hrefLang="nl" aria-label="Nederlands" aria-current={lang === 'nl' ? 'true' : undefined}
+                className={`px-3 py-3 rounded-lg text-sm font-semibold min-h-[44px] ${lang === 'nl' ? 'bg-primary text-primary-foreground' : 'text-white/50 hover:text-white/80'}`}>NL</Link>
             </div>
           </div>
         </nav>

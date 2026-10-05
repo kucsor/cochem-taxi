@@ -1,4 +1,3 @@
-
 {
   "metadata": {
     "title": "Taxi Cochem Rechner 📱 | Your Fair Price & Transfer",
@@ -16,7 +15,7 @@
     "trustIndicators": {
       "available": "Available now",
       "drivers": "Local drivers",
-      "prices": "Fixed prices"
+      "prices": "Transparent fares"
     },
     "calculateButton": "Calculate price"
   },
@@ -50,7 +49,9 @@
     },
     "locationPrefix": "Location:",
     "locating": "Locating",
-    "detailsLink": "More details on price calculation"
+    "detailsLink": "More details on price calculation",
+    "callButton": "Call a taxi",
+    "loadMap": "Load interactive map"
   },
   "rechnerPage": {
     "metaTitle": "Taxi Calculator Cochem | Calculate Taxi Fare for Free",
@@ -148,9 +149,7 @@
     "analyticsTitle": "Google Analytics",
     "analyticsContent": "This website uses functions of the web analysis service Google Analytics. The provider is Google Ireland Limited. Google Analytics uses so-called \"cookies\". These are text files that are stored on your computer and that allow an analysis of your use of the website.<br><br><strong>IP Anonymization:</strong> We have activated the IP anonymization function on this website. As a result, your IP address will be truncated by Google within member states of the European Union before being transmitted to the USA.",
     "consentTitle": "Consent & Cookies",
-    "consentContent": "On your first visit we ask whether you allow cookies for audience measurement with Google Analytics. <strong>Without your consent the service is not loaded</strong> and no such cookies are set. Our activity recommendations are plain links - they load no third-party content and set no cookies. Your choice is stored locally in your browser and can be changed at any time by clearing the site data in your browser. Essential functions such as the fare calculator are not affected.",
-    "affiliateTitle": "Affiliate Link Disclosure",
-    "affiliateContent": "This website displays activities and tours from our partner <strong>GetYourGuide</strong>. If you book through one of these links, we receive a commission. <strong>This does not cost you anything extra</strong> - the price stays the same. These earnings help us cover the running costs of this website and the free fare calculator. The provider and contracting party for the tours is GetYourGuide alone; we accept no liability for their offers."
+    "consentContent": "On your first visit we ask whether you allow cookies for audience measurement with Google Analytics. <strong>Without your consent the service is not loaded</strong> and no such cookies are set. Our activity recommendations are plain links - they load no third-party content and set no cookies. Your choice is stored locally in your browser and can be changed at any time by clearing the site data in your browser. Essential functions such as the fare calculator are not affected."
   },
   "common": {
     "skipToContent": "Skip to content"
@@ -161,14 +160,6 @@
     "accept": "Accept all",
     "decline": "Essential only",
     "moreInfo": "More in Legal Notice & Privacy"
-  },
-  "activities": {
-    "badge": "Tours & experiences",
-    "title": "Things to do around Cochem",
-    "subtitle": "Castle tours, wine tastings and Moselle river cruises - bookable through our partner GetYourGuide.",
-    "seeAll": "See all activities",
-    "cardCta": "View offers",
-    "disclosure": "Ad: These offers come from GetYourGuide. We earn a commission on bookings - the price stays the same for you."
   },
   "tariffNotice": {
     "text": "New taxi tariffs apply in Cochem as of 1 August 2026.",
@@ -217,7 +208,7 @@
     "metaTitle": "Cochem Attractions: Top Sights & Insider Tips",
     "metaDescription": "Reichsburg, the Bundesbank bunker, the Calmont and Eltz Castle: what is really worth seeing in Cochem - with insider tips and taxi transfers to the trailhead.",
     "h1": "Things to do in Cochem",
-    "intro": "Cochem is a natural base for exploring the Moselle: the Reichsburg looms directly above the town, Eltz Castle sits half an hour away in the woods, and all around are steep vineyards, wineries and boat landings. Below are the most popular tours in the region - and we will get you to the starting point and back by taxi.",
+    "intro": "Explore sights around Cochem and plan how to get there. This guide provides information about destinations and taxi transport. Tours and admission tickets are not booked on this website. To request a taxi, call by phone.",
     "blocks": [
       {
         "title": "Popular tours in Cochem",
@@ -226,7 +217,7 @@
       },
       {
         "title": "Eltz Castle & surroundings",
-        "text": "Eltz Castle is hard to reach by public transport. With a taxi and a booked tour the visit is easy to plan.",
+        "text": "Eltz Castle is hard to reach by public transport. Call to arrange taxi transport to the visitor car park and agree your return pickup.",
         "query": "Eltz Castle"
       },
       {
@@ -263,5 +254,24 @@
     "ctaText": "For longer trips we recommend booking ahead so the car is ready on time.",
     "callButton": "Call now",
     "otherRoutes": "Other popular routes"
+  },
+  "airportPage": {
+    "sectionTitle": "From Cochem to the airport",
+    "callButton": "Call to request an airport taxi",
+    "planningTitle": "Planning your departure and journey",
+    "planningText": "The calculator finds a route for the addresses you enter. Journey time and price are non-binding estimates. Allow extra time for traffic, check-in and security, following your airline’s advice.",
+    "departureTitle": "Pickup in Cochem",
+    "departureText": "These airport transfers depart exclusively from Cochem. When calling, give your pickup address in Cochem, airport, flight number and preferred departure time. A price calculation does not confirm a ride.",
+    "luggageTitle": "Families, groups and luggage",
+    "luggageText": "When calling, mention passenger numbers, suitcases and any child seats needed. Confirm availability, vehicle size and price before travelling. Long-distance transfers may require an agreed price by phone.",
+    "otherAirports": "Other airports",
+    "metaTitle": "Taxi Cochem → {airport} Airport ({code})"
+  },
+  "navigation": {
+    "home": "Home",
+    "price": "Price",
+    "call": "Call",
+    "services": "Services",
+    "top": "Top"
   }
 }

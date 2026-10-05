@@ -1,4 +1,3 @@
-
 {
   "metadata": {
     "title": "Taxi Cochem Rechner 📱 | Your Fair Price & Transfer",
@@ -16,7 +15,7 @@
     "trustIndicators": {
       "available": "Jetzt verfügbar",
       "drivers": "Ortskundige Fahrer",
-      "prices": "Feste Preise"
+      "prices": "Transparente Tarife"
     },
     "calculateButton": "Preis berechnen"
   },
@@ -46,7 +45,13 @@
     },
     "locationPrefix": "Standort:",
     "locating": "Wird gesucht",
-    "detailsLink": "Mehr Details zur Preisberechnung"
+    "detailsLink": "Mehr Details zur Preisberechnung",
+    "callButton": "Taxi anrufen",
+    "loadMap": "Interaktive Karte laden",
+    "subtitle": "Berechnen Sie den geschätzten Preis für Ihre Fahrt",
+    "hideMap": "Karte ausblenden",
+    "showMap": "Karte anzeigen",
+    "mapHidden": "Karte ausgeblendet"
   },
   "rechnerPage": {
     "metaTitle": "Taxi Rechner Cochem | Kostenlos Taxikosten berechnen",
@@ -144,9 +149,7 @@
     "analyticsTitle": "Google Analytics",
     "analyticsContent": "Diese Website nutzt Funktionen des Webanalysedienstes Google Analytics. Anbieter ist die Google Ireland Limited. Google Analytics verwendet sog. \"Cookies\". Das sind Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie ermöglichen.<br><br><strong>IP-Anonymisierung:</strong> Wir haben auf dieser Website die Funktion IP-Anonymisierung aktiviert. Dadurch wird Ihre IP-Adresse von Google innerhalb von Mitgliedstaaten der Europäischen Union vor der Übermittlung in die USA gekürzt.",
     "consentTitle": "Einwilligung & Cookies",
-    "consentContent": "Beim ersten Besuch fragen wir Sie, ob Sie Cookies für die Reichweitenmessung mit Google Analytics zulassen möchten. <strong>Ohne Ihre Zustimmung wird der Dienst nicht geladen</strong> und es werden keine entsprechenden Cookies gesetzt. Unsere Ausflugsempfehlungen sind reine Links - sie laden keine fremden Inhalte und setzen keine Cookies. Ihre Auswahl wird lokal in Ihrem Browser gespeichert und kann jederzeit geändert werden, indem Sie die Websitedaten in Ihrem Browser löschen. Notwendige Funktionen wie der Fahrpreisrechner sind davon nicht betroffen.",
-    "affiliateTitle": "Hinweis zu Partnerlinks (Affiliate)",
-    "affiliateContent": "Diese Website zeigt Aktivitäten und Touren unseres Partners <strong>GetYourGuide</strong> an. Wenn Sie über einen dieser Links buchen, erhalten wir eine Provision. <strong>Für Sie entstehen dadurch keine Mehrkosten</strong> - der Preis bleibt derselbe. Diese Einnahmen helfen uns, den Betrieb dieser Website und des kostenlosen Fahrpreisrechners zu finanzieren. Anbieter und Vertragspartner der Touren ist ausschließlich GetYourGuide; wir übernehmen keine Gewähr für deren Angebote."
+    "consentContent": "Beim ersten Besuch fragen wir Sie, ob Sie Cookies für die Reichweitenmessung mit Google Analytics zulassen möchten. <strong>Ohne Ihre Zustimmung wird der Dienst nicht geladen</strong> und es werden keine entsprechenden Cookies gesetzt. Unsere Ausflugsempfehlungen sind reine Links - sie laden keine fremden Inhalte und setzen keine Cookies. Ihre Auswahl wird lokal in Ihrem Browser gespeichert und kann jederzeit geändert werden, indem Sie die Websitedaten in Ihrem Browser löschen. Notwendige Funktionen wie der Fahrpreisrechner sind davon nicht betroffen."
   },
   "common": {
     "skipToContent": "Zum Inhalt springen"
@@ -157,14 +160,6 @@
     "accept": "Alle akzeptieren",
     "decline": "Nur notwendige",
     "moreInfo": "Mehr im Impressum & Datenschutz"
-  },
-  "activities": {
-    "badge": "Ausflüge & Erlebnisse",
-    "title": "Aktivitäten rund um Cochem",
-    "subtitle": "Burgführungen, Weinproben und Moselschifffahrten - buchbar über unseren Partner GetYourGuide.",
-    "seeAll": "Alle Aktivitäten ansehen",
-    "cardCta": "Angebote ansehen",
-    "disclosure": "Anzeige: Die Angebote stammen von GetYourGuide. Bei einer Buchung erhalten wir eine Provision - für Sie ändert sich der Preis nicht."
   },
   "tariffNotice": {
     "text": "Seit dem 1. August 2026 gelten neue Taxitarife in Cochem.",
@@ -213,7 +208,7 @@
     "metaTitle": "Cochem Sehenswürdigkeiten: Ausflüge & Geheimtipps",
     "metaDescription": "Reichsburg, Bundesbankbunker, Calmont und Burg Eltz: was sich in Cochem wirklich lohnt - mit Geheimtipps und Taxi-Transfer direkt zum Startpunkt.",
     "h1": "Ausflüge & Aktivitäten in Cochem",
-    "intro": "Cochem ist ein guter Ausgangspunkt für Ausflüge an der Mosel: Die Reichsburg thront direkt über der Stadt, die Burg Eltz liegt eine halbe Stunde entfernt im Wald, und rundherum warten Steillagen, Weingüter und Schiffsanleger. Hier finden Sie die beliebtesten Touren der Region - und wir bringen Sie mit dem Taxi zuverlässig zum Startpunkt und wieder zurück.",
+    "intro": "Entdecken Sie Sehenswürdigkeiten rund um Cochem und planen Sie Ihre Anreise. Hier finden Sie Informationen zu Ausflugszielen und Taxifahrten. Touren und Eintrittskarten werden auf dieser Website nicht gebucht. Ein Taxi bestellen Sie ausschließlich telefonisch.",
     "blocks": [
       {
         "title": "Beliebte Touren in Cochem",
@@ -259,5 +254,24 @@
     "ctaText": "Für längere Strecken empfehlen wir eine Vorbestellung - dann steht der Wagen pünktlich bereit.",
     "callButton": "Jetzt anrufen",
     "otherRoutes": "Weitere beliebte Strecken"
+  },
+  "airportPage": {
+    "sectionTitle": "Von Cochem zum Flughafen",
+    "callButton": "Flughafentaxi telefonisch anfragen",
+    "planningTitle": "Abfahrt und Fahrzeit planen",
+    "planningText": "Der Rechner ermittelt die Route für die eingegebenen Adressen. Fahrzeit und Preis sind unverbindliche Schätzungen. Planen Sie zusätzlich einen Puffer für Verkehr, Check-in und Sicherheitskontrolle ein. Richten Sie sich nach den Angaben Ihrer Fluggesellschaft.",
+    "departureTitle": "Abholung in Cochem",
+    "departureText": "Diese Flughafentransfers starten ausschließlich in Cochem. Nennen Sie telefonisch Ihre Abholadresse in Cochem, den Flughafen, Ihre Flugnummer und die gewünschte Abfahrtszeit. Eine Preisberechnung bestätigt keine Fahrt.",
+    "luggageTitle": "Familien, Gruppen und Gepäck",
+    "luggageText": "Nennen Sie beim Anruf die Personenzahl, Koffer und benötigte Kindersitze. Lassen Sie Verfügbarkeit, Fahrzeuggröße und Preis vor der Fahrt bestätigen. Für Fernfahrten kann eine telefonische Preisvereinbarung erforderlich sein.",
+    "otherAirports": "Weitere Flughäfen",
+    "metaTitle": "Taxi Cochem → Flughafen {airport} ({code})"
+  },
+  "navigation": {
+    "home": "Home",
+    "price": "Preis",
+    "call": "Anrufen",
+    "services": "Service",
+    "top": "Nach oben"
   }
 }

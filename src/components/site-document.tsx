@@ -36,6 +36,10 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  // AdSense ownership verification; advertising is configured separately.
+  other: {
+    'google-adsense-account': 'ca-pub-4881673408960749',
+  },
   manifest: '/manifest.json',
   icons: {
     icon: '/favicon.ico',

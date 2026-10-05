@@ -16,21 +16,14 @@ export type TrackedEvent =
   | 'click_services_nav'
   | 'load_map_click'
   | 'view_activities'
-  | 'click_activity_widget'
-  | 'click_affiliate_link'
   | 'consent_accept'
   | 'consent_reject';
 
-/**
- * The events that actually represent money: a phone call placed, a fare
- * calculated, an affiliate link followed. These are the numbers you need to
- * show the taxi company how many bookings this site sends them.
- */
+/** Phone and calculator interactions used to measure site usefulness. */
 const CONVERSION_EVENTS: ReadonlySet<TrackedEvent> = new Set<TrackedEvent>([
   'click_call_now',
   'use_calculator',
   'calculator_success',
-  'click_affiliate_link',
   'view_activities',
 ]);
 

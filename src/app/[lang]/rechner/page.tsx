@@ -1,4 +1,3 @@
-import { Activities } from '@/components/landing/activities'
 import { FareCalculator } from '@/components/landing/fare-calculator'
 import { getDictionary } from '@/lib/dictionaries'
 import { Locale } from '@/i18n-config'
@@ -37,12 +36,7 @@ export default async function RechnerPage({
       "price": "0",
       "priceCurrency": "EUR"
     },
-    "description": dict.rechnerPage.metaDescription,
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "ratingCount": "120"
-    }
+    "description": dict.rechnerPage.metaDescription
   }
 
   return (
@@ -79,8 +73,7 @@ export default async function RechnerPage({
           </Link>
         </div>
 
-        {/* Activities - shown right after the fare result, when intent is highest */}
-        <Activities dict={dict.activities} lang={lang} query="Cochem" className="py-4" />
+
 
         {/* SEO Content Block 1 */}
         <section className="prose prose-invert max-w-none glass p-8 rounded-2xl">

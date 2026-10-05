@@ -17,8 +17,6 @@ export interface RouteData {
   intro: LocalizedText;
   highlights: LocalizedList;
   faq: LocalizedFaq;
-  /** Search term handed to the GetYourGuide widget on this page. */
-  activitiesQuery: string;
 }
 
 export const routes: RouteData[] = [
@@ -27,7 +25,6 @@ export const routes: RouteData[] = [
     destination: { de: 'Burg Eltz', en: 'Eltz Castle' },
     distanceKm: 30,
     driveMinutes: 35,
-    activitiesQuery: 'Burg Eltz',
     intro: {
       de: 'Die Burg Eltz gehört zu den bekanntesten Burgen Deutschlands - und ist gleichzeitig eine der am schwersten erreichbaren. Mit öffentlichen Verkehrsmitteln ist die Anreise ab Cochem aufwendig und mit langen Wartezeiten verbunden. Mit dem Taxi fahren Sie direkt bis zum Besucherparkplatz Antoniuskapelle, von dort verkehrt in der Saison ein Pendelbus zur Burg, alternativ laufen Sie rund 30 Minuten durch den Wald.',
       en: 'Eltz Castle is one of the best-known castles in Germany - and also one of the hardest to reach. Getting there from Cochem by public transport is slow and involves long waiting times. By taxi you are driven straight to the Antoniuskapelle visitor car park; from there a shuttle bus runs to the castle in season, or you can walk about 30 minutes through the woods.',
@@ -74,7 +71,6 @@ export const routes: RouteData[] = [
     destination: { de: 'Flughafen Frankfurt-Hahn', en: 'Frankfurt-Hahn Airport' },
     distanceKm: 40,
     driveMinutes: 40,
-    activitiesQuery: 'Mosel',
     intro: {
       de: 'Der Flughafen Frankfurt-Hahn liegt rund 40 Kilometer von Cochem entfernt im Hunsrück. Für frühe Abflüge und späte Ankünfte ist das Taxi oft die einzige verlässliche Option, da die Busverbindungen nur zu wenigen Zeiten fahren. Wir holen Sie an Ihrer Adresse ab und bringen Sie direkt zum Terminal - mit Gepäck und ohne Umsteigen.',
       en: 'Frankfurt-Hahn Airport is about 40 kilometres from Cochem, in the Hunsrück hills. For early departures and late arrivals a taxi is often the only reliable option, as buses run only at a few times of day. We collect you at your address and drive you straight to the terminal - with your luggage and without changing.',
@@ -121,7 +117,6 @@ export const routes: RouteData[] = [
     destination: { de: 'Koblenz', en: 'Koblenz' },
     distanceKm: 55,
     driveMinutes: 50,
-    activitiesQuery: 'Koblenz',
     intro: {
       de: 'Koblenz liegt rund 55 Kilometer moselabwärts von Cochem, dort wo Mosel und Rhein am Deutschen Eck zusammenfließen. Die Bahnverbindung ist gut, aber wer früh morgens, spät abends oder mit viel Gepäck unterwegs ist, fährt mit dem Taxi entspannter. Wir bringen Sie zum Hauptbahnhof, zur Innenstadt oder direkt zu Ihrer Wunschadresse.',
       en: 'Koblenz lies about 55 kilometres downstream from Cochem, where the Moselle meets the Rhine at the Deutsches Eck. Train connections are good, but travelling early, late or with a lot of luggage is more comfortable by taxi. We take you to the main station, the city centre or straight to your address.',
@@ -160,7 +155,6 @@ export const routes: RouteData[] = [
     destination: { de: 'Trier', en: 'Trier' },
     distanceKm: 90,
     driveMinutes: 75,
-    activitiesQuery: 'Trier',
     intro: {
       de: 'Trier, die älteste Stadt Deutschlands, liegt rund 90 Kilometer moselaufwärts von Cochem. Die Fahrt dauert etwa 75 Minuten über die A1 beziehungsweise entlang der Mosel. Wir fahren Sie zur Porta Nigra, zum Hauptbahnhof oder zu Ihrem Hotel - für diese Strecke bitten wir um eine rechtzeitige Vorbestellung.',
       en: 'Trier, the oldest city in Germany, lies about 90 kilometres upstream from Cochem. The drive takes roughly 75 minutes via the A1 motorway or along the Moselle. We take you to the Porta Nigra, the main station or your hotel - please book this route well in advance.',

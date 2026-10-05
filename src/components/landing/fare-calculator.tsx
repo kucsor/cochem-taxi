@@ -27,6 +27,7 @@ const Map = dynamic(() => import('@/components/landing/map').then(mod => mod.Map
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
 type Dictionary = {
+  callButton?: string;
   title: string;
   startLabel: string;
   startPlaceholder: string;
@@ -189,9 +190,9 @@ function MapResult({ state, pending, isLoaded, setIsLoaded }: { state: FareState
   );
 }
 
-export function FareCalculator({ dict, lang = "de", showDetailsLink = true, initialStartAddress = "" }: { dict: Dictionary; lang?: string; showDetailsLink?: boolean; initialStartAddress?: string }) {
+export function FareCalculator({ dict, lang = "de", showDetailsLink = true, initialStartAddress = "", initialDestinationAddress = "" }: { dict: Dictionary; lang?: string; showDetailsLink?: boolean; initialStartAddress?: string; initialDestinationAddress?: string }) {
   const [startAddress, setStartAddress] = useState(initialStartAddress);
-  const [endAddress, setEndAddress] = useState("");
+  const [endAddress, setEndAddress] = useState(initialDestinationAddress);
   const [pickupTime, setPickupTime] = useState("");
   const [passengers, setPassengers] = useState<"1-4" | "5-8">("1-4");
   const [startSuggestions, setStartSuggestions] = useState<any[]>([]);
@@ -535,6 +536,13 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                     Anfahrt note (mobile 171px / desktop 210px) */}
                 <div aria-live="polite" role="status" className="min-h-[171px] md:min-h-[210px]">
                   <PriceResult state={state} pending={pending} dict={dict} />
+                  {state.price != null && !pending && (
+                    <Button asChild size="lg" className="mt-4 w-full">
+                      <a href="tel:+4926718080" onClick={() => trackEvent('click_call_now', { source: 'calculator_result' })}>
+                        {dict.callButton ?? (lang === 'de' ? 'Taxi anrufen' : 'Call a taxi')} · 02671 8080
+                      </a>
+                    </Button>
+                  )}
                 </div>
 
                 {showDetailsLink && dict.detailsLink && (

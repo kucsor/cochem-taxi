@@ -3,7 +3,6 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { Phone } from 'lucide-react'
 import { FareCalculator } from '@/components/landing/fare-calculator'
-import { Activities } from '@/components/landing/activities'
 import { Faq } from '@/components/landing/faq'
 import { LocationFacts } from '@/components/landing/location-facts'
 import { ScrollToTop } from '@/components/scroll-to-top'
@@ -140,16 +139,13 @@ export default async function TransferPage({ params }: Props) {
           dict={dict.fareCalculator}
           lang={lang}
           initialStartAddress="Cochem"
+          initialDestinationAddress={destination}
           showDetailsLink={false}
         />
       </section>
 
       <section className="py-8">
         <Faq title={dict.transferPage.faqTitle} items={faqItems} />
-      </section>
-
-      <section className="py-8">
-        <Activities dict={dict.activities} lang={lang} query={routeData.activitiesQuery} />
       </section>
 
       <section className="w-full max-w-3xl mx-auto py-8 text-center">

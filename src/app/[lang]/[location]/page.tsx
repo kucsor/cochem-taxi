@@ -3,7 +3,6 @@ import { Hero } from '@/components/landing/hero'
 import { ServiceRegion } from '@/components/landing/service-region'
 import { Services } from '@/components/landing/services'
 import { WhyUs } from '@/components/landing/why-us'
-import { Activities } from '@/components/landing/activities'
 import { Faq } from '@/components/landing/faq'
 import { LocationFacts } from '@/components/landing/location-facts'
 import { ScrollToTop } from '@/components/scroll-to-top'
@@ -122,10 +121,6 @@ export default async function LocationPage({ params }: Props) {
 
       <section className="py-8">
         <Faq title={dict.locationPage.faqTitle} items={faqItems} />
-      </section>
-
-      <section className="py-8">
-        <Activities dict={dict.activities} lang={lang} query="Cochem" />
       </section>
 
       <section id="services" className="py-8">

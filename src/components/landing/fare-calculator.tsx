@@ -28,6 +28,11 @@ const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
 
 type Dictionary = {
   callButton?: string;
+  subtitle: string;
+  hideMap: string;
+  showMap: string;
+  mapHidden: string;
+  loadMap: string;
   title: string;
   startLabel: string;
   startPlaceholder: string;
@@ -67,7 +72,7 @@ const initialState: FareState = {
   anfahrtFee: null,
 };
 
-function PriceResult({ state, pending, dict }: { state: FareState; pending: boolean; dict: Dictionary }) {
+function PriceResult({ state, pending, dict, lang }: { lang: string; state: FareState; pending: boolean; dict: Dictionary }) {
   useEffect(() => {
     if (state.price !== null && !pending) {
       trackEvent('calculator_success');
@@ -116,7 +121,7 @@ function PriceResult({ state, pending, dict }: { state: FareState; pending: bool
             <CountUp
               end={state.price}
               durationMs={700}
-              format={(value) => `~${value.toLocaleString("de-DE", { style: "currency", currency: "EUR" })}`}
+              format={(value) => `~${value.toLocaleString(lang === "nl" ? "nl-NL" : lang === "en" ? "en-GB" : "de-DE", { style: "currency", currency: "EUR" })}`}
             />
           </p>
           <p className="text-[10px] md:text-xs text-muted-foreground">
@@ -126,7 +131,7 @@ function PriceResult({ state, pending, dict }: { state: FareState; pending: bool
             <p
               className="text-[10px] md:text-xs text-primary/70 italic mt-1 md:mt-2 animate-in fade-in delay-300 fill-mode-forwards"
             >
-              {dict.anfahrtInfo.replace('{anfahrtPrice}', state.anfahrtFee.toLocaleString("de-DE", { style: "currency", currency: "EUR" }))}
+              {dict.anfahrtInfo.replace('{anfahrtPrice}', state.anfahrtFee.toLocaleString(lang === "nl" ? "nl-NL" : lang === "en" ? "en-GB" : "de-DE", { style: "currency", currency: "EUR" }))}
             </p>
           )}
         </div>
@@ -136,7 +141,7 @@ function PriceResult({ state, pending, dict }: { state: FareState; pending: bool
   return null;
 }
 
-function MapResult({ state, pending, isLoaded, setIsLoaded }: { state: FareState; pending: boolean; isLoaded: boolean; setIsLoaded: (v: boolean) => void }) {
+function MapResult({ state, pending, isLoaded, setIsLoaded, dict }: { dict: Dictionary; state: FareState; pending: boolean; isLoaded: boolean; setIsLoaded: (v: boolean) => void }) {
   const mapContainerClass = "h-[250px] md:h-[300px] lg:h-full w-full rounded-xl md:rounded-2xl overflow-hidden glass min-h-[200px] md:min-h-[300px] relative";
 
   // Static Map Image URL
@@ -165,7 +170,7 @@ function MapResult({ state, pending, isLoaded, setIsLoaded }: { state: FareState
             {/* Since domain is external, we need to allow it in next.config or use unoptimized */}
             <img
                 src={staticMapUrl}
-                alt="Map Preview"
+                alt={dict.routeMapTitle}
                 className="w-full h-full object-cover opacity-50 group-hover:opacity-70 transition-opacity duration-300"
                 width="800"
                 height="600"
@@ -176,7 +181,7 @@ function MapResult({ state, pending, isLoaded, setIsLoaded }: { state: FareState
         <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
           <Button variant="secondary" className="gap-2 shadow-lg hover:scale-105 transition-transform">
             <MapIcon className="w-4 h-4" />
-            Interaktive Karte laden
+            {dict.loadMap}
           </Button>
         </div>
       </div>
@@ -378,7 +383,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                     <h2 className="font-bold text-lg md:text-2xl text-white">{dict.title}</h2>
                   </div>
                   <p className="text-muted-foreground text-xs md:text-sm">
-                    Berechnen Sie den geschätzten Preis für Ihre Fahrt
+                    {dict.subtitle}
                   </p>
                 </CardHeader>
                 
@@ -535,7 +540,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                 {/* min-h calibrated to the measured result card incl. the
                     Anfahrt note (mobile 171px / desktop 210px) */}
                 <div aria-live="polite" role="status" className="min-h-[171px] md:min-h-[210px]">
-                  <PriceResult state={state} pending={pending} dict={dict} />
+                  <PriceResult lang={lang} state={state} pending={pending} dict={dict} />
                   {state.price != null && !pending && (
                     <Button asChild size="lg" className="mt-4 w-full">
                       <a href="tel:+4926718080" onClick={() => trackEvent('click_call_now', { source: 'calculator_result' })}>
@@ -573,16 +578,16 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                       onClick={() => setShowMap(!showMap)}
                       className="text-xs text-primary md:hidden"
                     >
-                      {showMap ? 'Karte ausblenden' : 'Karte anzeigen'}
+                      {showMap ? dict.hideMap : dict.showMap}
                     </Button>
                   </div>
                   <div className={`flex-grow ${!showMap ? 'hidden md:block' : 'block'}`}>
-                    <MapResult state={state} pending={pending} isLoaded={isMapLoaded} setIsLoaded={setIsMapLoaded} />
+                    <MapResult dict={dict} state={state} pending={pending} isLoaded={isMapLoaded} setIsLoaded={setIsMapLoaded} />
                   </div>
                   {/* Mobile map placeholder when hidden */}
                   {!showMap && (
                     <div className="h-[100px] rounded-xl glass flex items-center justify-center md:hidden">
-                      <p className="text-xs text-muted-foreground">Karte ausgeblendet</p>
+                      <p className="text-xs text-muted-foreground">{dict.mapHidden}</p>
                     </div>
                   )}
                 </div>

@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 import { Phone } from 'lucide-react'
 import { FareCalculator } from '@/components/landing/fare-calculator'
 import { Faq } from '@/components/landing/faq'
@@ -8,7 +8,7 @@ import { LocationFacts } from '@/components/landing/location-facts'
 import { ScrollToTop } from '@/components/scroll-to-top'
 import { Button } from '@/components/ui/button'
 import { getDictionary } from '@/lib/dictionaries'
-import { Locale } from '@/i18n-config'
+import { i18n, Locale } from '@/i18n-config'
 import { routes, getRoute, buildRouteFaq } from '@/lib/routes'
 import { breadcrumbSchema, formatTelephone, taxiRouteSchema } from '@/lib/schema'
 import { absoluteUrl, alternatesForLocale } from '@/lib/site'
@@ -25,14 +25,12 @@ function fill(template: string, values: Record<string, string | number>): string
 }
 
 export async function generateStaticParams() {
-  return routes.flatMap((route) => [
-    { lang: 'de', route: route.slug },
-    { lang: 'en', route: route.slug },
-  ])
+  return routes.flatMap(route => i18n.locales.map(lang => ({lang, route: route.slug})))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang, route } = await params
+  if (route === 'flughafen-hahn') permanentRedirect(`/${lang}/flughafen/hahn`)
   const routeData = getRoute(route)
 
   if (!routeData) return {}
@@ -53,6 +51,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function TransferPage({ params }: Props) {
   const { lang, route } = await params
+  if (route === 'flughafen-hahn') permanentRedirect(`/${lang}/flughafen/hahn`)
   const routeData = getRoute(route)
 
   if (!routeData) {

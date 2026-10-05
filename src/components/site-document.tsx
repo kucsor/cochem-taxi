@@ -1,4 +1,4 @@
-import './globals.css';
+import '@/app/globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { Inter, Poppins } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
@@ -43,13 +43,9 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function SiteDocument({children, lang}: {children: React.ReactNode; lang: string}) {
   return (
-    <html lang="de" className={`dark ${inter.variable} ${poppins.variable}`}>
+    <html lang={lang} className={`dark ${inter.variable} ${poppins.variable}`}>
       <body className="font-body antialiased">
         <ConsentProvider>
           <Analytics GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />

@@ -104,7 +104,7 @@ export function estimateFare(distanceKm: number, options: TariffOptions = {}): n
 
 /** Formats a price the way the calculator does: "24,50 €". */
 export function formatEuro(value: number, locale: string = 'de'): string {
-  return new Intl.NumberFormat(locale === 'en' ? 'en-GB' : 'de-DE', {
+  return new Intl.NumberFormat(locale === 'nl' ? 'nl-NL' : locale === 'en' ? 'en-GB' : 'de-DE', {
     style: 'currency',
     currency: 'EUR',
   }).format(value);
@@ -119,7 +119,7 @@ export function formatFareEstimate(
   distanceKm: number,
   { locale = 'de', ...tariff }: TariffOptions & { locale?: string } = {}
 ): string {
-  return new Intl.NumberFormat(locale === 'en' ? 'en-GB' : 'de-DE', {
+  return new Intl.NumberFormat(locale === 'nl' ? 'nl-NL' : locale === 'en' ? 'en-GB' : 'de-DE', {
     style: 'currency',
     currency: 'EUR',
     maximumFractionDigits: 0,

@@ -6,6 +6,7 @@ import { cache } from 'react'
 // We can prepare getDictionaries for client side
 const dictionaries = {
   en: () => import('@/locales/en.json').then((module) => module.default),
+  nl: () => import('@/locales/nl.json').then((module) => module.default),
   de: () => import('@/locales/de.json').then((module) => module.default),
 }
 

@@ -19,7 +19,7 @@ import type { Locale } from '@/i18n-config';
 /** Formats "2026-08-01" for display in the page language. */
 function formatValidFrom(lang: Locale): string {
   return new Date(`${TARIFF_VALID_FROM}T00:00:00Z`).toLocaleDateString(
-    lang === 'en' ? 'en-GB' : 'de-DE',
+    lang === 'nl' ? 'nl-NL' : lang === 'en' ? 'en-GB' : 'de-DE',
     { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' }
   );
 }

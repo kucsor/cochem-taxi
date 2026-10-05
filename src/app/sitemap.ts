@@ -22,7 +22,7 @@ const entries: Entry[] = [
   { pathFor: pricesPath, changeFrequency: 'monthly', priority: 0.9 },
   { pathFor: activitiesPath, changeFrequency: 'weekly', priority: 0.8 },
   ...airports.map(airport => ({pathFor: (lang: Locale) => `/${lang}/flughafen/${airport.slug}`, changeFrequency: 'monthly' as const, priority: 0.9})),
-  ...routes.map((route) => ({
+  ...routes.filter(route => route.slug !== 'flughafen-hahn').map((route) => ({
     pathFor: (lang: Locale) => `/${lang}/transfer/${route.slug}`,
     changeFrequency: 'monthly' as const,
     priority: 0.9,
@@ -46,8 +46,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: locale === 'de' ? entry.priority : entry.priority * 0.9,
       alternates: {
         languages: {
-          de: absoluteUrl(entry.pathFor('de')),
+          'de-DE': absoluteUrl(entry.pathFor('de')),
           en: absoluteUrl(entry.pathFor('en')),
+          'nl-NL': absoluteUrl(entry.pathFor('nl')),
+          'x-default': absoluteUrl(entry.pathFor('de')),
         },
       },
     }))

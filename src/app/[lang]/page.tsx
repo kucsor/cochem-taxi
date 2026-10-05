@@ -28,7 +28,7 @@ export default async function Home({
       
       <ServiceArea dict={dict.serviceArea} />
       <section className="py-8 w-full max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold text-center mb-6">{lang === 'de' ? 'Flughafentransfer ab und nach Cochem' : 'Airport transfers to and from Cochem'}</h2>
+        <h2 className="text-2xl font-bold text-center mb-6">{dict.airportPage.sectionTitle}</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{airports.map(airport => <Link key={airport.slug} href={`/${lang}/flughafen/${airport.slug}`} className="glass-card rounded-2xl p-6 text-center hover:text-primary">{airport.name} ({airport.code})</Link>)}</div>
       </section>
 

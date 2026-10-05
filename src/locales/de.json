@@ -46,7 +46,12 @@
     "locationPrefix": "Standort:",
     "locating": "Wird gesucht",
     "detailsLink": "Mehr Details zur Preisberechnung",
-    "callButton": "Taxi anrufen"
+    "callButton": "Taxi anrufen",
+    "loadMap": "Interaktive Karte laden",
+    "subtitle": "Berechnen Sie den geschätzten Preis für Ihre Fahrt",
+    "hideMap": "Karte ausblenden",
+    "showMap": "Karte anzeigen",
+    "mapHidden": "Karte ausgeblendet"
   },
   "rechnerPage": {
     "metaTitle": "Taxi Rechner Cochem | Kostenlos Taxikosten berechnen",
@@ -249,5 +254,24 @@
     "ctaText": "Für längere Strecken empfehlen wir eine Vorbestellung - dann steht der Wagen pünktlich bereit.",
     "callButton": "Jetzt anrufen",
     "otherRoutes": "Weitere beliebte Strecken"
+  },
+  "airportPage": {
+    "sectionTitle": "Von Cochem zum Flughafen",
+    "callButton": "Flughafentaxi telefonisch anfragen",
+    "planningTitle": "Abfahrt und Fahrzeit planen",
+    "planningText": "Der Rechner ermittelt die Route für die eingegebenen Adressen. Fahrzeit und Preis sind unverbindliche Schätzungen. Planen Sie zusätzlich einen Puffer für Verkehr, Check-in und Sicherheitskontrolle ein. Richten Sie sich nach den Angaben Ihrer Fluggesellschaft.",
+    "departureTitle": "Abholung in Cochem",
+    "departureText": "Diese Flughafentransfers starten ausschließlich in Cochem. Nennen Sie telefonisch Ihre Abholadresse in Cochem, den Flughafen, Ihre Flugnummer und die gewünschte Abfahrtszeit. Eine Preisberechnung bestätigt keine Fahrt.",
+    "luggageTitle": "Familien, Gruppen und Gepäck",
+    "luggageText": "Nennen Sie beim Anruf die Personenzahl, Koffer und benötigte Kindersitze. Lassen Sie Verfügbarkeit, Fahrzeuggröße und Preis vor der Fahrt bestätigen. Für Fernfahrten kann eine telefonische Preisvereinbarung erforderlich sein.",
+    "otherAirports": "Weitere Flughäfen",
+    "metaTitle": "Taxi Cochem → Flughafen {airport} ({code})"
+  },
+  "navigation": {
+    "home": "Home",
+    "price": "Preis",
+    "call": "Anrufen",
+    "services": "Service",
+    "top": "Nach oben"
   }
 }

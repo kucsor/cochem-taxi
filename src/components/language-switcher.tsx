@@ -21,12 +21,16 @@ export function LanguageSwitcher({ currentLang }: { currentLang?: string }) {
     if (!pathName) return '/'
     const segments = pathName.split('/')
     segments[1] = locale
+    const slug = segments[2];
+    if (['preise', 'prices', 'prijzen'].includes(slug)) segments[2] = {de:'preise',en:'prices',nl:'prijzen'}[locale];
+    if (['aktivitaeten', 'things-to-do', 'bezienswaardigheden'].includes(slug)) segments[2] = {de:'aktivitaeten',en:'things-to-do',nl:'bezienswaardigheden'}[locale];
     return segments.join('/')
   }
   
   const languageNames: Record<Locale, string> = {
     de: 'Deutsch',
     en: 'English',
+    nl: 'Nederlands',
   }
 
   return (

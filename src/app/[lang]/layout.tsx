@@ -1,3 +1,6 @@
+import { SiteDocument } from '@/components/site-document';
+export { viewport } from '@/components/site-document';
+import { metadata as documentMetadata } from '@/components/site-document';
 import type { Metadata } from 'next'
 import { i18n, type Locale } from '@/i18n-config'
 import { getDictionary } from '@/lib/dictionaries'
@@ -7,7 +10,6 @@ import { BottomNav } from '@/components/landing/bottom-nav';
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 import { ConsentBanner } from '@/components/consent-banner';
-import { HtmlLang } from '@/components/html-lang';
 import {
   TariffNotice,
   TARIFF_NOTICE_SHOW_UNTIL,
@@ -28,6 +30,7 @@ export async function generateMetadata({
   const { lang } = await params;
   const dictionary = await getDictionary(lang as Locale)
   return {
+    ...documentMetadata,
     metadataBase: new URL(SITE_URL),
     title: {
       template: `%s | Cochem-Taxi.de`,
@@ -38,7 +41,8 @@ export async function generateMetadata({
       canonical: `/${lang}`,
       languages: {
         'de-DE': '/de',
-        'en-US': '/en',
+        'en': '/en',
+        'nl-NL': '/nl',
         'x-default': '/de',
       },
     },
@@ -73,6 +77,7 @@ export default async function RootLayout({
   });
 
   return (
+    <SiteDocument lang={lang}>
     <div className="flex flex-col items-center min-h-dvh bg-background">
         <script
           type="application/ld+json"
@@ -85,7 +90,6 @@ export default async function RootLayout({
             __html: `try{if(localStorage.getItem('${TARIFF_NOTICE_STORAGE_KEY}')==='dismissed'||new Date()>new Date('${TARIFF_NOTICE_SHOW_UNTIL}'))document.documentElement.classList.add('tariff-notice-hidden')}catch(e){}`,
           }}
         />
-        <HtmlLang lang={lang} />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:font-semibold focus:text-primary-foreground"
@@ -98,10 +102,11 @@ export default async function RootLayout({
             {children}
         </main>
         <Footer dict={dict.footer} lang={lang} />
-        <BottomNav />
+        <BottomNav dict={dict.navigation} />
         <ConsentBanner dict={dict.consent} lang={lang} />
         <SpeedInsights />
         <Analytics />
     </div>
+    </SiteDocument>
   )
 }

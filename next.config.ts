@@ -5,7 +5,10 @@ const withPWA = require('next-pwa')({
   cacheStartUrl: false,
   dynamicStartUrl: false,
   publicExcludes: ['!noprecache/**/*'],
-  runtimeCaching: [{ urlPattern: /\/admin(?:\/|$)|\/api\//, handler: 'NetworkOnly' }],
+  runtimeCaching: [
+    { urlPattern: /\/admin(?:[/?]|$)|\/api\//, handler: 'NetworkOnly' },
+    ...require('next-pwa/cache'),
+  ],
   disable: process.env.NODE_ENV === 'development',
 });
 

@@ -49,8 +49,12 @@ A daily HMAC-derived IP value is stored separately for abuse prevention and is n
 
 ## Verification
 
+The existing lockfile was created with legacy peer resolution; CI uses `npm ci --legacy-peer-deps` to reproduce it. The unused `@genkit-ai/next` adapter (Next 15 peer requirement) was removed.
+
 `npm run check` — source invariants, TypeScript, unit tests.
 `npm run build` — complete production build and static pages.
 `node --env-file=.env.local scripts/integration-check.mjs` — starts a production server in the same test process environment and checks authentication, CSRF, copied-token revocation, tracking, filters, invalid input, 404 responses and airport routes. Requires configured test backend and Mapbox. It uses an isolated random test password and development events. The printed test event IDs identify test-only records for cleanup. Never print session tokens or environment values.
 
 Browser review should include consent accept/revoke, DE/EN/NL navigation, calculator edits, keyboard use and the dashboard. Real-device installation and phone-call completion require a real device; no call is placed by automated tests.
+
+Verified during implementation: production build passed; all 15 airport locale pages responded 200; three missing-path tests responded 404; authentication, wrong-origin rejection, tampered-token rejection, logout revocation, event validation/idempotency, report access/filter validation and all five real Mapbox routes passed. Browser visual review was blocked by a cloud-browser timeout.

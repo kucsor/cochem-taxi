@@ -48,11 +48,11 @@ export function Services({ dict }: { dict: Dictionary }) {
   const features = dict.features ? [
     { icon: Shield, text: dict.features[0] || "Versicherte Fahrten" },
     { icon: Clock, text: dict.features[1] || "Pünktliche Abholung" },
-    { icon: Star, text: dict.features[2] || "5-Sterne Service" },
+    { icon: Star, text: dict.features[2] || "Persönlicher Service" },
   ] : [
     { icon: Shield, text: "Insured Trips" },
     { icon: Clock, text: "Punctual Pickup" },
-    { icon: Star, text: "5-Star Service" },
+    { icon: Star, text: "Personal service" },
   ];
 
   return (

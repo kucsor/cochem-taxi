@@ -29,7 +29,7 @@ let cookie = "";
 async function request(path, body, headers = {}) {
   return fetch(origin + path, {
     method: body === undefined ? "GET" : "POST",
-    headers: { origin, "content-type": "application/json", ...headers },
+    headers: { origin, "content-type": "application/json", "x-real-ip": `integration-${salt}`, ...headers },
     body: body === undefined ? undefined : JSON.stringify(body),
     signal: AbortSignal.timeout(30000),
   });

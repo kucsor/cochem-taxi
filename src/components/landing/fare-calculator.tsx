@@ -463,7 +463,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
                         required
                         value={endAddress}
                         onChange={(e) => { setEndAddress(e.target.value); setEndCoords(null); }}
-                        onFocus={() => setIsEndFocused(true)}
+                        onFocus={() => setIsEndFocused(!airportSlug)}
                         onBlur={() => setTimeout(() => setIsEndFocused(false), 150)}
                         autoComplete="off"
                         aria-busy={isEndLoading}

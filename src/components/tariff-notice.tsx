@@ -12,10 +12,7 @@ export type TariffNoticeDictionary = {
   dismiss: string;
 };
 
-export const TARIFF_NOTICE_STORAGE_KEY = "cochem-taxi-tariff-notice-2026-08";
-
-/** The notice retires itself, so nobody has to remember to take it down. */
-export const TARIFF_NOTICE_SHOW_UNTIL = "2026-10-31T23:59:59Z";
+import { TARIFF_NOTICE_STORAGE_KEY, TARIFF_NOTICE_SHOW_UNTIL } from "@/lib/tariff-notice";
 
 /**
  * Rendered server-side so it is present in the initial HTML - that keeps the

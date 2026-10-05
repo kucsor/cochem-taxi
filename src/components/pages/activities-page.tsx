@@ -56,7 +56,7 @@ export async function ActivitiesPageContent({ lang }: { lang: Locale }) {
           size="lg"
           className="mt-6 h-14 rounded-full bg-primary px-8 text-base font-semibold text-primary-foreground hover:bg-primary/90 glow-gold-subtle"
         >
-          <a href={`tel:${dict.hero.phoneNumber.replace(/\s/g, '')}`} className="flex items-center gap-3">
+          <a href="tel:+4926718080" className="flex items-center gap-3">
             <Phone className="h-5 w-5" />
             <span>{page.callButton}</span>
             <span className="hidden border-l border-primary-foreground/30 pl-3 text-sm font-normal opacity-80 sm:inline">

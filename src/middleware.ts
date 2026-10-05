@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
   // This is a trade-off for static site generation performance.
   const cspHeader = `
     default-src 'self';
-    script-src 'self' https: http: 'unsafe-inline';
+    script-src 'self' https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live 'unsafe-inline';
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https:;
     font-src 'self' https://fonts.gstatic.com;
@@ -36,6 +36,7 @@ export function middleware(request: NextRequest) {
   // `/_next/` and `/api/` are ignored by the watcher, but we need to ignore files in `public`
   if (
     [
+      '/admin',
       '/manifest.json',
       '/favicon.ico',
     ].includes(pathname)
@@ -55,7 +56,7 @@ export function middleware(request: NextRequest) {
   )
 
   // Redirect if there is no locale
-  if (pathnameIsMissingLocale) {
+  if (pathnameIsMissingLocale && !pathname.startsWith('/admin/')) {
     const locale = i18n.defaultLocale
 
     // Use 308 Permanent Redirect for SEO

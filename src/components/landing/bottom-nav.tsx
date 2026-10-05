@@ -102,7 +102,7 @@ export function BottomNav({dict}: {dict:NavDictionary}) {
           {/* Call Button - Prominent */}
           <a
             href="tel:+4926718080"
-            onClick={() => trackEvent('click_call_now')}
+
             className="flex flex-col items-center justify-center -mt-6 active:scale-95 transition-transform duration-200"
           >
             <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30 glow-gold animate-pulse-glow">

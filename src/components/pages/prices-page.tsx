@@ -146,7 +146,7 @@ export async function PricesPageContent({ lang }: { lang: Locale }) {
             size="lg"
             className="h-14 w-full rounded-full bg-primary px-8 text-base font-semibold text-primary-foreground hover:bg-primary/90 glow-gold-subtle active:scale-[0.98] transition-transform sm:w-auto"
           >
-            <a href={`tel:${dict.hero.phoneNumber.replace(/\s/g, '')}`} className="flex items-center gap-3">
+            <a href="tel:+4926718080" className="flex items-center gap-3">
               <Phone className="h-5 w-5" />
               <span>{page.callButton}</span>
               <span className="hidden border-l border-primary-foreground/30 pl-3 text-sm font-normal opacity-80 sm:inline">

@@ -1,4 +1,5 @@
 import '@/app/globals.css';
+import { SiteTracker } from '@/components/site-tracker';
 import { Toaster } from '@/components/ui/toaster';
 import { Inter, Poppins } from 'next/font/google';
 import type { Metadata, Viewport } from 'next';
@@ -53,6 +54,7 @@ export function SiteDocument({children, lang}: {children: React.ReactNode; lang:
       <body className="font-body antialiased">
         <ConsentProvider>
           <Analytics GA_MEASUREMENT_ID={GA_MEASUREMENT_ID} />
+          <SiteTracker />
           {children}
         </ConsentProvider>
         <Toaster />

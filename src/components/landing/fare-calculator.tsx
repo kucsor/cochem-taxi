@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation, Loader2, Users, Map as MapIcon } from "lucide-react";
 import {
   Card,
@@ -55,6 +55,7 @@ type Dictionary = {
 };
 
 type FareState = {
+  duration?: number;
   price: number | null;
   distance: number | null;
   message: string | null;
@@ -73,17 +74,6 @@ const initialState: FareState = {
 };
 
 function PriceResult({ state, pending, dict, lang }: { lang: string; state: FareState; pending: boolean; dict: Dictionary }) {
-  useEffect(() => {
-    if (state.price !== null && !pending) {
-      trackEvent('calculator_success');
-    }
-  }, [state.price, pending]);
-
-  useEffect(() => {
-    if (state.message && !pending) {
-      trackEvent('calculator_error', { error_message: state.message });
-    }
-  }, [state.message, pending]);
 
   if (pending) {
       return (
@@ -127,6 +117,7 @@ function PriceResult({ state, pending, dict, lang }: { lang: string; state: Fare
           <p className="text-[10px] md:text-xs text-muted-foreground">
             {dict.resultDistance.replace('{distance}', state.distance.toFixed(1))}
           </p>
+          {state.duration != null && <p className="text-sm text-muted-foreground">~{Math.ceil(state.duration)} min · {lang === 'de' ? 'ohne Verkehrspuffer' : lang === 'nl' ? 'zonder verkeersbuffer' : 'excluding traffic buffer'}</p>}
           {state.hasAnfahrt && state.anfahrtFee !== null && (
             <p
               className="text-[10px] md:text-xs text-primary/70 italic mt-1 md:mt-2 animate-in fade-in delay-300 fill-mode-forwards"
@@ -145,7 +136,7 @@ function MapResult({ state, pending, isLoaded, setIsLoaded, dict }: { dict: Dict
   const mapContainerClass = "h-[250px] md:h-[300px] lg:h-full w-full rounded-xl md:rounded-2xl overflow-hidden glass min-h-[200px] md:min-h-[300px] relative";
 
   // Static Map Image URL
-  const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/7.166,50.146,12,0/800x600?access_token=${MAPBOX_TOKEN}&attribution=false&logo=false`;
+  const staticMapUrl = `https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/7.166,50.146,12,0/800x600?access_token=${MAPBOX_TOKEN}`;
 
   if (pending) {
     return (
@@ -195,7 +186,7 @@ function MapResult({ state, pending, isLoaded, setIsLoaded, dict }: { dict: Dict
   );
 }
 
-export function FareCalculator({ dict, lang = "de", showDetailsLink = true, initialStartAddress = "", initialDestinationAddress = "" }: { dict: Dictionary; lang?: string; showDetailsLink?: boolean; initialStartAddress?: string; initialDestinationAddress?: string }) {
+export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink = true, initialStartAddress = "", initialDestinationAddress = "" }: { airportSlug?: string; dict: Dictionary; lang?: string; showDetailsLink?: boolean; initialStartAddress?: string; initialDestinationAddress?: string }) {
   const [startAddress, setStartAddress] = useState(initialStartAddress);
   const [endAddress, setEndAddress] = useState(initialDestinationAddress);
   const [pickupTime, setPickupTime] = useState("");
@@ -209,6 +200,8 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
   const [showMap, setShowMap] = useState(false);
   
   const [state, setState] = useState<FareState>(initialState);
+  const requestVersion = useRef(0);
+  useEffect(() => { requestVersion.current++; setState(initialState); }, [startAddress, endAddress, pickupTime, passengers]);
   const [pending, setPending] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
@@ -233,14 +226,15 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
   useEffect(() => {
     const now = new Date();
     setPickupTime(
-      `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`
+      new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Berlin", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(now)
     );
   }, []);
 
   const fetchSuggestions = async (
     query: string,
     setter: React.Dispatch<React.SetStateAction<any[]>>,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    signal: AbortSignal
   ) => {
     if (query.length < 2) {
       setter([]);
@@ -249,7 +243,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
     setLoading(true);
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${MAPBOX_TOKEN}&country=DE&limit=5&proximity=7.1667,50.15&types=poi,address,place,locality`
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${MAPBOX_TOKEN}&country=DE,LU&limit=5&proximity=7.1667,50.15&types=poi,address,place,locality`, { signal }
       );
       if (response.ok) {
         const data = await response.json();
@@ -260,7 +254,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
     } catch (error) {
       setter([]);
     } finally {
-      setLoading(false);
+      if (!signal.aborted) setLoading(false);
     }
   };
 
@@ -269,8 +263,9 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
       if (startSuggestions.length > 0) setStartSuggestions([]);
       return;
     }
-    const handler = setTimeout(() => fetchSuggestions(startAddress, setStartSuggestions, setIsStartLoading), 300);
-    return () => clearTimeout(handler);
+    const controller = new AbortController();
+    const handler = setTimeout(() => fetchSuggestions(startAddress, setStartSuggestions, setIsStartLoading, controller.signal), 300);
+    return () => { clearTimeout(handler); controller.abort(); setIsStartLoading(false); };
   }, [startAddress, isStartFocused]);
 
   useEffect(() => {
@@ -278,8 +273,9 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
       if (endSuggestions.length > 0) setEndSuggestions([]);
       return;
     }
-    const handler = setTimeout(() => fetchSuggestions(endAddress, setEndSuggestions, setIsEndLoading), 300);
-    return () => clearTimeout(handler);
+    const controller = new AbortController();
+    const handler = setTimeout(() => fetchSuggestions(endAddress, setEndSuggestions, setIsEndLoading, controller.signal), 300);
+    return () => { clearTimeout(handler); controller.abort(); setIsEndLoading(false); };
   }, [endAddress, isEndFocused]);
 
   const handleSelectSuggestion = (suggestion: any, type: "start" | "end") => {
@@ -299,11 +295,11 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
   const handleLocateMe = () => {
     trackEvent('click_locate_me');
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by your browser.");
+      alert(dict.errorMessages.location);
       return;
     }
     const error = () => {
-      alert("Unable to retrieve your location.");
+      alert(dict.errorMessages.location);
       setStartAddress("");
     };
     const success = async (position: GeolocationPosition) => {
@@ -332,6 +328,10 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (pending) return;
+    const version = ++requestVersion.current;
+    setState(initialState);
+    trackEvent("use_calculator", { passengers });
     setPending(true);
     setIsMapLoaded(true); // Load map on submit
     if (!showMap) setShowMap(true); // Show map container on mobile
@@ -339,8 +339,10 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
     try {
       const response = await fetch('/api/calculate', {
         method: 'POST',
+        signal: AbortSignal.timeout(30000),
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          airportSlug,
           startAddress,
           endAddress,
           pickupTime,
@@ -353,11 +355,15 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
         }),
       });
       
-      if (!response.ok) throw new Error('API error');
       const data = await response.json();
-      setState(data);
-      trackEvent('use_calculator');
+      if (version !== requestVersion.current) return;
+      if (!response.ok || data.message) {
+        setState({ ...initialState, message: dict.errorMessages[data.code] || dict.errorMessages.generic });
+        trackEvent('calculator_error', { outcome: String(data.code || '').startsWith('geocoding') ? 'geocoding' : ['routing','rate_limited','validation','server_error'].includes(data.code) ? data.code : 'request_failed' });
+      } else { setState(data); trackEvent('calculator_success', { passengers }); }
     } catch (error) {
+      if (version !== requestVersion.current) return;
+      trackEvent("calculator_error", { outcome: "network_or_timeout" });
       setState({
         ...initialState,
         message: dict.errorMessages.generic || "Ein Fehler ist aufgetreten",
@@ -452,6 +458,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                       <Input
                         id="end"
                         name="endAddress"
+                        readOnly={!!airportSlug}
                         placeholder={dict.endPlaceholder}
                         required
                         value={endAddress}
@@ -520,6 +527,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                       <Input
                         id="time"
                         name="pickupTime"
+                        aria-description="Europe/Berlin"
                         type="time"
                         required
                         value={pickupTime}
@@ -543,7 +551,7 @@ export function FareCalculator({ dict, lang = "de", showDetailsLink = true, init
                   <PriceResult lang={lang} state={state} pending={pending} dict={dict} />
                   {state.price != null && !pending && (
                     <Button asChild size="lg" className="mt-4 w-full">
-                      <a href="tel:+4926718080" onClick={() => trackEvent('click_call_now', { source: 'calculator_result' })}>
+                      <a href="tel:+4926718080" >
                         {dict.callButton ?? (lang === 'de' ? 'Taxi anrufen' : 'Call a taxi')} · 02671 8080
                       </a>
                     </Button>

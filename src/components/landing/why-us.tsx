@@ -1,7 +1,6 @@
 "use client";
 
 import { Reveal } from "@/components/ui/reveal";
-import { CountUp } from "@/components/ui/count-up";
 import { trackSpotlight } from "@/lib/spotlight";
 import { Check, Users, Car, Package, HeartPulse, Award, Zap } from "lucide-react";
 
@@ -25,11 +24,6 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
     { icon: HeartPulse, text: dict.features[3], color: "from-rose-500/20 to-pink-600/20", iconColor: "text-rose-400" },
   ];
 
-  const stats = [
-    { end: 10, suffix: "+", label: dict.stats?.experience || "Years experience" },
-    { value: "24/7", label: dict.stats?.availability || "Availability" },
-    { end: 100, suffix: "%", label: dict.stats?.reliability || "Reliable" },
-  ];
 
   return (
     <section className="w-full max-w-5xl mx-auto px-4">
@@ -77,27 +71,6 @@ export function WhyUs({ dict }: { dict: Dictionary }) {
             </div>
           );
         })}
-      </Reveal>
-
-      {/* Stats Row - Smaller text */}
-      <Reveal stagger className="grid grid-cols-3 gap-4">
-        {stats.map((stat, index) => (
-          <div
-            key={index}
-            className="text-center p-3 md:p-4 rounded-xl glass-card glass-card-hover hover:-translate-y-1"
-          >
-            <div
-              className="text-xl md:text-2xl font-bold text-gradient-gold mb-1"
-            >
-              {"end" in stat && stat.end !== undefined ? (
-                <CountUp end={stat.end} suffix={stat.suffix} durationMs={900} />
-              ) : (
-                stat.value
-              )}
-            </div>
-            <div className="text-xs md:text-sm text-muted-foreground leading-tight">{stat.label}</div>
-          </div>
-        ))}
       </Reveal>
 
       {/* Bottom CTA */}

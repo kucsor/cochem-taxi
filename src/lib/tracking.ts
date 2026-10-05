@@ -1,62 +1,73 @@
-'use client';
-
-import { track } from '@vercel/analytics';
-
-export type TrackedEvent =
-  | 'click_call_now'
-  | 'click_calculator'
-  | 'click_scroll_top'
-  | 'use_calculator'
-  | 'calculator_success'
-  | 'calculator_error'
-  | 'click_locate_me'
-  | 'change_language'
-  | 'view_legal'
-  | 'click_home_nav'
-  | 'click_services_nav'
-  | 'load_map_click'
-  | 'view_activities'
-  | 'consent_accept'
-  | 'consent_reject';
-
-/** Phone and calculator interactions used to measure site usefulness. */
-const CONVERSION_EVENTS: ReadonlySet<TrackedEvent> = new Set<TrackedEvent>([
-  'click_call_now',
-  'use_calculator',
-  'calculator_success',
-  'view_activities',
-]);
-
-/**
- * Tracks a custom event.
- *
- * Two destinations, deliberately:
- * - Google Analytics: only after cookie consent, so it under-counts by design.
- * - Vercel Analytics: cookieless and needs no consent, so conversions are
- *   counted for 100% of visitors. Without this, every visitor who declines
- *   cookies would be invisible - which is most of them.
- */
+"use client";
+import type { AnalyticsEvent } from "./event-schema";
+export type TrackedEvent = AnalyticsEvent["name"];
+let visit: string | null = null;
+let permitted = false;
+export function setTrackingConsent(granted: boolean) {
+  permitted = granted;
+  if(typeof window !== "undefined") {
+    const id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-R1ZRPLYTDH";
+    (window as any)[`ga-disable-${id}`] = !granted;
+    if(!granted && typeof (window as any).gtag === "function") (window as any).gtag("consent", "update", {analytics_storage:"denied"});
+  }
+  visit = granted ? visit || crypto.randomUUID() : null;
+}
 export function trackEvent(
-  actionName: TrackedEvent,
-  params?: Record<string, string | number | undefined>
+  name: TrackedEvent,
+  params?: Record<string, string | number | undefined>,
 ) {
-  const eventParams = {
-    event_category: 'UserActions',
-    ...params,
+  if (
+    typeof window === "undefined" ||
+    /^\/admin/.test(location.pathname) ||
+    navigator.doNotTrack === "1" ||
+    (navigator as Navigator & { globalPrivacyControl?: boolean })
+      .globalPrivacyControl
+  )
+    return;
+  const path = location.pathname.replace(/\/$/, "");
+  if (!/^\/(de|en|nl)(\/[a-z0-9-]+){0,3}$/.test(path)) return;
+  const source = [
+    "header",
+    "footer",
+    "calculator",
+    "hero",
+    "navigation",
+    "service",
+    "page",
+  ].includes(String(params?.source))
+    ? String(params?.source)
+    : "other";
+  let referrer = "";
+  try {
+    const host = new URL(document.referrer).hostname;
+    if (host !== location.hostname) referrer = host;
+  } catch {}
+  const data = {
+    id: crypto.randomUUID(),
+    name,
+    path,
+    visit,
+    referrer,
+    device: /iPad|Tablet/i.test(navigator.userAgent)
+      ? "tablet"
+      : /Mobi|Android/i.test(navigator.userAgent)
+        ? "mobile"
+        : "desktop",
+    source,
+    value: typeof params?.value === "number" ? params.value : undefined,
+    outcome: params?.outcome,
   };
-
-  // Google Analytics - present only once consent has been granted.
-  if (typeof (window as any).gtag === 'function') {
-    (window as any).gtag('event', actionName, eventParams);
-  }
-
-  // Vercel Analytics - cookieless, always counted. Keep the payload to plain
-  // strings/numbers; undefined values are dropped.
-  if (CONVERSION_EVENTS.has(actionName)) {
-    const properties: Record<string, string | number> = {};
-    for (const [key, value] of Object.entries(params ?? {})) {
-      if (value !== undefined) properties[key] = value;
-    }
-    track(actionName, Object.keys(properties).length > 0 ? properties : undefined);
-  }
+  void fetch("/api/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+    keepalive: true,
+  }).catch(() => {});
+  try {
+    if (
+      permitted &&
+      typeof (window as any).gtag === "function"
+    )
+      (window as any).gtag("event", name, { source, value: data.value });
+  } catch {}
 }

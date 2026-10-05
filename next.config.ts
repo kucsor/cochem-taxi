@@ -2,13 +2,20 @@ const withPWA = require('next-pwa')({
   dest: 'public',
   register: true,
   skipWaiting: true,
+  cacheStartUrl: false,
+  dynamicStartUrl: false,
+  publicExcludes: ['!noprecache/**/*'],
+  runtimeCaching: [
+    { urlPattern: /\/admin(?:[/?]|$)|\/api\//, handler: 'NetworkOnly' },
+    ...require('next-pwa/cache'),
+  ],
   disable: process.env.NODE_ENV === 'development',
 });
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   poweredByHeader: false,
   images: {

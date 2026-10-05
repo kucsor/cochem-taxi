@@ -40,7 +40,7 @@ export default async function RechnerPage({
   }
 
   return (
-    <main className="min-h-screen pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto">
+    <div className="min-h-screen pt-24 pb-12 px-4 md:px-8 max-w-7xl mx-auto">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -87,6 +87,6 @@ export default async function RechnerPage({
           <div dangerouslySetInnerHTML={{ __html: sanitizeHtml(dict.rechnerPage.content_2) }} />
         </section>
       </div>
-    </main>
+    </div>
   )
 }

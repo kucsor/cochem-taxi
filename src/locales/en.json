@@ -13,7 +13,7 @@
     "mainTitleAccent": "Taxi in Cochem?",
     "features": "Fast • Reliable • Affordable",
     "trustIndicators": {
-      "available": "Available now",
+      "available": "Call to check availability",
       "drivers": "Local drivers",
       "prices": "Transparent fares"
     },
@@ -45,7 +45,10 @@
       "geocoding_start": "Start address could not be found.",
       "geocoding_end": "Destination address could not be found.",
       "routing": "Route between the addresses could not be calculated.",
-      "missing_input": "Please enter start, destination, and time."
+      "missing_input": "Please enter start, destination, and time.",
+      "cochem_only": "Airport transfers depart only from Cochem. Enter a pickup address in Cochem.",
+      "rate_limited": "Too many requests. Please wait one minute.",
+      "location": "Unable to determine your location. Please enter an address."
     },
     "locationPrefix": "Location:",
     "locating": "Locating",
@@ -86,7 +89,7 @@
     "features": [
       "Insured Trips",
       "Punctual Pickup",
-      "5-Star Service"
+      "Personal service"
     ]
   },
   "whyUs": {
@@ -149,7 +152,9 @@
     "analyticsTitle": "Google Analytics",
     "analyticsContent": "This website uses functions of the web analysis service Google Analytics. The provider is Google Ireland Limited. Google Analytics uses so-called \"cookies\". These are text files that are stored on your computer and that allow an analysis of your use of the website.<br><br><strong>IP Anonymization:</strong> We have activated the IP anonymization function on this website. As a result, your IP address will be truncated by Google within member states of the European Union before being transmitted to the USA.",
     "consentTitle": "Consent & Cookies",
-    "consentContent": "On your first visit we ask whether you allow cookies for audience measurement with Google Analytics. <strong>Without your consent the service is not loaded</strong> and no such cookies are set. Our activity recommendations are plain links - they load no third-party content and set no cookies. Your choice is stored locally in your browser and can be changed at any time by clearing the site data in your browser. Essential functions such as the fare calculator are not affected."
+    "consentContent": "On your first visit we ask whether you allow cookies for audience measurement with Google Analytics. <strong>Without your consent the service is not loaded</strong> and no such cookies are set. Our activity recommendations are plain links - they load no third-party content and set no cookies. Your choice is stored locally in your browser and can be changed at any time by clearing the site data in your browser. Essential functions such as the fare calculator are not affected.",
+    "ownAnalyticsTitle": "Site statistics and external services",
+    "ownAnalyticsContent": "We count page views and interactions without calculator addresses or GPS coordinates. Without consent, no visitor identifier is used; with consent, a random identifier exists only in memory for this page session. Events are stored in a separate Supabase project in Frankfurt and deleted after 90 days. A daily rotating cryptographic IP-derived value limits abuse and is stored briefly, separately from events. Vercel provides hosting, Web Analytics and Speed Insights. Mapbox processes addresses and any permitted location data sent for route calculation. Google Analytics loads only with consent, which can be withdrawn in Cookie settings. Our own statistics respect DNT/GPC. Phone clicks do not confirm completed calls."
   },
   "common": {
     "skipToContent": "Skip to content"

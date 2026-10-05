@@ -1,7 +1,7 @@
 /**
  * Single source of truth for the taxi tariff and the Cochem zone geometry.
  *
- * Used by the Server Action (`src/app/actions.ts`), the API route
+ * Used by the API route
  * (`src/app/api/calculate/route.ts`) and by the statically rendered price
  * estimates on the location / transfer pages.
  */

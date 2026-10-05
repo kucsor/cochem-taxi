@@ -13,7 +13,7 @@
     "mainTitleAccent": "taxi nodig in Cochem?",
     "features": "Snel • Betrouwbaar • Betaalbaar",
     "trustIndicators": {
-      "available": "Nu bereikbaar",
+      "available": "Bel voor beschikbaarheid",
       "drivers": "Lokale chauffeurs",
       "prices": "Transparante tarieven"
     },
@@ -46,7 +46,10 @@
       "geocoding_start": "Het vertrekadres is niet gevonden.",
       "geocoding_end": "De bestemming is niet gevonden.",
       "routing": "Er kon geen route tussen de adressen worden berekend.",
-      "missing_input": "Vul vertrekadres, bestemming en tijd in."
+      "missing_input": "Vul vertrekadres, bestemming en tijd in.",
+      "cochem_only": "Luchthaventransfers vertrekken alleen vanuit Cochem. Vul een ophaaladres in Cochem in.",
+      "rate_limited": "Te veel aanvragen. Wacht één minuut.",
+      "location": "Uw locatie kon niet worden bepaald. Vul een adres in."
     },
     "locationPrefix": "Locatie:",
     "locating": "Locatie bepalen",
@@ -86,7 +89,7 @@
     "features": [
       "Verzekerde ritten",
       "Op tijd opgehaald",
-      "Uitstekende service"
+      "Persoonlijke service"
     ]
   },
   "whyUs": {
@@ -149,7 +152,9 @@
     "analyticsTitle": "Google Analytics",
     "analyticsContent": "Deze website gebruikt Google Analytics van Google Ireland Limited. Deze dienst gebruikt cookies: tekstbestanden op uw apparaat waarmee uw gebruik van de website kan worden geanalyseerd.<br><br><strong>IP-anonimisering:</strong> Op deze website is IP-anonimisering geactiveerd. Google verkort uw IP-adres binnen de Europese Unie voordat het naar de Verenigde Staten wordt doorgestuurd.",
     "consentTitle": "Toestemming en cookies",
-    "consentContent": "Bij uw eerste bezoek vragen wij toestemming voor Google Analytics. <strong>Zonder toestemming wordt deze dienst niet geladen</strong> en worden de bijbehorende cookies niet geplaatst. Uw keuze wordt lokaal in uw browser opgeslagen. U kunt deze wijzigen via de cookie-instellingen onderaan de website. Essentiële functies, zoals de calculator, blijven beschikbaar."
+    "consentContent": "Bij uw eerste bezoek vragen wij toestemming voor Google Analytics. <strong>Zonder toestemming wordt deze dienst niet geladen</strong> en worden de bijbehorende cookies niet geplaatst. Uw keuze wordt lokaal in uw browser opgeslagen. U kunt deze wijzigen via de cookie-instellingen onderaan de website. Essentiële functies, zoals de calculator, blijven beschikbaar.",
+    "ownAnalyticsTitle": "Gebruiksstatistieken en externe diensten",
+    "ownAnalyticsContent": "We tellen paginaweergaven en interacties zonder adressen uit de calculator of GPS-coördinaten. Zonder toestemming gebruiken we geen bezoekers-ID; met toestemming bestaat een willekeurige ID alleen in het geheugen voor deze paginasessie. Gebeurtenissen worden opgeslagen in een apart Supabase-project in Frankfurt en na 90 dagen verwijderd. Een dagelijks wisselende cryptografisch afgeleide IP-waarde beperkt misbruik en wordt kort en apart van gebeurtenissen opgeslagen. Vercel levert hosting, Web Analytics en Speed Insights. Mapbox verwerkt de adressen en eventueel toegestane locatiegegevens voor de routeberekening. Google Analytics wordt alleen na toestemming geladen; intrekken kan via Cookie-instellingen. Onze eigen statistieken respecteren DNT/GPC. Telefoonklikken bevestigen geen voltooide gesprekken."
   },
   "common": {
     "skipToContent": "Naar de inhoud"

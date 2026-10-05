@@ -1,7 +1,7 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { Reveal } from "@/components/ui/reveal";
-import { trackSpotlight } from "@/lib/spotlight";
 import { Hotel, Castle, Plane, Shield, Clock, Star, ArrowUpRight } from "lucide-react";
 
 type Dictionary = {
@@ -19,6 +19,7 @@ type Dictionary = {
 };
 
 export function Services({ dict }: { dict: Dictionary }) {
+  const lang = usePathname().split("/")[1] || "de";
   const services = [
     {
       key: "hotel",
@@ -47,11 +48,11 @@ export function Services({ dict }: { dict: Dictionary }) {
   const features = dict.features ? [
     { icon: Shield, text: dict.features[0] || "Versicherte Fahrten" },
     { icon: Clock, text: dict.features[1] || "Pünktliche Abholung" },
-    { icon: Star, text: dict.features[2] || "5-Sterne Service" },
+    { icon: Star, text: dict.features[2] || "Persönlicher Service" },
   ] : [
     { icon: Shield, text: "Insured Trips" },
     { icon: Clock, text: "Punctual Pickup" },
-    { icon: Star, text: "5-Star Service" },
+    { icon: Star, text: "Personal service" },
   ];
 
   return (
@@ -78,10 +79,11 @@ export function Services({ dict }: { dict: Dictionary }) {
           const item = dict.items[service.key as keyof typeof dict.items];
 
           return (
-            <div
+            <a
+              href={service.key === "airport" ? `/${lang}/flughafen/hahn` : `/${lang}/rechner`}
+              data-source={`service_${service.key}`}
               key={service.key}
-              onMouseMove={trackSpotlight}
-              className={`group relative overflow-hidden rounded-2xl glass-card glass-card-hover spotlight p-6 cursor-pointer ${service.size} hover:-translate-y-1 hover:scale-[1.02]`}
+                            className={`group relative overflow-hidden rounded-2xl glass-card glass-card-hover spotlight p-6 cursor-pointer ${service.size} hover:-translate-y-1 hover:scale-[1.02]`}
             >
               {/* Gradient background */}
               <div aria-hidden="true" className={`absolute inset-0 bg-gradient-to-br ${service.color} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -100,7 +102,7 @@ export function Services({ dict }: { dict: Dictionary }) {
                   {item.description}
                 </p>
 
-                <div className="mt-4 flex items-center gap-1 text-primary text-sm opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="mt-4 flex items-center gap-1 text-primary text-sm transition-opacity">
                   <span>{dict.learnMore || "Learn more"}</span>
                   <ArrowUpRight className="w-4 h-4" />
                 </div>
@@ -108,7 +110,7 @@ export function Services({ dict }: { dict: Dictionary }) {
 
               {/* Decorative corner */}
               <div aria-hidden="true" className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-2xl group-hover:scale-150 transition-transform duration-700" />
-            </div>
+            </a>
           );
         })}
       </Reveal>

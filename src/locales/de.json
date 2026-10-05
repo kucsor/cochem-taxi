@@ -13,7 +13,7 @@
     "mainTitleAccent": "Taxi in Cochem?",
     "features": "Schnell • Zuverlässig • Preiswert",
     "trustIndicators": {
-      "available": "Jetzt verfügbar",
+      "available": "Verfügbarkeit telefonisch erfragen",
       "drivers": "Ortskundige Fahrer",
       "prices": "Transparente Tarife"
     },
@@ -41,7 +41,10 @@
       "geocoding_start": "Startadresse konnte nicht gefunden werden.",
       "geocoding_end": "Zieladresse konnte nicht gefunden werden.",
       "routing": "Route zwischen den Adressen konnte nicht berechnet werden.",
-      "missing_input": "Bitte geben Sie Start, Ziel und Uhrzeit ein."
+      "missing_input": "Bitte geben Sie Start, Ziel und Uhrzeit ein.",
+      "cochem_only": "Flughafentransfers starten ausschließlich in Cochem. Bitte geben Sie eine Abholadresse in Cochem ein.",
+      "rate_limited": "Zu viele Anfragen. Bitte warten Sie eine Minute.",
+      "location": "Der Standort konnte nicht ermittelt werden. Bitte geben Sie die Adresse ein."
     },
     "locationPrefix": "Standort:",
     "locating": "Wird gesucht",
@@ -86,7 +89,7 @@
     "features": [
       "Versicherte Fahrten",
       "Pünktliche Abholung",
-      "5-Sterne Service"
+      "Persönlicher Service"
     ]
   },
   "whyUs": {
@@ -149,7 +152,9 @@
     "analyticsTitle": "Google Analytics",
     "analyticsContent": "Diese Website nutzt Funktionen des Webanalysedienstes Google Analytics. Anbieter ist die Google Ireland Limited. Google Analytics verwendet sog. \"Cookies\". Das sind Textdateien, die auf Ihrem Computer gespeichert werden und die eine Analyse der Benutzung der Website durch Sie ermöglichen.<br><br><strong>IP-Anonymisierung:</strong> Wir haben auf dieser Website die Funktion IP-Anonymisierung aktiviert. Dadurch wird Ihre IP-Adresse von Google innerhalb von Mitgliedstaaten der Europäischen Union vor der Übermittlung in die USA gekürzt.",
     "consentTitle": "Einwilligung & Cookies",
-    "consentContent": "Beim ersten Besuch fragen wir Sie, ob Sie Cookies für die Reichweitenmessung mit Google Analytics zulassen möchten. <strong>Ohne Ihre Zustimmung wird der Dienst nicht geladen</strong> und es werden keine entsprechenden Cookies gesetzt. Unsere Ausflugsempfehlungen sind reine Links - sie laden keine fremden Inhalte und setzen keine Cookies. Ihre Auswahl wird lokal in Ihrem Browser gespeichert und kann jederzeit geändert werden, indem Sie die Websitedaten in Ihrem Browser löschen. Notwendige Funktionen wie der Fahrpreisrechner sind davon nicht betroffen."
+    "consentContent": "Beim ersten Besuch fragen wir Sie, ob Sie Cookies für die Reichweitenmessung mit Google Analytics zulassen möchten. <strong>Ohne Ihre Zustimmung wird der Dienst nicht geladen</strong> und es werden keine entsprechenden Cookies gesetzt. Unsere Ausflugsempfehlungen sind reine Links - sie laden keine fremden Inhalte und setzen keine Cookies. Ihre Auswahl wird lokal in Ihrem Browser gespeichert und kann jederzeit geändert werden, indem Sie die Websitedaten in Ihrem Browser löschen. Notwendige Funktionen wie der Fahrpreisrechner sind davon nicht betroffen.",
+    "ownAnalyticsTitle": "Eigene Nutzungsstatistik und externe Dienste",
+    "ownAnalyticsContent": "Wir zählen Seitenaufrufe und Interaktionen ohne Adressen aus dem Rechner oder GPS-Koordinaten. Ohne Zustimmung wird kein Besucherkennzeichen gesetzt; mit Zustimmung wird eine zufällige Kennung nur im Arbeitsspeicher für diese Seitensitzung verwendet. Ereignisse werden in einem separaten Supabase-Projekt in Frankfurt gespeichert und nach 90 Tagen gelöscht. Ein täglich wechselnder, kryptografisch abgeleiteter IP-Wert begrenzt Missbrauch und wird getrennt von Ereignissen kurzfristig gespeichert. Vercel stellt Hosting, Web Analytics und Speed Insights bereit. Mapbox verarbeitet die zur Routenberechnung gesendeten Adressen und ggf. freigegebenen Standortdaten. Google Analytics lädt nur mit Zustimmung; die Cookie-Einstellungen ermöglichen den Widerruf. DNT/GPC wird von unserer eigenen Statistik berücksichtigt. Telefonklicks bestätigen keine durchgeführten Anrufe."
   },
   "common": {
     "skipToContent": "Zum Inhalt springen"

@@ -1,4 +1,5 @@
 "use client";
+import { setTrackingConsent } from "@/lib/tracking";
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
@@ -36,6 +37,7 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
     try {
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored === "granted" || stored === "denied") {
+        setTrackingConsent(stored === "granted");
         setConsent(stored);
       }
     } catch {
@@ -50,6 +52,7 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Choice is not persisted, but it still applies for this page view.
     }
+    setTrackingConsent(value === "granted");
     setConsent(value);
   }, []);
 
@@ -65,6 +68,7 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Nothing stored to clear; the in-memory reset below still applies.
     }
+    setTrackingConsent(false);
     setConsent("unset");
   }, []);
 

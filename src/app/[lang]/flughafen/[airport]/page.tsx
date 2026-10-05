@@ -36,7 +36,7 @@ export default async function AirportPage({params}: Props) {
       <p className="text-muted-foreground max-w-3xl mx-auto">{item[lang]}</p>
       <a className="inline-flex rounded-full bg-primary text-primary-foreground px-8 py-4 font-bold" href="tel:+4926718080">{page.callButton} · 02671 8080</a>
     </section>
-    <FareCalculator dict={dict.fareCalculator} lang={lang} initialStartAddress="Cochem" initialDestinationAddress={item.address} />
+    <FareCalculator key={item.slug} airportSlug={item.slug} dict={dict.fareCalculator} lang={lang} initialStartAddress="Cochem" initialDestinationAddress={item.address} />
     <section className="glass-card p-6 rounded-2xl space-y-4">
       <h2 className="text-2xl font-bold">{page.planningTitle}</h2>
       <p>{page.planningText}</p>

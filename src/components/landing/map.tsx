@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MapGL, { MapRef, Source, Layer, Marker } from 'react-map-gl';
 import type { LayerProps } from 'react-map-gl';
-import { LngLatBounds } from 'mapbox-gl';
+import mapboxgl, { LngLatBounds } from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
@@ -42,6 +42,7 @@ function AnimatedMarker({ color, delay = 0 }: { color: string; delay?: number })
 
 export function Map({ geometry, hasAnfahrt = false }: MapProps) {
   const mapRef = useRef<MapRef>(null);
+  const [failed,setFailed]=useState(false);
   
   const yellowColor = '#ffc400';
   const orangeColor = '#FFA500';
@@ -96,8 +97,10 @@ export function Map({ geometry, hasAnfahrt = false }: MapProps) {
     return () => clearTimeout(timer);
   }, [geometry]);
 
+  if(failed || !mapboxgl.supported()) return <div role="status" className="p-6 text-center text-sm">Karte nicht verfügbar / Map unavailable / Kaart niet beschikbaar. <a className="underline" href="tel:+4926718080">02671 8080</a></div>;
   return (
     <MapGL
+      onError={()=>setFailed(true)}
       ref={mapRef}
       mapboxAccessToken={MAPBOX_TOKEN}
       initialViewState={{
@@ -112,7 +115,7 @@ export function Map({ geometry, hasAnfahrt = false }: MapProps) {
       dragRotate={false} // Disable rotation (keep it simple)
       touchZoomRotate={true} // Enable pinch zoom on mobile
       doubleClickZoom={true}
-      attributionControl={false} // Remove attribution for cleaner look
+      attributionControl={true} // Remove attribution for cleaner look
     >
       {/* NO NavigationControl - removed for cleaner UI */}
       

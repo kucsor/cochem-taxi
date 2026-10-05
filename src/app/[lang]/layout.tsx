@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import { SiteDocument } from '@/components/site-document';
 export { viewport } from '@/components/site-document';
 import { metadata as documentMetadata } from '@/components/site-document';
@@ -12,9 +13,8 @@ import { Analytics } from "@vercel/analytics/next";
 import { ConsentBanner } from '@/components/consent-banner';
 import {
   TariffNotice,
-  TARIFF_NOTICE_SHOW_UNTIL,
-  TARIFF_NOTICE_STORAGE_KEY,
 } from '@/components/tariff-notice';
+import { TARIFF_NOTICE_SHOW_UNTIL, TARIFF_NOTICE_STORAGE_KEY } from '@/lib/tariff-notice';
 import { formatTelephone, taxiServiceSchema } from '@/lib/schema';
 import { SITE_URL } from '@/lib/site';
 
@@ -28,6 +28,7 @@ export async function generateMetadata({
   params: Promise<{ lang: string }>
 }): Promise<Metadata> {
   const { lang } = await params;
+  if (!i18n.locales.includes(lang as Locale)) notFound();
   const dictionary = await getDictionary(lang as Locale)
   return {
     ...documentMetadata,
@@ -57,6 +58,7 @@ export default async function RootLayout({
   params: Promise<{ lang: string }>
 }>) {
   const { lang } = await params;
+  if (!i18n.locales.includes(lang as Locale)) notFound();
   const dict = await getDictionary(lang as Locale);
   
   const formattedTelephone = formatTelephone(dict.hero.phoneNumber);

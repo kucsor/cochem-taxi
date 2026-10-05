@@ -74,9 +74,9 @@ export function Hero({ dict }: { dict: Dictionary }) {
             size="lg"
             className="group relative overflow-hidden bg-primary text-primary-foreground hover:bg-primary/90 glow-gold-subtle transition-all duration-300 h-14 md:h-16 px-8 md:px-10 rounded-full text-base md:text-lg font-semibold w-full md:w-auto hover:scale-[1.02] active:scale-[0.98]"
           >
-            <a 
-              href={`tel:${dict.phoneNumber.replace(/\s/g, '')}`} 
-              onClick={() => trackEvent('click_call_now')}
+            <a
+              href="tel:+4926718080" data-source="hero"
+
               className="flex items-center justify-center gap-3"
             >
               <div

@@ -1,193 +1,144 @@
-import { NextRequest, NextResponse } from 'next/server';
-import mbxGeocoding from "@mapbox/mapbox-sdk/services/geocoding";
-import mbxDirections from "@mapbox/mapbox-sdk/services/directions";
+import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
+import { airports } from "@/lib/airports";
+import { allowRequest, sameOrigin } from "@/lib/server/gateway";
 import {
   ANFAHRT_FEE_PERCENTAGE,
   COCHEM_CENTER_COORDS,
   COCHEM_POLYGON,
   PRICE_BUFFER,
-  getBaseFee,
   getHaversineDistance,
+  getBaseFee,
   getRatePerKm,
   isNightTime,
   isPointInPolygon,
   routePassesThroughCochemZone,
 } from "@/lib/fare";
-
-const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN || '';
-
-// Initialize services lazily to prevent build-time errors
-const getGeocodingService = () => mbxGeocoding({ accessToken: mapboxToken });
-const getDirectionsService = () => mbxDirections({ accessToken: mapboxToken });
-
-// Input validation schema
-const calculateSchema = z.object({
-  startAddress: z.string().min(1, "Start address is required").max(200, "Start address is too long"),
-  endAddress: z.string().min(1, "End address is required").max(200, "End address is too long"),
-  pickupTime: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/, "Invalid time format (HH:MM)"),
-  startLat: z.string().optional(),
-  startLon: z.string().optional(),
-  endLat: z.string().optional(),
-  endLon: z.string().optional(),
-  passengers: z.enum(["1-4", "5-8"]).optional().default("1-4"),
-  errorMessages: z.record(z.string()).optional(),
+const coordinate = (min: number, max: number) =>
+  z
+    .string()
+    .optional()
+    .transform((v) => (v === "" || v === undefined ? undefined : Number(v)))
+    .pipe(z.number().finite().min(min).max(max).optional());
+const schema = z.object({
+  startAddress: z.string().trim().min(1).max(200),
+  endAddress: z.string().trim().min(1).max(200),
+  pickupTime: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/),
+  passengers: z.enum(["1-4", "5-8"]).default("1-4"),
+  startLat: coordinate(-90, 90),
+  startLon: coordinate(-180, 180),
+  endLat: coordinate(-90, 90),
+  endLon: coordinate(-180, 180),
+  airportSlug: z
+    .enum(["hahn", "frankfurt", "koeln-bonn", "duesseldorf", "luxemburg"])
+    .optional(),
 });
-
-type FareState = {
-  price: number | null;
-  distance: number | null;
-  message: string | null;
-  geometry: any | null;
-  hasAnfahrt: boolean;
-  anfahrtFee: number | null;
+type Coords = { lat: number; lon: number };
+const empty = {
+  price: null,
+  distance: null,
+  message: null,
+  geometry: null,
+  hasAnfahrt: false,
+  anfahrtFee: null,
 };
-
-async function geocodeAddress(address: string): Promise<{ lat: number; lon: number } | null> {
-  try {
-    const response = await getGeocodingService().forwardGeocode({
-      query: address,
-      limit: 1,
-      countries: ['DE'],
-      proximity: [7.1667, 50.15],
-    }).send();
-
-    if (response?.body?.features?.length > 0) {
-      const [lon, lat] = response.body.features[0].center;
-      return { lat, lon };
-    }
-    return null;
-  } catch (error) {
-    console.error("Geocoding error:", error);
-    return null;
-  }
+function failure(code: string, status = 422) {
+  return NextResponse.json({ ...empty, message: code, code }, { status });
 }
-
-async function getRoute(startCoords: { lat: number; lon: number }, endCoords: { lat: number; lon: number }) {
-  try {
-    const response = await getDirectionsService().getDirections({
-      profile: 'driving',
-      waypoints: [
-        { coordinates: [startCoords.lon, startCoords.lat] },
-        { coordinates: [endCoords.lon, endCoords.lat] }
-      ],
-      geometries: 'geojson',
-      overview: 'full',
-    }).send();
-
-    if (response?.body?.routes?.length > 0) {
-      const route = response.body.routes[0];
-      return { distance: route.distance / 1000, geometry: route.geometry };
-    }
-    return null;
-  } catch (error) {
-    console.error("Directions error:", error);
-    return null;
-  }
+async function mapbox(url: string) {
+  const token = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+  if (!token) throw new Error("Map unavailable");
+  const response = await fetch(
+    `${url}${url.includes("?") ? "&" : "?"}access_token=${encodeURIComponent(token)}`,
+    { signal: AbortSignal.timeout(12000), cache: "no-store" },
+  );
+  if (!response.ok) throw new Error("Map unavailable");
+  return response.json();
 }
-
+async function geocode(address: string): Promise<Coords | null> {
+  const exact = airports.find(
+    (a) => a.address.toLowerCase() === address.toLowerCase(),
+  );
+  if (exact) return { lat: exact.lat, lon: exact.lon };
+  const d = await mapbox(
+    `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?country=DE,LU&limit=1&proximity=7.1667,50.15`,
+  );
+  const center = d.features?.[0]?.center;
+  return center ? { lon: center[0], lat: center[1] } : null;
+}
+async function route(a: Coords, b: Coords) {
+  const d = await mapbox(
+    `https://api.mapbox.com/directions/v5/mapbox/driving/${a.lon},${a.lat};${b.lon},${b.lat}?geometries=geojson&overview=full`,
+  );
+  return d.routes?.[0];
+}
 export async function POST(request: NextRequest) {
-  // Security: Check Origin to prevent CSRF/Hotlinking
-  const origin = request.headers.get('origin');
-  if (origin) {
-    const requestOrigin = new URL(request.url).origin;
-    if (origin !== requestOrigin) {
-      console.warn(`[Security] Blocked request from invalid origin: ${origin}`);
-      return NextResponse.json({ message: "Forbidden" }, { status: 403 });
-    }
-  }
-
+  if (!sameOrigin(request)) return failure("forbidden", 403);
   try {
-    const body = await request.json();
-
-    // Validate input
-    const validationResult = calculateSchema.safeParse(body);
-
-    const initialState: FareState = {
-      price: null, distance: null, message: null, geometry: null, hasAnfahrt: false, anfahrtFee: null,
-    };
-
-    if (!validationResult.success) {
-      const errorMessage = validationResult.error.issues.map(i => i.message).join(", ");
-      return NextResponse.json({ ...initialState, message: errorMessage });
+    if (Number(request.headers.get("content-length") || 0) > 6000)
+      return failure("validation", 413);
+    if (!(await allowRequest(request, "calculator", 20)))
+      return failure("rate_limited", 429);
+    const raw = await request.text();
+    if (raw.length > 6000) return failure("validation", 413);
+    const parsed = schema.safeParse(JSON.parse(raw));
+    if (!parsed.success) return failure("validation", 400);
+    const p = parsed.data;
+    const start =
+      p.startLat !== undefined && p.startLon !== undefined
+        ? { lat: p.startLat, lon: p.startLon }
+        : await geocode(p.startAddress);
+    const airport = airports.find((a) => a.slug === p.airportSlug);
+    const end = airport
+      ? { lat: airport.lat, lon: airport.lon }
+      : p.endLat !== undefined && p.endLon !== undefined
+        ? { lat: p.endLat, lon: p.endLon }
+        : await geocode(p.endAddress);
+    if (!start || !end)
+      return failure(
+        !start && !end
+          ? "geocoding_both"
+          : !start
+            ? "geocoding_start"
+            : "geocoding_end",
+      );
+    if (airports.some((a) => getHaversineDistance(start, a) < 1))
+      return failure("cochem_only");
+    if (
+      (airport || airports.some((a) => getHaversineDistance(end, a) < 1)) &&
+      !isPointInPolygon(start, COCHEM_POLYGON)
+    )
+      return failure("cochem_only");
+    const main = await route(start, end);
+    if (!main?.distance) return failure("routing");
+    const distance = main.distance / 1000;
+    const large = p.passengers === "5-8";
+    const base = getBaseFee({ large });
+    const rate = getRatePerKm({ large, night: isNightTime(p.pickupTime) });
+    let fee = 0;
+    if (
+      !isPointInPolygon(start, COCHEM_POLYGON) &&
+      !isPointInPolygon(end, COCHEM_POLYGON) &&
+      !routePassesThroughCochemZone(main.geometry)
+    ) {
+      const approach = await route(COCHEM_CENTER_COORDS, start);
+      if (!approach) return failure("routing");
+      fee = (base + (approach.distance / 1000) * rate) * ANFAHRT_FEE_PERCENTAGE;
     }
-
-    const { startAddress, endAddress, pickupTime, startLat, startLon, endLat, endLon, errorMessages, passengers } = validationResult.data;
-
-    let startCoords: { lat: number; lon: number } | null = null;
-    if (startLat && startLon) {
-      const lat = parseFloat(startLat);
-      const lon = parseFloat(startLon);
-      if (!isNaN(lat) && !isNaN(lon)) startCoords = { lat, lon };
-    }
-    if (!startCoords) startCoords = await geocodeAddress(startAddress);
-
-    let endCoords: { lat: number; lon: number } | null = null;
-    if (endLat && endLon) {
-      const lat = parseFloat(endLat);
-      const lon = parseFloat(endLon);
-      if (!isNaN(lat) && !isNaN(lon)) endCoords = { lat, lon };
-    }
-    if (!endCoords) endCoords = await geocodeAddress(endAddress);
-
-    if (!startCoords || !endCoords) {
-      let message = errorMessages?.geocoding_both || "Addresses not found";
-      if (!startCoords && !endCoords) message = errorMessages?.geocoding_both || "Both addresses not found";
-      else if (!startCoords) message = errorMessages?.geocoding_start || "Start address not found";
-      else message = errorMessages?.geocoding_end || "End address not found";
-      return NextResponse.json({ ...initialState, message });
-    }
-
-    const mainRoute = await getRoute(startCoords, endCoords);
-    if (!mainRoute?.distance) {
-      return NextResponse.json({ ...initialState, message: errorMessages?.routing || "Route not found" });
-    }
-
-    const { distance, geometry } = mainRoute;
-
-    // Select tariff based on passengers
-    const isLarge = passengers === "5-8";
-    const isNightTariff = isNightTime(pickupTime);
-    const currentBaseFee = getBaseFee({ large: isLarge });
-    const ratePerKm = getRatePerKm({ night: isNightTariff, large: isLarge });
-    const mainPrice = (currentBaseFee + distance * ratePerKm);
-
-    let anfahrtFee = 0;
-    let hasAnfahrt = false;
-    
-    const startIsInZone = isPointInPolygon(startCoords, COCHEM_POLYGON);
-    const endIsInZone = isPointInPolygon(endCoords, COCHEM_POLYGON);
-    const routeGoesThroughCochem = routePassesThroughCochemZone(geometry);
-
-    if (!startIsInZone && !endIsInZone && !routeGoesThroughCochem) {
-      hasAnfahrt = true;
-      const distStartToCenter = getHaversineDistance(startCoords, COCHEM_CENTER_COORDS);
-      const distEndToCenter = getHaversineDistance(endCoords, COCHEM_CENTER_COORDS);
-      
-      // Simplified anfahrt calculation - use haversine as estimate
-      const anfahrtDistance = Math.min(distStartToCenter, distEndToCenter);
-      if (anfahrtDistance > 0) {
-        const anfahrtPriceFull = (currentBaseFee + anfahrtDistance * ratePerKm);
-        anfahrtFee = anfahrtPriceFull * ANFAHRT_FEE_PERCENTAGE;
-      }
-    }
-    
-    const finalPrice = (mainPrice + anfahrtFee) * PRICE_BUFFER;
-
-    return NextResponse.json({
-      price: finalPrice,
-      distance: distance,
-      message: null,
-      geometry: geometry,
-      hasAnfahrt: hasAnfahrt,
-      anfahrtFee: anfahrtFee > 0 ? anfahrtFee : null,
-    });
-
-  } catch (error) {
-    console.error("API error:", error);
     return NextResponse.json(
-      { price: null, distance: null, message: "Server error", geometry: null, hasAnfahrt: false, anfahrtFee: null },
-      { status: 500 }
+      {
+        price: (base + distance * rate + fee) * PRICE_BUFFER,
+        distance,
+        duration: main.duration / 60,
+        message: null,
+        geometry: main.geometry,
+        hasAnfahrt: fee > 0,
+        anfahrtFee: fee > 0 ? fee * PRICE_BUFFER : null,
+      },
+      { headers: { "Cache-Control": "no-store" } },
     );
+  } catch (error) {
+    console.warn("Calculator request failed", error instanceof Error ? error.name : "UnknownError");
+    return failure("server_error", 503);
   }
 }

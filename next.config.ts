@@ -4,7 +4,7 @@ const withPWA = require('next-pwa')({
   skipWaiting: true,
   cacheStartUrl: false,
   dynamicStartUrl: false,
-  publicExcludes: ['!noprecache/**/*'],
+  publicExcludes: ['!noprecache/**/*', '!admin-sw.js'],
   runtimeCaching: [
     { urlPattern: /\/admin(?:[/?]|$)|\/api\//, handler: 'NetworkOnly' },
     ...require('next-pwa/cache'),
@@ -42,6 +42,8 @@ const nextConfig = {
   },
   async headers() {
     return [
+      { source: '/admin-sw.js', headers: [{ key: 'Cache-Control', value: 'no-cache' }] },
+      { source: '/admin.webmanifest', headers: [{ key: 'Cache-Control', value: 'no-cache' }] },
       {
         source: '/:path*',
         headers: [

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Mail, Clock, MapPin, ExternalLink, Heart, Compass, Cookie } from "lucide-react";
+import { Phone, Clock, MapPin, ExternalLink, Heart, Compass, Cookie } from "lucide-react";
 import { trackEvent } from "@/lib/tracking";
 import { Reveal } from "@/components/ui/reveal";
 import { useConsent } from "@/components/consent-provider";
@@ -17,7 +17,8 @@ type Dictionary = {
   legalLink: string;
   tagline: string;
   quickContact: string;
-  email: string;
+  callTaxi: string;
+  phoneOnly: string;
   rights: string;
   exploreTitle: string;
   pricesLink: string;
@@ -65,17 +66,18 @@ export function Footer({ dict, lang }: { dict: Dictionary; lang: string }) {
           <div className="space-y-4">
             <h3 className="font-semibold text-white">{dict.quickContact || "Quick Contact"}</h3>
             <a
-              href="mailto:contact@cochem-taxi.de"
+              href="tel:+4926718080"
               className="flex items-center gap-3 p-4 rounded-xl glass-card hover:bg-primary/10 transition-colors group hover:scale-105 active:scale-95 duration-200"
             >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                <Mail className="w-5 h-5 text-primary" />
+                <Phone className="w-5 h-5 text-primary" />
               </div>
               <div>
-                <div className="text-sm text-muted-foreground">{dict.email || "E-Mail"}</div>
-                <div className="text-sm font-semibold text-white">contact@cochem-taxi.de</div>
+                <div className="text-sm text-muted-foreground">{dict.callTaxi}</div>
+                <div className="text-sm font-semibold text-white">+49 2671 8080</div>
               </div>
             </a>
+            <p className="text-sm text-muted-foreground">{dict.phoneOnly}</p>
           </div>
 
           {/* Transfers & tours - internal links so these pages get crawled */}

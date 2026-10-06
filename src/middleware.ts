@@ -11,7 +11,7 @@ export function middleware(request: NextRequest) {
   // This is a trade-off for static site generation performance.
   const cspHeader = `
     default-src 'self';
-    script-src 'self' https://www.googletagmanager.com https://va.vercel-scripts.com https://vercel.live 'unsafe-inline';
+    script-src 'self' https://va.vercel-scripts.com https://vercel.live 'unsafe-inline';
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
     img-src 'self' blob: data: https:;
     font-src 'self' https://fonts.gstatic.com;
@@ -20,7 +20,7 @@ export function middleware(request: NextRequest) {
     form-action 'self';
     frame-ancestors 'none';
     frame-src 'self';
-    connect-src 'self' https://api.mapbox.com https://events.mapbox.com https://*.google-analytics.com https://analytics.google.com https://*.analytics.google.com https://www.googletagmanager.com;
+    connect-src 'self' https://api.mapbox.com https://events.mapbox.com;
     worker-src 'self' blob:;
     block-all-mixed-content;
     upgrade-insecure-requests;

@@ -18,7 +18,6 @@ cp .env.example .env.local
 Editează `.env.local`:
 ```env
 NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1...  # Tokenul tău Mapbox
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...  # (Opțional) Google Analytics ID
 NEXT_PUBLIC_GYG_PARTNER_ID=...       # (Opțional) Suprascrie Partner ID-ul GetYourGuide
 ```
 
@@ -78,7 +77,7 @@ src/
 - ✅ Suport multi-lingv (Germană/Engleză)
 - ✅ Design responsive (mobile-first)
 - ✅ PWA (Progressive Web App)
-- ✅ Google Analytics tracking (doar după consimțământ)
+- ✅ Statistici Supabase; identificator de sesiune doar după consimțământ. Google Analytics eliminat.
 - ✅ SEO optimizat cu metadata dinamică, canonical + hreflang pe fiecare pagină
 - ✅ 16 pagini de localitate cu conținut unic (`src/lib/locations.ts`)
 - ✅ 4 pagini de transfer: Burg Eltz, Flughafen Hahn, Koblenz, Trier (`src/lib/routes.ts`)

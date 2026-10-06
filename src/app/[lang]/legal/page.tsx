@@ -68,6 +68,10 @@ export default async function LegalPage({
             <h3 className="text-2xl font-bold font-headline mb-2 text-foreground">{legalDict.analyticsTitle}</h3>
             <p dangerouslySetInnerHTML={{ __html: sanitizeHtml(legalDict.analyticsContent) }} />
           </div>
+          <div>
+            <h3 className="text-2xl font-bold font-headline mb-2 text-foreground">{legalDict.rightsTitle}</h3>
+            <p dangerouslySetInnerHTML={{ __html: sanitizeHtml(legalDict.rightsContent) }} />
+          </div>
         </section>
       </div>
     </div>

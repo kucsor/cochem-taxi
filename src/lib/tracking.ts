@@ -2,14 +2,7 @@
 import type { AnalyticsEvent } from "./event-schema";
 export type TrackedEvent = AnalyticsEvent["name"];
 let visit: string | null = null;
-let permitted = false;
 export function setTrackingConsent(granted: boolean) {
-  permitted = granted;
-  if(typeof window !== "undefined") {
-    const id = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID || "G-R1ZRPLYTDH";
-    (window as any)[`ga-disable-${id}`] = !granted;
-    if(!granted && typeof (window as any).gtag === "function") (window as any).gtag("consent", "update", {analytics_storage:"denied"});
-  }
   visit = granted ? visit || crypto.randomUUID() : null;
 }
 export function trackEvent(
@@ -63,11 +56,4 @@ export function trackEvent(
     body: JSON.stringify(data),
     keepalive: true,
   }).catch(() => {});
-  try {
-    if (
-      permitted &&
-      typeof (window as any).gtag === "function"
-    )
-      (window as any).gtag("event", name, { source, value: data.value });
-  } catch {}
 }

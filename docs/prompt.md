@@ -1,3 +1,5 @@
+> Document istoric. Textele legale și integrarea Google Analytics de mai jos sunt depășite; sursa curentă este src/locales și docs/analytics-dashboard.md. Nu le reutilizați.
+
 
 # Prompt pentru Recrearea Website-ului de Taxi
 

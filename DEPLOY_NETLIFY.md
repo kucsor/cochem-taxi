@@ -5,8 +5,7 @@
 Asigură-te că fișierul `.env.local` există și conține:
 
 ```env
-NEXT_PUBLIC_MAPBOX_TOKEN=pk.eyJ1Ijoia3V4b3IiLCJhIjoiY21rejM5dzVzMGI1dDNlcjM4bm9qbmtrdyJ9.hxdGkoj2symWByLE8RfcuQ
-NEXT_PUBLIC_GA_MEASUREMENT_ID=G-L53813EW8Y
+NEXT_PUBLIC_MAPBOX_TOKEN=YOUR_MAPBOX_PUBLIC_TOKEN
 ```
 
 ## Pasul 2: Build Local

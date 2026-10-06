@@ -5,7 +5,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 export type ConsentState = "unset" | "granted" | "denied";
 
-const STORAGE_KEY = "cochem-taxi-consent-v1";
+const STORAGE_KEY = "cochem-taxi-consent-v2";
 
 type ConsentContextValue = {
   consent: ConsentState;
@@ -25,16 +25,23 @@ const ConsentContext = createContext<ConsentContextValue>({
   reset: () => {},
 });
 
-/**
- * Gate for Google Analytics, which sets cookies. Nothing loads until the
- * visitor accepts - required by DSGVO / TDDDG in Germany.
- */
+/** Consent controls the optional in-memory session identifier. */
 export function ConsentProvider({ children }: { children: React.ReactNode }) {
   const [consent, setConsent] = useState<ConsentState>("unset");
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    // Retire cookies and preference from the removed Google integration.
+    for (const item of document.cookie.split(";")) {
+      const name = item.split("=")[0].trim();
+      if (!/^_ga(?:_|$)|^_gid$|^_gat/.test(name)) continue;
+      document.cookie = `${name}=; Max-Age=0; Path=/`;
+      const parts = location.hostname.split(".");
+      for (let i = 0; i < parts.length - 1; i++)
+        document.cookie = `${name}=; Max-Age=0; Path=/; Domain=.${parts.slice(i).join(".")}`;
+    }
     try {
+      window.localStorage.removeItem("cochem-taxi-consent-v1");
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored === "granted" || stored === "denied") {
         setTrackingConsent(stored === "granted");

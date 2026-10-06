@@ -36,6 +36,11 @@ export function trackEvent(
     if (host !== location.hostname) referrer = host;
   } catch {}
   const data = {
+    destination: params?.destination,
+    passengers: params?.passengers,
+    tariff: params?.tariff,
+    fare: params?.fare,
+    distance: params?.distance,
     id: crypto.randomUUID(),
     name,
     path,

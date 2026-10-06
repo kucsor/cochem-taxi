@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) return new NextResponse(null, { status: 400 });
     if (!(await allowRequest(request, "events", 120)))
       return new NextResponse(null, { status: 429 });
-    const { id, name, path, visit, referrer, device, source, value, outcome } =
+    const { id, name, path, visit, referrer, device, source, value, outcome, destination, passengers, tariff, fare, distance } =
       parsed.data;
     await gateway("event", {
       environment: process.env.VERCEL_ENV || "development",
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
       device,
       source,
       value,
-      outcome,
+      outcome, destination, passengers, tariff, fare, distance,
       language: path.split("/")[1],
     });
     return new NextResponse(null, { status: 204 });

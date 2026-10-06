@@ -1,5 +1,14 @@
 import { z } from "zod";
+import { destinations } from "./analytics-destinations.ts";
 export const eventNames = [
+  "destination_search",
+  "destination_select",
+  "pickup_select",
+  "passenger_change",
+  "time_change",
+  "map_toggle",
+  "location_success",
+  "location_error",
   "page_view",
   "click_call_now",
   "click_calculator",
@@ -25,6 +34,11 @@ export const eventNames = [
 ] as const;
 // No addresses, coordinates, query strings, free-text errors or full referrer URLs.
 export const eventSchema = z.object({
+  destination: z.enum(destinations).optional(),
+  passengers: z.enum(["1-4", "5-8"]).optional(),
+  tariff: z.enum(["day", "night"]).optional(),
+  fare: z.number().finite().min(0).max(10000).optional(),
+  distance: z.number().finite().min(0).max(3000).optional(),
   id: z.string().uuid(),
   name: z.enum(eventNames),
   path: z

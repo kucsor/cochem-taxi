@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   try {
     if (!(await allowRequest(request, "login", 5, 900)))
       return NextResponse.json(
-        { error: "Prea multe încercări. Încearcă din nou în 15 minute." },
+        { error: "Too many attempts. Please try again in 15 minutes." },
         { status: 429 },
       );
     const parsed = z
@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
       .safeParse(await request.json());
     if (!parsed.success)
       return NextResponse.json(
-        { error: "Date de autentificare incorecte." },
+        { error: "Invalid username or password." },
         { status: 401 },
       );
     const valid = await verifyPassword(parsed.data.password);
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       parsed.data.username !== (process.env.ADMIN_USERNAME || "kuxor")
     )
       return NextResponse.json(
-        { error: "Date de autentificare incorecte." },
+        { error: "Invalid username or password." },
         { status: 401 },
       );
     const response = NextResponse.json(
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     return response;
   } catch {
     return NextResponse.json(
-      { error: "Autentificarea nu este disponibilă momentan." },
+      { error: "Sign-in is temporarily unavailable." },
       { status: 503 },
     );
   }

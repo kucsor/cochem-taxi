@@ -9,7 +9,7 @@ export function SiteTracker() {
     const start = Date.now();
     const depths = new Set<number>();
     const click = (e: MouseEvent) => {
-      const a = (e.target as Element)?.closest("a");
+      const a = e.target instanceof Element ? e.target.closest("a") : null;
       if (!a) return;
       const href = a.getAttribute("href") || "";
       const source =

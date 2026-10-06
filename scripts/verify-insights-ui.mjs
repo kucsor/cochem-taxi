@@ -1,0 +1,231 @@
+// Local-only UI contract test with clearly synthetic statistics. No production writes.
+import { spawn } from "node:child_process";
+import { createRequire } from "node:module";
+import { mkdirSync } from "node:fs";
+import assert from "node:assert/strict";
+const require = createRequire(import.meta.url);
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const chrome = require(process.env.CHROMIUM_MODULE || "@sparticuz/chromium");
+const server = spawn(
+  process.execPath,
+  ["node_modules/next/dist/bin/next", "start", "-H", "127.0.0.1", "-p", "9123"],
+  { stdio: "ignore" },
+);
+let browser;
+try {
+  for (let i = 0; i < 80; i++) {
+    try {
+      if ((await fetch("http://127.0.0.1:9123/admin")).ok) break;
+    } catch {}
+    await new Promise((r) => setTimeout(r, 250));
+  }
+  assert.equal(
+    (await fetch("http://127.0.0.1:9123/api/admin/insights")).status,
+    401,
+  );
+  browser = await chromium.launch({
+    executablePath:
+      process.env.CHROMIUM_EXECUTABLE || (await chrome.executablePath()),
+    args: chrome.args,
+    headless: true,
+  });
+  const p = await browser.newPage({
+    viewport: { width: 1440, height: 1050 },
+    reducedMotion: "reduce",
+  });
+  const errors = [];
+  p.on("pageerror", (e) => errors.push(e.message));
+  const daily = Array.from({ length: 30 }, (_, i) => ({
+    day: `2026-09-${String(i + 1).padStart(2, "0")}`,
+    views: 10 + ((i * 7) % 60),
+    calls: 2 + (i % 8),
+    calculations: 3 + (i % 15),
+    successes: 2 + (i % 12),
+    errors: i % 3,
+  }));
+  const destination = (name, n) => ({
+    destination: name,
+    searches: n * 2,
+    selections: n,
+    calculations: n,
+    successes: n - 2,
+    errors: 2,
+    average_fare: 142.13,
+    average_distance: 41.6,
+  });
+  const fixture = {
+    views: 1284,
+    calls: 126,
+    calculations: 348,
+    successes: 326,
+    errors: 12,
+    total: 4212,
+    average_engagement: 74,
+    average_fare: 162.4,
+    previous: { views: 982, calls: 91, calculations: 240 },
+    daily,
+    destinations: [
+      destination("airport-hahn", 132),
+      destination("airport-frankfurt", 87),
+      destination("koblenz", 65),
+      destination("other", 20),
+    ],
+    destinationTrends: [
+      { month: "2026-09", destination: "airport-hahn", calculations: 80 },
+      { month: "2026-10", destination: "airport-hahn", calculations: 132 },
+    ],
+    groups: {
+      events: [
+        { label: "page_view", count: 1284 },
+        { label: "use_calculator", count: 348 },
+      ],
+      pages: [
+        { label: "/de", count: 802 },
+        { label: "/en", count: 320 },
+        { label: "/nl", count: 162 },
+      ],
+      devices: [
+        { label: "mobile", count: 981 },
+        { label: "desktop", count: 280 },
+        { label: "tablet", count: 23 },
+      ],
+      languages: [
+        { label: "de", count: 780 },
+        { label: "en", count: 362 },
+        { label: "nl", count: 142 },
+      ],
+      sources: [
+        { label: "google.com", count: 518 },
+        { label: "", count: 330 },
+      ],
+      callSources: [
+        { label: "hero", count: 87 },
+        { label: "footer", count: 39 },
+      ],
+      outcomes: [
+        { label: "routing", count: 8 },
+        { label: "network_or_timeout", count: 4 },
+      ],
+      hours: [{ label: "10", count: 120 }],
+      weekdays: [{ label: "1", count: 183 }],
+      passengers: [
+        { label: "1-4", count: 260 },
+        { label: "5-8", count: 88 },
+      ],
+      tariffs: [
+        { label: "day", count: 240 },
+        { label: "night", count: 108 },
+      ],
+      depths: [{ label: "25", count: 420 }],
+    },
+    updated_at: new Date().toISOString(),
+    last_event: new Date().toISOString(),
+    first_available: "2026-10-05",
+    timezone: "Europe/Berlin",
+    recent: [],
+  };
+  let authenticated = false,
+    mode = "normal";
+  await p.route("**/api/admin/insights?*", (r) =>
+    r.fulfill({
+      status: authenticated ? (mode === "error" ? 503 : 200) : 401,
+      contentType: "application/json",
+      body: JSON.stringify(
+        !authenticated
+          ? { error: "Sign in required." }
+          : mode === "error"
+            ? { error: "Statistics are temporarily unavailable." }
+            : mode === "empty"
+              ? {
+                  ...fixture,
+                  total: 0,
+                  views: 0,
+                  calls: 0,
+                  calculations: 0,
+                  successes: 0,
+                  errors: 0,
+                  daily: [],
+                  destinations: [],
+                  destinationTrends: [],
+                  groups: {},
+                  recent: [],
+                }
+              : fixture,
+      ),
+    }),
+  );
+  await p.route("**/api/admin/login", (r) => {
+    authenticated = true;
+    return r.fulfill({
+      status: 200,
+      contentType: "application/json",
+      body: '{"ok":true}',
+    });
+  });
+  await p.goto("http://127.0.0.1:9123/admin");
+  await p.getByLabel("Password", { exact: true }).fill("synthetic-test-only");
+  await p.getByRole("button", { name: "Open dashboard", exact: true }).click();
+  await p.getByText("1,284", { exact: true }).waitFor();
+  mkdirSync("docs/previews", { recursive: true });
+  await p.screenshot({
+    path: "docs/previews/insights-desktop-synthetic.jpg",
+    fullPage: true,
+    type: "jpeg", quality: 75,
+  });
+  await p.getByRole("button", { name: "Destinations", exact: true }).click();
+  await p
+    .getByRole("heading", { name: "Frankfurt-Hahn Airport", exact: true })
+    .waitFor();
+  await p.getByLabel("Search destinations").fill("Frankfurt");
+  assert.equal(await p.locator(".destination-card").count(), 2);
+  const dl = p.waitForEvent("download");
+  await p.getByRole("button", { name: "Export CSV" }).click();
+  assert((await dl).suggestedFilename().endsWith(".csv"));
+  for (const width of [390, 360, 768]) {
+    await p.setViewportSize({ width, height: 844 });
+    for (const section of [
+      "Overview",
+      "Destinations",
+      "Features",
+      "Audience",
+      "Reliability",
+    ]) {
+      await p.getByRole("button", { name: section, exact: true }).click();
+      assert(
+        await p.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth,
+        ),
+        `Overflow at ${width} on ${section}`,
+      );
+    }
+    await p.getByRole("button", { name: "Overview", exact: true }).click();
+    if (width === 390)
+      await p.screenshot({
+        path: "docs/previews/insights-mobile-synthetic.jpg",
+        fullPage: true,
+    type: "jpeg", quality: 75,
+      });
+  }
+  await p.getByRole("button", { name: "Filters", exact: true }).click();
+  await p.getByLabel("Language", { exact: true }).selectOption("en");
+  mode = "empty";
+  await p
+    .getByRole("button", { name: "Refresh statistics", exact: true })
+    .click();
+  await p.getByText("No activity in this selection", { exact: true }).waitFor();
+  mode = "error";
+  await p
+    .getByRole("button", { name: "Refresh statistics", exact: true })
+    .click();
+  await p.getByRole("alert").filter({hasText:"Statistics are temporarily unavailable."}).waitFor();
+  assert(
+    (await p.getByRole("alert").filter({hasText:"Statistics are temporarily unavailable."}).innerText()).includes("Previously loaded data"),
+  );
+  assert.deepEqual(errors, []);
+  console.log(
+    "PASS: protected API, login UI, desktop/mobile/tablet layouts, five sections, search, filters, CSV, empty and failed reports; screenshots use synthetic data.",
+  );
+} finally {
+  await browser?.close();
+  server.kill("SIGTERM");
+}

@@ -64,15 +64,17 @@ Browser review should include consent accept/revoke, DE/EN/NL navigation, calcul
 
 Verified during implementation: production build passed; all 15 airport locale pages responded 200; three missing-path tests responded 404; authentication, wrong-origin rejection, tampered-token rejection, logout revocation, event validation/idempotency, report access/filter validation and all five real Mapbox routes passed. Browser visual review was blocked by a cloud-browser timeout.
 
-## Insights rollout — production approval required
+## Insights rollout — backend activated 2026-10-06
 
-Production migration and gateway deployment have NOT been applied. Automatic approval review rejected the persistent schema/trigger/retention changes. Do not merge the frontend before the following approved rollout:
+The user approved activation subject to no added charges. Organization `kuxor` was verified on Supabase Free before proceeding. No paid resources, upgrade or new project were created. Database size after activation: approximately 11 MB of the current 500 MB Free allowance. Free quotas still apply.
 
-1. Explicitly authorize `supabase/insights.sql` for project `zticpqpmztfzubfkltvx`: add validated event fields/names, create private `analytics_daily`, install an insert rollup trigger/report functions, backfill retained events, schedule deletion of aggregates older than 730 days. Raw-event retention remains 90 days. No existing event data is deleted by the migration itself.
+The production migration was applied, the gateway deployed as version 4, and live backend verification passed. CI and the Vercel preview build also passed. The frontend PR is ready for merge. The steps below document the completed backend rollout (do not reapply the migration):
+
+1. User explicitly authorized `supabase/insights.sql` for project `zticpqpmztfzubfkltvx`: add validated event fields/names, create private `analytics_daily`, install an insert rollup trigger/report functions, backfill retained events, schedule deletion of aggregates older than 730 days. Raw-event retention remains 90 days. No existing event data is deleted by the migration itself.
 2. Apply the SQL as one migration/transaction. It is an apply-once migration, not an idempotent setup script. A constraint change requires a short exclusive table lock; schedule for low traffic.
 3. Deploy the updated analytics-gateway with the existing secret digest substituted securely and the existing custom authentication preserved. Both legacy stats and new insights actions are supported.
 4. Verify production/preview isolation, the new report, public-access denial and advisors. Test collection using preview events only.
-5. Merge the frontend PR. New fields and event names require the updated schema and gateway. Confirm first real data and privacy copy, then close the draft status.
+5. Remaining step: merge the frontend PR. New fields and event names require the updated schema and gateway. Confirm first real data and privacy copy, then close the draft status.
 
 Rollback frontend/gateway if necessary; the additive database table and trigger can remain without breaking the old dashboard. Do not drop analytics data as part of rollback.
 
@@ -82,3 +84,5 @@ Rollback frontend/gateway if necessary; the additive database table and trigger 
 - `npm run build`: production build.
 - `scripts/verify-insights-sql.mjs`: isolated PGlite PostgreSQL test. Install `@electric-sql/pglite@0.3.14` in a temporary validation directory and set `PGLITE_MODULE` to its module entry. Tests schema, service-role insert/rollup, idempotency, Berlin date boundaries, filters, aggregate survival after raw deletion and denied anon table/report access. pg_cron scheduling is stubbed; actual production scheduling remains to be verified after approval.
 - `scripts/verify-insights-ui.mjs`: local browser contract test with synthetic intercepted reports, not a claim of deployed end-to-end database verification. Set PLAYWRIGHT_MODULE and CHROMIUM_MODULE to local Playwright and @sparticuz/chromium installations. Tests protected API, desktop/phone/tablet, navigation, filters, exports, empty/error states and screenshots.
+
+Live verification after approval: local production app → API → live Edge Function → database → authenticated report passed. Valid destination metrics persisted once despite duplicate UUID; arbitrary destination text was rejected; preview data stayed separate from production; legacy stats and logout revocation passed. Dedicated synthetic preview event and its aggregate were removed after verification. Retention cron jobs are active. Public table/report access is denied; Supabase advisor reports only expected informational deny-by-default RLS notices.

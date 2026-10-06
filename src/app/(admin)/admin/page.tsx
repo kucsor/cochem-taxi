@@ -446,7 +446,7 @@ export default function Dashboard() {
             <br />
             Improve the experience.
           </p>
-          <a href="/de" target="_blank" rel="noreferrer">
+          <a href="https://cochem-taxi.de/de" target="_blank" rel="noreferrer">
             Open website <ArrowUpRight size={16} />
           </a>
           <button onClick={logout}>

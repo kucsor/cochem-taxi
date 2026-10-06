@@ -11,10 +11,21 @@ export default function AdminPwa() {
   const [prompt, setPrompt] = useState<InstallPrompt | null>(null);
   const [installing, setInstalling] = useState(false);
   useEffect(() => {
+    // Never promote the dashboard within the already installed taxi origin.
+    if (["cochem-taxi.de", "www.cochem-taxi.de"].includes(location.hostname)) return;
     if ("serviceWorker" in navigator) {
-      void navigator.serviceWorker.register("/admin-sw.js", {
-        scope: "/admin", updateViaCache: "none",
-      }).catch(() => { /* Dashboard remains usable without installation. */ });
+      void (async () => {
+        if (location.hostname === "insights.cochem-taxi.de") {
+          for (const registration of await navigator.serviceWorker.getRegistrations()) {
+            const worker = registration.active || registration.waiting || registration.installing;
+            if (new URL(registration.scope).pathname === "/" && worker &&
+                new URL(worker.scriptURL).pathname === "/sw.js") await registration.unregister();
+          }
+        }
+        await navigator.serviceWorker.register("/admin-sw.js", {
+          scope: "/admin", updateViaCache: "none",
+        });
+      })().catch(() => { /* Dashboard remains usable without installation. */ });
     }
     const capture = (event: Event) => {
       if (window.matchMedia("(display-mode: standalone)").matches) return;

@@ -5,6 +5,25 @@ import { i18n } from './i18n-config'
 
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
+  const hostname = (request.headers.get('host') || request.nextUrl.host).split(':')[0].toLowerCase()
+  const isTaxiHost = hostname === 'cochem-taxi.de' || hostname === 'www.cochem-taxi.de'
+  const isInsightsHost = hostname === 'insights.cochem-taxi.de'
+  const isAdminPath = pathname === '/admin' || pathname.startsWith('/admin/')
+
+  // Separate origins keep Android installations, cookies and workers independent.
+  if (isTaxiHost && isAdminPath) {
+    const target = new URL(request.nextUrl.pathname + request.nextUrl.search, 'https://insights.cochem-taxi.de')
+    return NextResponse.redirect(target, 307)
+  }
+  if (isTaxiHost && pathname === '/admin.webmanifest') {
+    return NextResponse.rewrite(new URL('/manifest.json', request.url))
+  }
+  if (isInsightsHost && pathname === '/') {
+    return NextResponse.redirect(new URL('/admin', request.url), 307)
+  }
+  if (isInsightsHost && !isAdminPath && !pathname.includes('.') && !pathname.startsWith('/api/') && !pathname.startsWith('/_next/')) {
+    return NextResponse.redirect(new URL(pathname + request.nextUrl.search, 'https://cochem-taxi.de'), 307)
+  }
 
   // CSP: Construct header without nonce for SSG compatibility
   // Removing 'strict-dynamic' to allow 'unsafe-inline' to work for inline scripts
@@ -38,6 +57,7 @@ export function middleware(request: NextRequest) {
     [
       '/admin',
       '/manifest.json',
+      '/admin.webmanifest',
       '/favicon.ico',
     ].includes(pathname)
   ) {
@@ -83,5 +103,5 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   // Matcher ignoring `/_next/`, `/api/` and static files
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|manifest.json|.*\\..*).*)'],
+  matcher: ['/admin.webmanifest', '/((?!api|_next/static|_next/image|favicon.ico|manifest.json|.*\\..*).*)'],
 }

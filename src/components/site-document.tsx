@@ -1,4 +1,5 @@
 import '@/app/globals.css';
+import { TaxiPwa } from '@/components/taxi-pwa';
 import { SiteTracker } from '@/components/site-tracker';
 import { Toaster } from '@/components/ui/toaster';
 import { Inter, Poppins } from 'next/font/google';
@@ -41,6 +42,7 @@ export function SiteDocument({children, lang}: {children: React.ReactNode; lang:
     <html lang={lang} className={`dark ${inter.variable} ${poppins.variable}`}>
       <body className="font-body antialiased">
         <ConsentProvider>
+          <TaxiPwa />
           <SiteTracker />
           {children}
         </ConsentProvider>

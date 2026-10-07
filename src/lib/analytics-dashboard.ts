@@ -18,6 +18,7 @@ export type DestinationRow = {
   average_distance: number | null;
 };
 export type Insights = {
+  routeReport?: RouteReport;
   views: number;
   calls: number;
   calculations: number;
@@ -134,3 +135,20 @@ export function csvCell(value: unknown) {
     '"'
   );
 }
+
+export type RouteRow = {
+  origin: string; destination: string;
+  calculations: number; successes: number; errors: number; call_clicks: number;
+  sessions: number | null; call_sessions: number | null; consented_calculations: number | null;
+  average_fare: number | null; average_distance: number | null;
+  first_day: string; last_day: string;
+  breakdown: { passengers: string; tariff: string; calculations: number }[];
+};
+export type RouteReport = {
+  version: number; first_available: string | null; sessions_available: boolean;
+  legacy_calculations: number; missing_destination: number;
+  routes: RouteRow[];
+  daily: { day: string; origin: string; destination: string; calculations: number }[];
+  interests: { destination: string; searches: number; selections: number }[];
+  legacy_destinations: { destination: string; calculations: number }[];
+};

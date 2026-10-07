@@ -1132,3 +1132,35 @@
     letter-spacing: 0.09em;
   }
 }
+
+/* Structured route reporting: readable cards at phone widths. */
+.routes-workspace { display: grid; gap: 22px; min-width: 0; }
+.route-summary { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 12px; margin: 12px 0 20px; }
+.route-summary > div { padding: 18px; border: 1px solid #2c394a; border-radius: 14px; background: #101c2b; }
+.route-summary span, .route-detail summary small { display: block; color: #a8b7ca; font-size: 12px; }
+.route-summary strong { display: block; font-size: 30px; color: #f4c66a; margin-top: 8px; }
+.route-checkbox { display: flex; gap: 10px; align-items: center; margin: 14px 0; font-size: 13px; color: #bac7d8; }
+.route-checkbox input { accent-color: #f4c66a; width: 18px; height: 18px; }
+.route-detail summary { cursor: pointer; display: flex; justify-content: space-between; gap: 16px; align-items: center; padding: 6px 0; list-style: none; }
+.route-detail summary > span { min-width: 0; }
+.route-detail summary strong { display: block; font-size: 17px; margin: 7px 0; overflow-wrap: anywhere; }
+.route-detail summary span span { color: #a8b7ca; font-size: 12px; }
+.route-detail summary b { font-size: 25px; color: #f4c66a; text-align: right; flex-shrink: 0; }
+.route-detail summary small { font-weight: 400; font-size: 11px; }
+.route-detail summary:focus-visible { outline: 2px solid #f4c66a; outline-offset: 5px; border-radius: 8px; }
+.route-detail[open] .destination-metrics { margin-top: 20px; animation: panel-in .25s ease-out; }
+.route-detail .muted { margin-top: 16px; }
+.route-breakdown { display: grid; gap: 9px; margin-top: 14px; }
+.route-breakdown > div { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; border-bottom: 1px solid #253343; padding: 12px 0; font-size: 13px; }
+.routes-workspace .muted { font-size: 12px; line-height: 1.7; color: #a8b7ca; }
+.routes-workspace .notice { margin: 16px 0 0; }
+.routes-workspace .destination-tools { flex-wrap: wrap; }
+@media(max-width: 650px) {
+ .route-summary { grid-template-columns: repeat(2,minmax(0,1fr)); }
+ .route-summary > div { padding: 12px; }
+ .route-summary strong { font-size: 24px; }
+ .route-detail summary { align-items: flex-start; flex-direction: column; }
+ .route-detail summary b { text-align: left; }
+ .routes-workspace .destination-tools > * { width: 100%; }
+}
+@media(prefers-reduced-motion: reduce) { .route-detail[open] .destination-metrics { animation: none; } }

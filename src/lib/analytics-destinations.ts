@@ -81,10 +81,35 @@ export function classifyDestination(
   }
   if (/burg.eltz|eltz.castle/.test(q)) return "burg-eltz";
   if (/reichsburg/.test(q)) return "reichsburg";
-  for (const k of [...destinations].sort((a, b) => b.length - a.length)) {
+  // Never scan districts or street names for a town substring.
+  const city = q.split(",")[0].trim().replace(/\s*\(mosel\)$/, "");
+  for (const k of destinations) {
     if (k.startsWith("airport-") || ["other", "unknown"].includes(k)) continue;
-    const term = k === "zell-mosel" ? "zell" : k.replace(/-/g, "[ -]");
-    if (new RegExp(`(^|[^a-z])${term}($|[^a-z])`).test(q)) return k;
+    const term = k === "zell-mosel" ? "zell" : k;
+    if (city === term || city === term.replace(/-/g, " ")) return k;
   }
   return "other";
+}
+
+export type PlaceFeature = {
+  text?: string;
+  place_type?: string[];
+  context?: { id: string; text: string }[];
+};
+/** Selected structured feature only. District/address strings never identify a town. */
+export function classifyPlace(feature?: PlaceFeature, airport?: string): Destination {
+  if (airport) return classifyDestination("", airport);
+  if (!feature) return "unknown";
+  const name = (feature.text || "").trim();
+  if (feature.place_type?.includes("poi")) {
+    const landmark = classifyDestination(name);
+    if (landmark.startsWith("airport-") || ["reichsburg", "burg-eltz"].includes(landmark)) return landmark;
+  }
+  const city = feature.place_type?.some(t => t === "place" || t === "locality")
+    ? name
+    : feature.context?.find(c => c.id.startsWith("place."))?.text
+      || feature.context?.find(c => c.id.startsWith("locality."))?.text;
+  if (!city) return "unknown";
+  const result = classifyDestination(city);
+  return result.startsWith("airport-") ? "other" : result;
 }

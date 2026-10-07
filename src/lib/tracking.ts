@@ -2,7 +2,10 @@
 import type { AnalyticsEvent } from "./event-schema";
 export type TrackedEvent = AnalyticsEvent["name"];
 let visit: string | null = null;
+let lastEstimate: { at: number; origin?: string | number; destination?: string | number; passengers?: string | number; tariff?: string | number } | null = null;
+export function clearEstimateAttribution() { lastEstimate = null; }
 export function setTrackingConsent(granted: boolean) {
+  if (!granted) clearEstimateAttribution();
   visit = granted ? visit || crypto.randomUUID() : null;
 }
 export function trackEvent(
@@ -35,10 +38,18 @@ export function trackEvent(
     const host = new URL(document.referrer).hostname;
     if (host !== location.hostname) referrer = host;
   } catch {}
+  if (name === "use_calculator" || name === "calculator_error") clearEstimateAttribution();
+  if (name === "calculator_success" && visit && params?.route_version === 2) {
+    lastEstimate = { at: Date.now(), origin: params.origin, destination: params.destination, passengers: params.passengers, tariff: params.tariff };
+  }
+  const linked = name === "click_call_now" && visit && lastEstimate && Date.now() - lastEstimate.at <= 30 * 60_000 ? lastEstimate : null;
   const data = {
-    destination: params?.destination,
-    passengers: params?.passengers,
-    tariff: params?.tariff,
+    origin: linked?.origin ?? params?.origin,
+    route_version: linked ? 2 : params?.route_version,
+    after_estimate: linked ? 1 : undefined,
+    destination: linked?.destination ?? params?.destination,
+    passengers: linked?.passengers ?? params?.passengers,
+    tariff: linked?.tariff ?? params?.tariff,
     fare: params?.fare,
     distance: params?.distance,
     id: crypto.randomUUID(),

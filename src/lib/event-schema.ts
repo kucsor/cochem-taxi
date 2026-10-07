@@ -35,6 +35,9 @@ export const eventNames = [
 // No addresses, coordinates, query strings, free-text errors or full referrer URLs.
 export const eventSchema = z.object({
   destination: z.enum(destinations).optional(),
+  origin: z.enum(destinations).optional(),
+  route_version: z.literal(2).optional(),
+  after_estimate: z.literal(1).optional(),
   passengers: z.enum(["1-4", "5-8"]).optional(),
   tariff: z.enum(["day", "night"]).optional(),
   fare: z.number().finite().min(0).max(10000).optional(),

@@ -1,4 +1,5 @@
 "use client";
+import { RoutesPanel } from "./routes-panel";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   AreaChart,
@@ -54,7 +55,7 @@ import {
 import "./dashboard.css";
 const tabs = [
   ["overview", "Overview", LayoutDashboard],
-  ["destinations", "Destinations", MapPin],
+  ["destinations", "Routes & Destinations", MapPin],
   ["features", "Features", Activity],
   ["audience", "Audience", Users],
   ["quality", "Reliability", ShieldCheck],
@@ -189,11 +190,7 @@ export default function Dashboard() {
     [environment, setEnvironment] = useState("production"),
     [period, setPeriod] = useState<"day" | "week" | "month">("day"),
     [auto, setAuto] = useState(false),
-    [filters, setFilters] = useState(false),
-    [query, setQuery] = useState(""),
-    [sort, setSort] = useState<
-      "calculations" | "searches" | "successes" | "errors"
-    >("calculations");
+    [filters, setFilters] = useState(false);
   const request = useRef<AbortController | null>(null),
     serial = useRef(0);
   const load = useCallback(
@@ -247,30 +244,6 @@ export default function Dashboard() {
     () => groupDays(stats?.daily || [], period),
     [stats, period],
   );
-  const destinations = useMemo(
-    () =>
-      (stats?.destinations || [])
-        .filter((d) =>
-          dest(d.destination).toLowerCase().includes(query.toLowerCase()),
-        )
-        .sort((a, b) => b[sort] - a[sort]),
-    [stats, query, sort],
-  );
-  const trends = useMemo(() => {
-    const top = (stats?.destinations || [])
-      .filter((d) => d.destination !== "unknown")
-      .slice(0, 5)
-      .map((d) => d.destination);
-    const map = new Map<string, Record<string, string | number>>();
-    for (const r of stats?.destinationTrends || []) {
-      const row =
-        map.get(r.month) ||
-        Object.fromEntries([["month", r.month], ...top.map((d) => [d, 0])]);
-      if (top.includes(r.destination)) row[r.destination] = r.calculations;
-      map.set(r.month, row);
-    }
-    return { top, rows: [...map.values()] };
-  }, [stats]);
   async function login(e: React.FormEvent) {
     e.preventDefault();
     setBusy(true);
@@ -328,7 +301,7 @@ export default function Dashboard() {
     for (const d of stats.destinations)
       records.push(
         [
-          "Destinations",
+          "Destination categories (include unverified history)",
           dest(d.destination),
           "",
           d.calculations,
@@ -340,6 +313,13 @@ export default function Dashboard() {
         ["Destination searches", dest(d.destination), "", d.searches],
         ["Destination selections", dest(d.destination), "", d.selections],
       );
+    for (const r of stats.routeReport?.routes || []) {
+      const route = `${dest(r.origin)} → ${dest(r.destination)}`;
+      records.push(["Routes v2",route,"",r.calculations,r.successes,r.errors,r.average_fare,r.average_distance],
+        ["Route call clicks after estimate",route,"",r.call_clicks],
+        ["Route consented tab sessions",route,"",r.sessions],
+        ["Route sessions with call click",route,"",r.call_sessions]);
+    }
     for (const t of stats.destinationTrends)
       records.push([
         "Destination monthly",
@@ -661,12 +641,9 @@ export default function Dashboard() {
                       <em>part of the journey.</em>
                     </h2>
                     <p>
-                      {stats.destinations.find(
-                        (d) =>
-                          d.destination !== "unknown" && d.calculations > 0,
-                      )
-                        ? `${dest(stats.destinations.find((d) => d.destination !== "unknown" && d.calculations > 0)!.destination)} leads recorded calculation demand in this period.`
-                        : "Your destination insights will grow as people use the calculator."}
+                      {stats.routeReport?.routes.find(r => ![r.origin, r.destination].some(x => x === "unknown" || x === "other") && r.calculations > 0)
+                        ? "Explore identified pickup–destination pairs in Routes & Destinations."
+                        : "Route insights will appear as new structured place selections are recorded. Historical categories remain unverified."}
                     </p>
                   </div>
                   <div className="hero-number">
@@ -851,135 +828,7 @@ export default function Dashboard() {
                 </div>
               </>
             )}
-            {tab === "destinations" && (
-              <>
-                <Panel
-                  title="Where people want to go"
-                  note="Searches count category changes after typing pauses. Selections count autocomplete choices. Neither represents a unique person."
-                >
-                  <div className="destination-tools">
-                    <label className="search-box">
-                      <Search size={17} />
-                      <input
-                        aria-label="Search destinations"
-                        placeholder="Find a destination…"
-                        value={query}
-                        onChange={(e) => setQuery(e.target.value)}
-                      />
-                    </label>
-                    <label className="sort-label">
-                      Rank by
-                      <select
-                        aria-label="Rank destinations by"
-                value={sort}
-                        onChange={(e) => setSort(e.target.value as typeof sort)}
-                      >
-                        <option value="calculations">Calculations</option>
-                        <option value="searches">Searches</option>
-                        <option value="successes">Successful estimates</option>
-                        <option value="errors">Errors</option>
-                      </select>
-                    </label>
-                  </div>
-                  <div className="destination-list">
-                    {destinations.map((d, i) => (
-                      <article className="destination-card" key={d.destination}>
-                        <div className="destination-heading">
-                          <span className="rank">
-                            {String(i + 1).padStart(2, "0")}
-                          </span>
-                          <div>
-                            <h3>{dest(d.destination)}</h3>
-                            <span>
-                              {d.destination.startsWith("airport-")
-                                ? "Airport transfer"
-                                : d.destination === "unknown"
-                                  ? "Older or unclassified activity"
-                                  : "Destination category"}
-                            </span>
-                          </div>
-                          <strong>
-                            {fmt(d[sort])}
-                            <small>{sort}</small>
-                          </strong>
-                        </div>
-                        <div className="destination-metrics">
-                          {[
-                            ["Searches", d.searches],
-                            ["Selected", d.selections],
-                            ["Calculated", d.calculations],
-                            ["Successful", d.successes],
-                            ["Errors", d.errors],
-                            ["Avg. estimate", money(d.average_fare)],
-                            [
-                              "Avg. distance",
-                              d.average_distance == null
-                                ? "—"
-                                : `${fmt(d.average_distance)} km`,
-                            ],
-                          ].map(([k, v]) => (
-                            <div key={String(k)}>
-                              <span>{k}</span>
-                              <strong>
-                                {typeof v === "number" ? fmt(v) : v}
-                              </strong>
-                            </div>
-                          ))}
-                        </div>
-                      </article>
-                    ))}
-                    {!destinations.length && (
-                      <p className="empty">
-                        No destination activity matches these filters.
-                      </p>
-                    )}
-                  </div>
-                </Panel>
-                <Panel
-                  title="Destination demand over time"
-                  note="Monthly calculation starts for the five leading recorded categories."
-                >
-                  <div className="chart">
-                    <ResponsiveContainer width="100%" height="100%">
-                      <LineChart data={trends.rows}>
-                        <CartesianGrid stroke="#253343" vertical={false} />
-                        <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                        <YAxis width={36} allowDecimals={false} />
-                        <Tooltip {...tooltip} />
-                        <Legend />
-                        {trends.top.map((d, i) => (
-                          <Line
-                            key={d}
-                            dataKey={d}
-                            name={dest(d)}
-                            stroke={
-                              [
-                                "#f4c66a",
-                                "#63d7b4",
-                                "#8eaafa",
-                                "#f28c98",
-                                "#bf99ef",
-                              ][i]
-                            }
-                            strokeWidth={2}
-                            isAnimationActive={false}
-                          />
-                        ))}
-                      </LineChart>
-                    </ResponsiveContainer>
-                  </div>
-                </Panel>
-                <div className="notice">
-                  <ShieldCheck size={20} />
-                  <p>
-                    Only predefined airports, towns and landmarks are recorded.
-                    Exact addresses, search text and GPS coordinates never enter
-                    these analytics. “Other destination” groups anything outside
-                    the list.
-                  </p>
-                </div>
-              </>
-            )}
+            {tab === "destinations" && <RoutesPanel stats={stats} from={from} to={to} />}
             {tab === "features" && (
               <>
                 <div className="two-grid">

@@ -16,8 +16,8 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { CountUp } from "@/components/ui/count-up";
-import { classifyDestination } from "@/lib/analytics-destinations";
-import { trackEvent } from "@/lib/tracking";
+import { classifyDestination, classifyPlace, type Destination } from "@/lib/analytics-destinations";
+import { trackEvent, clearEstimateAttribution } from "@/lib/tracking";
 import Image from "next/image";
 
 const Map = dynamic(() => import('@/components/landing/map').then(mod => mod.Map), {
@@ -188,6 +188,9 @@ function MapResult({ state, pending, isLoaded, setIsLoaded, dict }: { dict: Dict
 }
 
 export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink = true, initialStartAddress = "", initialDestinationAddress = "" }: { airportSlug?: string; dict: Dictionary; lang?: string; showDetailsLink?: boolean; initialStartAddress?: string; initialDestinationAddress?: string }) {
+  // Initial values are curated route-page presets, not visitor-entered addresses.
+  const originCategory = useRef<Destination>(classifyDestination(initialStartAddress));
+  const destinationCategory = useRef<Destination>(classifyDestination(initialDestinationAddress, airportSlug));
   const [startAddress, setStartAddress] = useState(initialStartAddress);
   const [endAddress, setEndAddress] = useState(initialDestinationAddress);
   const [pickupTime, setPickupTime] = useState("");
@@ -203,7 +206,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
   const [state, setState] = useState<FareState>(initialState);
   const requestVersion = useRef(0);
   const lastSearchCategory = useRef("");
-  useEffect(() => { requestVersion.current++; setState(initialState); }, [startAddress, endAddress, pickupTime, passengers]);
+  useEffect(() => { clearEstimateAttribution(); requestVersion.current++; setPending(false); setState(initialState); }, [startAddress, endAddress, pickupTime, passengers]);
   const [pending, setPending] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
@@ -279,7 +282,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
     const handler = setTimeout(() => {
       const destination = classifyDestination(endAddress, airportSlug);
       if(endAddress.trim().length >= 3 && destination !== lastSearchCategory.current) {
-        trackEvent("destination_search", {destination, source:"calculator"});
+        trackEvent("destination_search", {destination, route_version: 2, source:"calculator"});
         lastSearchCategory.current = destination;
       }
       void fetchSuggestions(endAddress, setEndSuggestions, setIsEndLoading, controller.signal);
@@ -289,7 +292,15 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
 
   const handleSelectSuggestion = (suggestion: any, type: "start" | "end") => {
     const displayName = formatPlaceName(suggestion);
-    trackEvent(type === "end" ? "destination_select" : "pickup_select", {destination: type === "end" ? classifyDestination(suggestion.place_name, airportSlug) : undefined, source:"calculator"});
+    clearEstimateAttribution();
+    const category = classifyPlace(suggestion, type === "end" ? airportSlug : undefined);
+    if (type === "start") originCategory.current = category;
+    else destinationCategory.current = category;
+    trackEvent(type === "end" ? "destination_select" : "pickup_select", {
+      destination: type === "end" ? category : undefined,
+      origin: type === "start" ? category : originCategory.current,
+      route_version: 2, source: "calculator",
+    });
     const coords = { lat: suggestion.center[1], lon: suggestion.center[0] };
     if (type === "start") {
       setStartAddress(displayName);
@@ -325,6 +336,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
         const data = await response.json();
         if (data.features && data.features.length > 0) {
           setStartAddress(formatPlaceName(data.features[0]));
+          originCategory.current = classifyPlace(data.features[0]);
         } else {
           setStartAddress(`${dict.locationPrefix} ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
         }
@@ -333,6 +345,8 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
       }
       setStartSuggestions([]);
     };
+    clearEstimateAttribution();
+    originCategory.current = "unknown";
     setStartAddress(`${dict.locating}...`);
     setStartCoords(null);
     navigator.geolocation.getCurrentPosition(success, error, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
@@ -343,7 +357,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
     if (pending) return;
     const version = ++requestVersion.current;
     setState(initialState);
-    const metrics = { passengers, destination: classifyDestination(endAddress, airportSlug), tariff: Number(pickupTime.split(":")[0]) >= 22 || Number(pickupTime.split(":")[0]) < 6 ? "night" : "day", source: "calculator" };
+    const metrics = { passengers, origin: originCategory.current, destination: destinationCategory.current, route_version: 2, tariff: Number(pickupTime.split(":")[0]) >= 22 || Number(pickupTime.split(":")[0]) < 6 ? "night" : "day", source: "calculator" };
     trackEvent("use_calculator", metrics);
     setPending(true);
     setIsMapLoaded(true); // Load map on submit
@@ -420,7 +434,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
                         placeholder={dict.startPlaceholder} 
                         required 
                         value={startAddress} 
-                        onChange={(e) => { setStartAddress(e.target.value); setStartCoords(null); }} 
+                        onChange={(e) => { clearEstimateAttribution(); originCategory.current = "unknown"; setStartAddress(e.target.value); setStartCoords(null); }}
                         onFocus={() => setIsStartFocused(true)} 
                         onBlur={() => setTimeout(() => setIsStartFocused(false), 150)} 
                         autoComplete="off" 
@@ -475,7 +489,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
                         placeholder={dict.endPlaceholder}
                         required
                         value={endAddress}
-                        onChange={(e) => { setEndAddress(e.target.value); setEndCoords(null); }}
+                        onChange={(e) => { clearEstimateAttribution(); destinationCategory.current = "unknown"; setEndAddress(e.target.value); setEndCoords(null); }}
                         onFocus={() => setIsEndFocused(!airportSlug)}
                         onBlur={() => setTimeout(() => setIsEndFocused(false), 150)}
                         autoComplete="off"

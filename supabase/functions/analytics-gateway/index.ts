@@ -24,12 +24,12 @@ Deno.serve(async (request:Request)=>{
    const {data,error}=await db.rpc('analytics_allow',{p_key:p.key,p_limit:p.limit,p_seconds:p.seconds});if(error)throw error;return Response.json(data);
   }
   if(action==='event'){
-   const {error}=await db.from('analytics_events').insert({environment:p.environment,id:p.id,name:p.name,path:p.path,visit:p.visit,language:p.language,referrer:p.referrer,device:p.device,source:p.source,value:p.value,outcome:p.outcome,destination:p.destination,passengers:p.passengers,tariff:p.tariff,fare:p.fare,distance:p.distance});
+   const {error}=await db.from('analytics_events').insert({environment:p.environment,id:p.id,name:p.name,path:p.path,visit:p.visit,language:p.language,referrer:p.referrer,device:p.device,source:p.source,value:p.value,outcome:p.outcome,destination:p.destination,origin:p.origin,route_version:p.route_version,after_estimate:p.after_estimate,passengers:p.passengers,tariff:p.tariff,fare:p.fare,distance:p.distance});
    if(error&&error.code!=='23505')throw error;return Response.json({ok:true});
   }
   if(action==='stats'||action==='insights'){
    if(!/^\d{4}-\d{2}-\d{2}$/.test(p.from)||!/^\d{4}-\d{2}-\d{2}$/.test(p.to)||Date.parse(p.to)-Date.parse(p.from)>(action==='insights'?730:365)*86400000||p.from>p.to)return new Response(null,{status:400});
-   const {data,error}=await db.rpc(action==='insights'?'analytics_insights':'analytics_report',{p_from:p.from,p_to:p.to,p_language:p.language||'',p_device:p.device||'',p_environment:p.environment||'production'});if(error)throw error;return Response.json(data);
+   const {data,error}=await db.rpc(action==='insights'?'analytics_route_insights':'analytics_report',{p_from:p.from,p_to:p.to,p_language:p.language||'',p_device:p.device||'',p_environment:p.environment||'production'});if(error)throw error;return Response.json(data);
   }
   return new Response(null,{status:400});
  }catch{return Response.json({error:'Service unavailable'},{status:503});}

@@ -30,11 +30,12 @@ try {
     headless: true,
   });
   const p = await browser.newPage({
+    serviceWorkers: "block",
     viewport: { width: 1440, height: 1050 },
     reducedMotion: "reduce",
   });
   const errors = [];
-  p.on("pageerror", (e) => errors.push(e.message));
+  p.on("pageerror", (e) => {errors.push(e.message); console.error("PAGE_ERROR",e.message);});
   const daily = Array.from({ length: 30 }, (_, i) => ({
     day: `2026-09-${String(i + 1).padStart(2, "0")}`,
     views: 10 + ((i * 7) % 60),
@@ -124,6 +125,12 @@ try {
     timezone: "Europe/Berlin",
     recent: [],
   };
+  fixture.routeReport = {
+    version:2,first_available:"2026-10-05",sessions_available:true,legacy_calculations:7,missing_destination:7,
+    routes:[{origin:"cochem",destination:"airport-hahn",calculations:8,successes:7,errors:1,call_clicks:3,sessions:4,call_sessions:2,consented_calculations:6,average_fare:120,average_distance:40,first_day:"2026-10-05",last_day:"2026-10-07",breakdown:[{passengers:"1-4",tariff:"day",calculations:8}]}],
+    daily:[{day:"2026-10-05",origin:"cochem",destination:"airport-hahn",calculations:8}],
+    interests:[{destination:"airport-hahn",searches:3,selections:4}],legacy_destinations:[{destination:"unknown",calculations:7}]
+  };
   let authenticated = false,
     mode = "normal";
   await p.route("**/api/admin/insights?*", (r) =>
@@ -138,6 +145,7 @@ try {
             : mode === "empty"
               ? {
                   ...fixture,
+                  routeReport: {...fixture.routeReport,routes:[],daily:[],interests:[],legacy_destinations:[],legacy_calculations:0,missing_destination:0},
                   total: 0,
                   views: 0,
                   calls: 0,
@@ -165,19 +173,24 @@ try {
   await p.goto("http://127.0.0.1:9123/admin");
   await p.getByLabel("Password", { exact: true }).fill("synthetic-test-only");
   await p.getByRole("button", { name: "Open dashboard", exact: true }).click();
-  await p.getByText("1,284", { exact: true }).waitFor();
+  await p.getByText("1,284", { exact: true }).waitFor().catch(async e=>{console.error((await p.locator("body").innerText()).slice(-2000));throw e;});
   mkdirSync("docs/previews", { recursive: true });
   await p.screenshot({
-    path: "docs/previews/insights-desktop-synthetic.jpg",
+    path: "docs/previews/routes-overview-synthetic.jpg",
     fullPage: true,
     type: "jpeg", quality: 75,
   });
-  await p.getByRole("button", { name: "Destinations", exact: true }).click();
-  await p
-    .getByRole("heading", { name: "Frankfurt-Hahn Airport", exact: true })
-    .waitFor();
-  await p.getByLabel("Search destinations").fill("Frankfurt");
-  assert.equal(await p.locator(".destination-card").count(), 2);
+  await p.getByRole("button", { name: "Routes & Destinations", exact: true }).click();
+  await p.getByRole("heading", { name: "Most calculated routes", exact: true }).waitFor();
+  await p.getByLabel("Search routes").fill("Hahn");
+  assert.equal(await p.locator(".route-detail").count(), 1);
+  await p.locator(".route-detail summary").click();
+  await p.getByText("Consented tab sessions", {exact:true}).waitFor();
+  await p.getByLabel("Route chart grouping").selectOption("week");
+  await p.getByLabel("Search routes").fill("");
+  const routeDownload = p.waitForEvent("download");
+  await p.getByRole("button", { name: "Export routes CSV",exact:true }).click();
+  assert((await routeDownload).suggestedFilename().startsWith("cochem-routes-"));
   const dl = p.waitForEvent("download");
   await p.getByRole("button", { name: "Export CSV" }).click();
   assert((await dl).suggestedFilename().endsWith(".csv"));
@@ -185,7 +198,7 @@ try {
     await p.setViewportSize({ width, height: 844 });
     for (const section of [
       "Overview",
-      "Destinations",
+      "Routes & Destinations",
       "Features",
       "Audience",
       "Reliability",
@@ -198,10 +211,10 @@ try {
         `Overflow at ${width} on ${section}`,
       );
     }
-    await p.getByRole("button", { name: "Overview", exact: true }).click();
+    await p.getByRole("button", { name: "Routes & Destinations", exact: true }).click();
     if (width === 390)
       await p.screenshot({
-        path: "docs/previews/insights-mobile-synthetic.jpg",
+        path: "docs/previews/routes-mobile-synthetic.jpg",
         fullPage: true,
     type: "jpeg", quality: 75,
       });

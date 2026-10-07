@@ -1,0 +1,30 @@
+import {readFileSync} from 'node:fs';
+import assert from 'node:assert/strict';
+process.on('uncaughtException',e=>{console.error(e.message,e.detail||'',e.position||'');process.exit(1)});
+const {PGlite}=await import(process.env.PGLITE_MODULE||'@electric-sql/pglite');
+const db=new PGlite();
+await db.exec("create role anon; create role authenticated; create role service_role bypassrls; create schema cron; create function cron.schedule(text,text,text) returns integer language sql as 'select 1';");
+await db.exec(readFileSync('supabase/schema.sql','utf8').replace('create extension if not exists pg_cron;',''));
+await db.exec(readFileSync('supabase/insights.sql','utf8'));
+await db.exec("insert into public.analytics_events(id,name,path,language,device,source,referrer,environment,destination) values (gen_random_uuid(),'use_calculator','/de','de','mobile','calculator','','production','zell-mosel');");
+await db.exec(readFileSync('supabase/migrations/20261007184125_route_insights_v2.sql','utf8'));
+await db.exec('set role service_role');
+const visit=crypto.randomUUID();
+async function event(name,extra={}) {
+ const e={id:crypto.randomUUID(),name,visit,origin:'cochem',destination:'airport-hahn',passengers:'1-4',tariff:'day',fare:null,distance:null,after_estimate:null,...extra};
+ await db.query("insert into public.analytics_events(id,name,path,language,device,source,referrer,environment,origin,destination,route_version,visit,passengers,tariff,fare,distance,after_estimate) values ($1,$2,'/de','de','mobile','calculator','','production',$3,$4,2,$5,$6,$7,$8,$9,$10) on conflict(id) do nothing",[e.id,e.name,e.origin,e.destination,e.visit,e.passengers,e.tariff,e.fare,e.distance,e.after_estimate]);return e;
+}
+await event('use_calculator');await event('use_calculator');await event('use_calculator',{visit:null});
+await event('calculator_success',{fare:100,distance:40});await event('calculator_success',{fare:120,distance:44});
+const click=await event('click_call_now',{after_estimate:1});await event('click_call_now',click);await event('click_call_now',{after_estimate:1});
+const report=async(extra='')=>(await db.query("select analytics_route_insights((now() at time zone 'Europe/Berlin')::date"+extra+",(now() at time zone 'Europe/Berlin')::date,'de','mobile','production') data")).rows[0].data;
+let r=await report();let route=r.routeReport.routes[0];
+assert.equal(r.calculations,4);assert.equal(r.routeReport.legacy_calculations,1);assert.equal(r.routeReport.legacy_destinations[0].destination,'zell-mosel');
+assert.equal(route.calculations,3);assert.equal(route.sessions,1);assert.equal(route.consented_calculations,2);assert.equal(route.call_clicks,2);assert.equal(route.call_sessions,1);assert.equal(route.average_fare,110);assert.equal(route.average_distance,42);assert.equal(route.breakdown[0].calculations,3);
+assert.equal(r.routeReport.daily[0].calculations,3);assert.equal((await report('-100')).routeReport.routes[0].sessions,null);
+await assert.rejects(event('calculator_success',{after_estimate:1}),/check constraint/);
+assert.equal((await db.query("select analytics_route_insights(current_date,current_date,'en','','production') data")).rows[0].data.routeReport.routes.length,0);
+assert.equal((await db.query("select analytics_route_insights(current_date,current_date,'','','preview') data")).rows[0].data.routeReport.routes.length,0);
+await db.exec('delete from public.analytics_events');assert.equal((await report()).routeReport.routes[0].calculations,3);
+await db.exec('reset role; set role anon');await assert.rejects(db.query("select analytics_route_insights(current_date,current_date)"),/permission denied/);
+console.log('PASS: additive migration preserves history, route rollup, consent session deduplication, call-click deduplication, averages, retention, filters and private RPC.');await db.close();

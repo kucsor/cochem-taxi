@@ -41,8 +41,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import {
-  destinationLabels,
-  type Destination,
+  analyticsPlaceLabel,
 } from "@/lib/analytics-destinations";
 import {
   berlinToday,
@@ -65,7 +64,7 @@ const tabs = [
 type Tab = (typeof tabs)[number][0];
 const fmt = (n: number | null | undefined) =>
   n == null ? "—" : n.toLocaleString("en-GB", { maximumFractionDigits: 1 });
-const dest = (s: string) => destinationLabels[s as Destination] || s;
+const dest = analyticsPlaceLabel;
 const label = (s: string) =>
   eventLabels[s] ||
   failureDetails[s]?.title ||
@@ -999,9 +998,9 @@ export default function Dashboard() {
                       revenue. Estimated fares are calculator outputs.
                     </li>
                     <li>
-                      Destinations are predefined categories inferred in the
-                      browser. Other and not-recorded categories remain visible
-                      rather than guessed.
+                      Destinations include municipalities identified by the map,
+                      plus known airports and landmarks. Exact addresses are
+                      excluded. Historical missing places cannot be reconstructed.
                     </li>
                     <li>
                       Raw events expire after 90 days. Aggregates without
@@ -1014,6 +1013,8 @@ export default function Dashboard() {
                       collection began or outside retention is unavailable.
                     </li>
                     <li>
+                      Calculation starts are recorded after required place lookups.
+                      Leaving before lookup completes may not record a start.
                       Ad blockers, DNT/GPC, offline use and abandoned pages can
                       reduce coverage. Sessions spanning date boundaries can
                       split start and outcome counts.

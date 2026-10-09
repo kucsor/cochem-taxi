@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
 import { csvCell, eventLabels, type ActivityEvent } from "@/lib/analytics-dashboard";
-import { destinationLabels, type Destination } from "@/lib/analytics-destinations";
+import { analyticsPlaceLabel } from "@/lib/analytics-destinations";
 import { describeFailure } from "@/lib/calculation-diagnostics";
-const place = (s?: string | null) => !s || s === "unknown" ? "Not recorded" : s === "other" ? "Outside supported places" : destinationLabels[s as Destination] || s;
+const place = analyticsPlaceLabel;
 const time = (s: string) => new Date(s).toLocaleString("en-GB", { timeZone: "Europe/Berlin", day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit" });
 export function ActivityLog({events, errorsOnly = false, totalErrors = 0}: {events: ActivityEvent[]; errorsOnly?: boolean; totalErrors?: number}) {
   const [filter,setFilter] = useState("all");
@@ -11,7 +11,7 @@ export function ActivityLog({events, errorsOnly = false, totalErrors = 0}: {even
   const [limit,setLimit] = useState(20);
   const filtered = events.filter(e => (filter === "all" || (filter === "calculations" ? ["use_calculator","calculator_success","calculator_error"].includes(e.name) : e.name === filter)) && [e.path,place(e.origin),place(e.destination),e.outcome,eventLabels[e.name],e.name,e.name === "calculator_error" ? describeFailure(e.outcome).title : ""].join(" ").toLowerCase().includes(query.trim().toLowerCase()));
   function exportLog() {
-    const rows = [["Time (UTC)","Event","Reason code","Explanation","Page","Pickup category","Destination category","Route version","Passengers","Tariff","Estimate EUR (not revenue)","Distance km","Device","Language","Source","Event ID"],...filtered.map(e=>[e.created_at,e.name,e.outcome||"",e.name === "calculator_error" ? describeFailure(e.outcome).explanation : "",e.path,place(e.origin),place(e.destination),e.route_version??"",e.passengers||"",e.tariff||"",e.fare??"",e.distance??"",e.device,e.language,e.source||"",e.id||""])];
+    const rows = [["Time (UTC)","Event","Reason code","Explanation","Page","Pickup locality / landmark","Destination locality / landmark","Route version","Passengers","Tariff","Estimate EUR (not revenue)","Distance km","Device","Language","Source","Event ID"],...filtered.map(e=>[e.created_at,e.name,e.outcome||"",e.name === "calculator_error" ? describeFailure(e.outcome).explanation : "",e.path,place(e.origin),place(e.destination),e.route_version??"",e.passengers||"",e.tariff||"",e.fare??"",e.distance??"",e.device,e.language,e.source||"",e.id||""])];
     const url=URL.createObjectURL(new Blob(["\uFEFF"+rows.map(r=>r.map(csvCell).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"}));
     const a=document.createElement("a");a.href=url;a.download=errorsOnly?"calculation-error-log.csv":"activity-log.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
@@ -33,7 +33,7 @@ export function ActivityLog({events, errorsOnly = false, totalErrors = 0}: {even
           {failed && <div className="notice"><p><strong>{reason.title}.</strong> {reason.explanation}</p><p>{reason.action}</p><p>Recorded code: <code>{e.outcome||"not recorded"}</code></p></div>}
           <dl className="log-fields">{[
             ["Page",e.path],["Device / language",`${e.device} · ${e.language.toUpperCase()}`],["Placement",e.source||"Not recorded"],
-            ["Pickup category",place(e.origin)],["Destination category",place(e.destination)],["Route data",e.route_version === 2 ? "Current place categories" : "Historical / unavailable — route unverified"],
+            ["Pickup locality / landmark",place(e.origin)],["Destination locality / landmark",place(e.destination)],["Route data",e.route_version === 2 ? "Identified locality / landmark categories" : "Historical / unavailable — route unverified"],
             ["Passengers",e.passengers||"Not recorded"],["Tariff",e.tariff||"Not recorded"],
             ["Calculated estimate (not revenue)",e.fare == null ? "Not recorded" : new Intl.NumberFormat("en-GB",{style:"currency",currency:"EUR"}).format(e.fare)],
             ["Distance",e.distance == null ? "Not recorded" : `${e.distance} km`],

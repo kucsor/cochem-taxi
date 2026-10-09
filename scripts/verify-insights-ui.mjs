@@ -132,6 +132,9 @@ try {
     daily:[{day:"2026-10-05",origin:"cochem",destination:"airport-hahn",calculations:8}],
     interests:[{destination:"airport-hahn",searches:3,selections:4}],legacy_destinations:[{destination:"unknown",calculations:7}]
   };
+  fixture.routeReport.routes.push({...fixture.routeReport.routes[0],destination:"locality:DE-RP:place.12345:Mayen",calculations:3});
+  fixture.routeReport.daily.push({day:"2026-10-05",origin:"cochem",destination:"locality:DE-RP:place.12345:Mayen",calculations:3});
+  fixture.routeReport.interests.push({destination:"locality:DE-RP:place.12345:Mayen",searches:0,selections:3});
   let authenticated = false,
     mode = "normal";
   await p.route("**/api/admin/insights?*", (r) =>
@@ -197,6 +200,9 @@ try {
   });
   await p.getByRole("button", { name: "Routes & Destinations", exact: true }).click();
   await p.getByRole("heading", { name: "Most calculated routes", exact: true }).waitFor();
+  await p.getByLabel("Search routes").fill("Mayen");
+  assert.equal(await p.locator(".route-detail").count(),1);
+  assert.match(await p.locator(".route-detail summary").innerText(),/Mayen · DE-RP/);
   await p.getByLabel("Search routes").fill("Hahn");
   assert.equal(await p.locator(".route-detail").count(), 1);
   await p.locator(".route-detail summary").click();

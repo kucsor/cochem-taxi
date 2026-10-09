@@ -1,5 +1,6 @@
 "use client";
 
+import { calculationOutcome } from "@/lib/calculation-diagnostics";
 import { useState, useEffect, useRef } from "react";
 import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation, Loader2, Users, Map as MapIcon } from "lucide-react";
 import {
@@ -386,7 +387,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
       if (version !== requestVersion.current) return;
       if (!response.ok || data.message) {
         setState({ ...initialState, message: dict.errorMessages[data.code] || dict.errorMessages.generic });
-        trackEvent('calculator_error', { ...metrics, outcome: String(data.code || '').startsWith('geocoding') ? 'geocoding' : ['routing','rate_limited','validation','server_error'].includes(data.code) ? data.code : 'request_failed' });
+        trackEvent('calculator_error', { ...metrics, outcome: calculationOutcome(data.code) });
       } else { setState(data); trackEvent('calculator_success', { ...metrics, fare: Math.round(data.price * 100) / 100, distance: Math.round(data.distance * 10) / 10 }); }
     } catch (error) {
       if (version !== requestVersion.current) return;

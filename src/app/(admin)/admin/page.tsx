@@ -1,4 +1,6 @@
 "use client";
+import { ActivityLog } from "./activity-log";
+import { failureDetails } from "@/lib/calculation-diagnostics";
 import { RoutesPanel } from "./routes-panel";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -63,16 +65,10 @@ const tabs = [
 type Tab = (typeof tabs)[number][0];
 const fmt = (n: number | null | undefined) =>
   n == null ? "—" : n.toLocaleString("en-GB", { maximumFractionDigits: 1 });
-const money = (n: number | null | undefined) =>
-  n == null
-    ? "—"
-    : new Intl.NumberFormat("en-GB", {
-        style: "currency",
-        currency: "EUR",
-      }).format(n);
 const dest = (s: string) => destinationLabels[s as Destination] || s;
 const label = (s: string) =>
   eventLabels[s] ||
+  failureDetails[s]?.title ||
   (
     {
       unknown: "Not recorded",
@@ -773,7 +769,7 @@ export default function Dashboard() {
                     </ResponsiveContainer>
                   </div>
                 </Panel>
-                <div className="two-grid">
+                <div>
                   <Panel
                     title="Activity ratios"
                     note="Independent event counts, not a tracked conversion funnel."
@@ -801,23 +797,7 @@ export default function Dashboard() {
                       is not a completed call or booking.
                     </p>
                   </Panel>
-                  <Panel
-                    title="The typical estimate"
-                    note="Based on recorded successful calculations."
-                  >
-                    <div className="big-stat">
-                      {money(stats.average_fare)}
-                      <span>Average estimated fare · not revenue</span>
-                    </div>
-                    <div className="ratio">
-                      <span>Measured engagement</span>
-                      <strong>{fmt(stats.average_engagement)}s</strong>
-                    </div>
-                    <p className="footnote">
-                      Engagement is sampled when a page becomes hidden. It does
-                      not cover every visit.
-                    </p>
-                  </Panel>
+
                 </div>
                 <div className="two-grid">
                   <Breakdown title="Most viewed pages" rows={group("pages")} />
@@ -872,42 +852,7 @@ export default function Dashboard() {
                     rows={group("callSources")}
                   />
                 </div>
-                <Panel
-                  title="Recent recorded activity"
-                  note="Latest 30 events in this selection; available within the 90-day raw-data window."
-                >
-                  <div className="activity-list">
-                    {stats.recent.map((r, i) => (
-                      <div
-                        className="activity-row"
-                        key={`${r.created_at}-${i}`}
-                      >
-                        <Activity size={16} />
-                        <div>
-                          <strong>{label(r.name)}</strong>
-                          <span>
-                            {r.path} · {label(r.device)} ·{" "}
-                            {r.language.toUpperCase()}
-                            {r.destination !== "unknown" &&
-                              ` · ${dest(r.destination)}`}
-                          </span>
-                        </div>
-                        <time>
-                          {new Date(r.created_at).toLocaleString("en-GB", {
-                            timeZone: "Europe/Berlin",
-                            day: "2-digit",
-                            month: "short",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </time>
-                      </div>
-                    ))}
-                    {!stats.recent.length && (
-                      <p className="empty">No recent events available.</p>
-                    )}
-                  </div>
-                </Panel>
+                <ActivityLog events={stats.recent} />
               </>
             )}
             {tab === "audience" && (
@@ -976,6 +921,7 @@ export default function Dashboard() {
             )}
             {tab === "quality" && (
               <>
+                <ActivityLog errorsOnly events={stats.recent_errors ?? stats.recent.filter(e => e.name === "calculator_error")} totalErrors={stats.errors} />
                 <div className="kpi-grid">
                   <article className="kpi">
                     <CheckCircle2 />

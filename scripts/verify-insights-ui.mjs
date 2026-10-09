@@ -123,8 +123,9 @@ try {
     last_event: new Date().toISOString(),
     first_available: "2026-10-05",
     timezone: "Europe/Berlin",
-    recent: [],
+    recent: [{id:"synthetic-error",created_at:"2026-10-09T11:50:13Z",name:"calculator_error",outcome:"cochem_only",path:"/de/flughafen/hahn",device:"mobile",language:"de",source:"calculator",origin:"unknown",destination:"airport-hahn",route_version:2,passengers:"5-8",tariff:"day"}],
   };
+  fixture.recent_errors = fixture.recent;
   fixture.routeReport = {
     version:2,first_available:"2026-10-05",sessions_available:true,legacy_calculations:7,missing_destination:7,
     routes:[{origin:"cochem",destination:"airport-hahn",calculations:8,successes:7,errors:1,call_clicks:3,sessions:4,call_sessions:2,consented_calculations:6,average_fare:120,average_distance:40,first_day:"2026-10-05",last_day:"2026-10-07",breakdown:[{passengers:"1-4",tariff:"day",calculations:8}]}],
@@ -156,7 +157,7 @@ try {
                   destinations: [],
                   destinationTrends: [],
                   groups: {},
-                  recent: [],
+                  recent: [], recent_errors: [],
                 }
               : fixture,
       ),
@@ -174,6 +175,20 @@ try {
   await p.getByLabel("Password", { exact: true }).fill("synthetic-test-only");
   await p.getByRole("button", { name: "Open dashboard", exact: true }).click();
   await p.getByText("1,284", { exact: true }).waitFor().catch(async e=>{console.error((await p.locator("body").innerText()).slice(-2000));throw e;});
+  assert.equal(await p.getByText("The typical estimate",{exact:true}).count(),0);
+  assert.equal(await p.getByText("Measured engagement",{exact:true}).count(),0);
+  await p.getByRole("button",{name:"Reliability",exact:true}).click();
+  await p.locator(".log-entry summary").click();
+  await p.getByText("Recorded code:",{exact:false}).waitFor();
+  assert.match(await p.locator(".log-body").innerText(),/intentional restriction/);
+  assert.match(await p.locator(".log-body").innerText(),/5-8/);
+  const logDownload=p.waitForEvent("download");
+  await p.getByRole("button",{name:"Export log CSV",exact:true}).click();
+  assert.equal((await logDownload).suggestedFilename(),"calculation-error-log.csv");
+  await p.getByLabel("Search error log").fill("no-such-route");
+  assert.equal(await p.locator(".log-entry").count(),0);
+  await p.getByLabel("Search error log").fill("");
+  await p.getByRole("button",{name:"Overview",exact:true}).click();
   mkdirSync("docs/previews", { recursive: true });
   await p.screenshot({
     path: "docs/previews/routes-overview-synthetic.jpg",
@@ -204,6 +219,10 @@ try {
       "Reliability",
     ]) {
       await p.getByRole("button", { name: section, exact: true }).click();
+      if(section === "Reliability" || section === "Features") {
+        await p.locator(".log-entry summary").click();
+        if(width===390 && section === "Reliability") await p.screenshot({path:"/tmp/diagnostics-mobile.png",fullPage:true});
+      }
       assert(
         await p.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,

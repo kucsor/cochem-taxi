@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { calculationOutcomes } from "./calculation-diagnostics.ts";
 import { destinations } from "./analytics-destinations.ts";
 export const eventNames = [
   "destination_search",
@@ -65,17 +66,6 @@ export const eventSchema = z.object({
     "other",
   ]),
   value: z.number().int().min(0).max(3600).optional(),
-  outcome: z
-    .enum([
-      "network_or_timeout",
-      "request_failed",
-      "geocoding",
-      "routing",
-      "rate_limited",
-      "validation",
-      "server_error",
-      "success",
-    ])
-    .optional(),
+  outcome: z.enum(calculationOutcomes).optional(),
 });
 export type AnalyticsEvent = z.infer<typeof eventSchema>;

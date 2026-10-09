@@ -1,9 +1,9 @@
 "use client";
 import { useMemo, useState } from "react";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { destinationLabels, type Destination } from "@/lib/analytics-destinations";
+import { analyticsPlaceLabel } from "@/lib/analytics-destinations";
 import { csvCell, type Insights, type RouteRow } from "@/lib/analytics-dashboard";
-const label = (s: string) => s === "unknown" ? "Not recorded" : s === "other" ? "Outside supported places" : destinationLabels[s as Destination] || s;
+const label = analyticsPlaceLabel;
 const title = (r: {origin: string; destination: string}) => `${label(r.origin)} → ${label(r.destination)}`;
 const complete = (r: RouteRow) => ![r.origin,r.destination].some(x=>x === "unknown" || x === "other");
 const number = (n: number | null) => n == null ? "—" : new Intl.NumberFormat("en-GB").format(n);
@@ -65,15 +65,17 @@ export function RoutesPanel({stats,from,to}:{stats:Insights;from:string;to:strin
         <label className="sort-label">Rank by <select aria-label="Rank routes by" value={sort} onChange={e=>setSort(e.target.value as typeof sort)}><option value="calculations">Calculations</option><option value="successes">Successful estimates</option><option value="call_clicks">Call clicks after estimate</option></select></label>
         <button className="secondary" onClick={exportRoutes} disabled={!visible.length}>Export routes CSV</button>
       </div>
-      <label className="route-checkbox"><input type="checkbox" checked={includeIncomplete} onChange={e=>setIncludeIncomplete(e.target.checked)}/> Include incomplete / unsupported routes</label>
+      <p className="muted">“Cochem → Zell” means the recorded pickup category was Cochem and the destination category was Zell. Repeated calculations can come from the same person. These are expressions of interest, not confirmed journeys or bookings.</p>
+      <p className="muted">{number(tracked-identified)} current calculations have an route with unidentified places and are hidden unless you enable the option below.</p>
+      <label className="route-checkbox"><input type="checkbox" checked={includeIncomplete} onChange={e=>setIncludeIncomplete(e.target.checked)}/> Include routes with unidentified places</label>
       <div className="destination-list">{visible.map(r=><details className="destination-card route-detail" key={r.origin+'|'+r.destination}>
-        <summary><span><small>FROM → TO</small><strong>{title(r)}</strong><span>{complete(r)?'Selected places': 'Incomplete route — not a confirmed place pair'}</span></span><b>{number(r.calculations)}<small>calculations · details ↓</small></b></summary>
+        <summary><span><small>FROM → TO</small><strong>{title(r)}</strong><span>{complete(r)?'Identified places': 'Incomplete route — one or both places not identified'}</span></span><b>{number(r.calculations)}<small>calculations · details ↓</small></b></summary>
         <div className="destination-metrics">{[['Successful estimates',number(r.successes)],['Errors',number(r.errors)],['Avg. estimate',money(r.average_fare)],['Avg. distance',r.average_distance == null?'—':number(r.average_distance)+' km'],['Call clicks after estimate',number(r.call_clicks)],['Consented tab sessions',number(r.sessions)],['Sessions with call click',number(r.call_sessions)]].map(([k,v])=><div key={k}><span>{k}</span><strong>{v}</strong></div>)}</div>
-        <p className="muted">First recorded: {r.first_day}. Last activity: {r.last_day}. Average price and distance include successful estimates only.</p>
+        <p className="muted">First recorded: {r.first_day}. Last activity: {r.last_day}. Average price and distance include successful estimates only. Estimates are not revenue and cannot predict earnings from website visits.</p>
         <p className="muted">{r.consented_calculations == null ? 'Session counts are unavailable for ranges starting more than 89 days ago. Calculation and call-click totals remain available for two years.' : `${r.consented_calculations} of ${r.calculations} calculations carried consent for session measurement. A session is one consenting browser tab, not a unique person. Sessions with a call click may have calculated before this date range.`}</p>
         <div className="route-breakdown">{r.breakdown.map((b,i)=><div key={i}><span>{b.passengers==='unknown'?'Passengers not recorded':b.passengers+' passengers'} · {b.tariff==='unknown'?'Tariff not recorded':b.tariff==='night'?'Night tariff':'Day tariff'}</span><strong>{number(b.calculations)} calculations</strong></div>)}</div>
       </details>)}</div>
-      {!visible.length && <p className="empty">No identified routes match this selection yet. Historical activity is kept separately below. New routes appear after visitors select places and calculate.</p>}
+      {!visible.length && <p className="empty">No routes match this selection. Try clearing the search or including incomplete routes. Historical activity is kept separately below.</p>}
       <p className="muted">Call attribution requires session consent and a click within 30 minutes after the latest successful estimate in that tab. Editing a place or starting another calculation clears it. A click does not confirm a connected call or a completed ride.</p>
     </Box>
     <Box title="Route demand over time" note="Calculation starts for the five leading identified routes. Gaps after tracking began are shown as zero.">
@@ -81,7 +83,7 @@ export function RoutesPanel({stats,from,to}:{stats:Insights;from:string;to:strin
       <p className="muted">Showing {bucket === 'day'?'daily':bucket==='week'?'weekly':'monthly'} totals. Weeks start Monday; dates use Berlin time.</p>
       {chart.top.length ? <div className="chart"><ResponsiveContainer width="100%" height="100%"><LineChart data={chart.rows}><CartesianGrid stroke="#253343" vertical={false}/><XAxis dataKey="date" tick={{fontSize:10}} minTickGap={24}/><YAxis allowDecimals={false} width={30}/><Tooltip contentStyle={{background:'#152131',borderColor:'#34445a',borderRadius:12}}/><Legend wrapperStyle={{fontSize:11}}/>{chart.top.map((r,i)=><Line key={title(r)} dataKey={'r'+i} name={title(r)} stroke={['#f4c66a','#63d7b4','#8eaafa','#f28c98','#bf99ef'][i]} dot={{r:3}} strokeWidth={2} isAnimationActive={false}/>)}</LineChart></ResponsiveContainer></div>:<p className="empty">A trend will appear after the first identified route calculation. No historical route is inferred.</p>}
     </Box>
-    <Box title="Destination interest before calculation" note="Typing signals and autocomplete selections are independent event counts. Zero typing signals does not mean nobody selected the destination.">
+    <Box title="Destination interest before calculation" note="Typing signals and autocomplete selections are independent event counts. Typing is categorized only when it matches a known category; other typing signals stay unclassified. Selected municipalities can be recorded beyond the former list.">
       <div className="route-breakdown">{(report?.interests||[]).map(d=><div key={d.destination}><strong>{label(d.destination)}</strong><span>{number(d.searches)} typing signals · {number(d.selections)} selections</span></div>)}</div>
       {!report?.interests?.length && <p className="empty">No new destination interest recorded for these filters.</p>}
     </Box>
@@ -89,6 +91,6 @@ export function RoutesPanel({stats,from,to}:{stats:Insights;from:string;to:strin
       <div className="route-breakdown">{(report?.legacy_destinations || stats.destinations).filter(d=>d.calculations>0).map(d=><div key={d.destination}><span>{label(d.destination)} · {d.destination==='unknown'?'missing destination':'unverified historical category'}</span><strong>{number(d.calculations)} calculations</strong></div>)}</div>
       {report?.legacy_calculations === 0 && <p className="empty">No historical calculations in this selection.</p>}
     </Box>
-    <p className="muted">Only supported place categories are collected. Exact addresses, search text and GPS coordinates are never included in analytics. Unselected or unresolved places stay “Not recorded”; places outside the list stay “Outside supported places”.</p>
+    <p className="muted">Municipalities are identified from structured map results, including addresses entered without selecting a suggestion. There is no manually maintained town list for new calculations. Known airports and landmarks keep their names. Exact addresses, search text and GPS coordinates are never included in analytics. If the map cannot identify a municipality, it remains “Locality not identified”. “Outside the former list” applies only to historical records.</p>
   </div>;
 }

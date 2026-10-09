@@ -1,3 +1,21 @@
+export type ActivityEvent = {
+  id?: string;
+  created_at: string;
+  name: string;
+  path: string;
+  device: string;
+  language: string;
+  destination: string;
+  origin?: string | null;
+  source?: string | null;
+  outcome?: string | null;
+  route_version?: number | null;
+  passengers?: string | null;
+  tariff?: string | null;
+  fare?: number | null;
+  distance?: number | null;
+  after_estimate?: number | null;
+};
 export type Row = { label: string; count: number };
 export type Day = {
   day: string;
@@ -40,14 +58,8 @@ export type Insights = {
   last_event: string | null;
   first_available: string | null;
   timezone: string;
-  recent: {
-    created_at: string;
-    name: string;
-    path: string;
-    device: string;
-    language: string;
-    destination: string;
-  }[];
+  recent: ActivityEvent[];
+  recent_errors?: ActivityEvent[];
 };
 export const eventLabels: Record<string, string> = {
   page_view: "Page view",

@@ -1,5 +1,7 @@
 "use client";
 
+import { airports } from "@/lib/airports";
+import { calculationOutcome } from "@/lib/calculation-diagnostics";
 import { useState, useEffect, useRef } from "react";
 import { Locate, MapPin, Clock, Calculator, Sparkles, Navigation, Loader2, Users, Map as MapIcon } from "lucide-react";
 import {
@@ -16,7 +18,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { CountUp } from "@/components/ui/count-up";
-import { classifyDestination, classifyPlace, type Destination } from "@/lib/analytics-destinations";
+import { classifyDestination, resolvedAnalyticsPlace } from "@/lib/analytics-destinations";
 import { trackEvent, clearEstimateAttribution } from "@/lib/tracking";
 import Image from "next/image";
 
@@ -189,8 +191,8 @@ function MapResult({ state, pending, isLoaded, setIsLoaded, dict }: { dict: Dict
 
 export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink = true, initialStartAddress = "", initialDestinationAddress = "" }: { airportSlug?: string; dict: Dictionary; lang?: string; showDetailsLink?: boolean; initialStartAddress?: string; initialDestinationAddress?: string }) {
   // Initial values are curated route-page presets, not visitor-entered addresses.
-  const originCategory = useRef<Destination>(classifyDestination(initialStartAddress));
-  const destinationCategory = useRef<Destination>(classifyDestination(initialDestinationAddress, airportSlug));
+  const originCategory = useRef<string>(classifyDestination(initialStartAddress));
+  const destinationCategory = useRef<string>(classifyDestination(initialDestinationAddress, airportSlug));
   const [startAddress, setStartAddress] = useState(initialStartAddress);
   const [endAddress, setEndAddress] = useState(initialDestinationAddress);
   const [pickupTime, setPickupTime] = useState("");
@@ -248,7 +250,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
     setLoading(true);
     try {
       const response = await fetch(
-        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${MAPBOX_TOKEN}&country=DE,LU&limit=5&proximity=7.1667,50.15&types=poi,address,place,locality`, { signal }
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?access_token=${MAPBOX_TOKEN}&country=DE,LU&limit=5&proximity=7.1667,50.15&language=de&types=address,place,locality`, { signal }
       );
       if (response.ok) {
         const data = await response.json();
@@ -280,7 +282,8 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
     }
     const controller = new AbortController();
     const handler = setTimeout(() => {
-      const destination = classifyDestination(endAddress, airportSlug);
+      const category = classifyDestination(endAddress, airportSlug);
+      const destination = category === "other" ? "unknown" : category;
       if(endAddress.trim().length >= 3 && destination !== lastSearchCategory.current) {
         trackEvent("destination_search", {destination, route_version: 2, source:"calculator"});
         lastSearchCategory.current = destination;
@@ -293,7 +296,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
   const handleSelectSuggestion = (suggestion: any, type: "start" | "end") => {
     const displayName = formatPlaceName(suggestion);
     clearEstimateAttribution();
-    const category = classifyPlace(suggestion, type === "end" ? airportSlug : undefined);
+    const category = resolvedAnalyticsPlace(suggestion, type === "end" ? airportSlug : undefined);
     if (type === "start") originCategory.current = category;
     else destinationCategory.current = category;
     trackEvent(type === "end" ? "destination_select" : "pickup_select", {
@@ -330,13 +333,13 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
       setStartCoords({ lat: latitude, lon: longitude });
       try {
         const response = await fetch(
-          `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${MAPBOX_TOKEN}&limit=1&types=address,poi,place,locality`
+          `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?access_token=${MAPBOX_TOKEN}&limit=1&language=de&types=address,place,locality`
         );
         if (!response.ok) throw new Error('Reverse geocoding failed');
         const data = await response.json();
         if (data.features && data.features.length > 0) {
           setStartAddress(formatPlaceName(data.features[0]));
-          originCategory.current = classifyPlace(data.features[0]);
+          originCategory.current = resolvedAnalyticsPlace(data.features[0]);
         } else {
           setStartAddress(`${dict.locationPrefix} ${latitude.toFixed(4)}, ${longitude.toFixed(4)}`);
         }
@@ -358,12 +361,41 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
     const version = ++requestVersion.current;
     setState(initialState);
     const metrics = { passengers, origin: originCategory.current, destination: destinationCategory.current, route_version: 2, tariff: Number(pickupTime.split(":")[0]) >= 22 || Number(pickupTime.split(":")[0]) < 6 ? "night" : "day", source: "calculator" };
-    trackEvent("use_calculator", metrics);
+    clearEstimateAttribution();
+    let recordedStart = false;
+    const recordStart = () => {
+      if (!recordedStart) { trackEvent("use_calculator", metrics); recordedStart = true; }
+    };
     setPending(true);
     setIsMapLoaded(true); // Load map on submit
     if (!showMap) setShowMap(true); // Show map container on mobile
     
     try {
+      // Reuse the same lookup needed for unselected addresses, before sending
+      // coordinates to the calculator. No second server geocode is necessary.
+      const resolve = async (address: string, coords: {lat:number;lon:number} | null, category: string, fixedAirport?: string) => {
+        const airport = airports.find(a => a.slug === fixedAirport || a.address.toLowerCase() === address.toLowerCase());
+        if (airport) return {coords:{lat:airport.lat,lon:airport.lon},category:`airport-${airport.slug}`};
+        if (coords) return {coords,category};
+        const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${MAPBOX_TOKEN}&country=DE,LU&limit=1&language=de&types=address,place,locality&proximity=7.1667,50.15`, {signal:AbortSignal.timeout(12000)});
+        if (!response.ok) throw new Error("Place lookup unavailable");
+        const feature = (await response.json()).features?.[0];
+        return {coords:feature?.center ? {lon:feature.center[0],lat:feature.center[1]} : null,category:resolvedAnalyticsPlace(feature)};
+      };
+      const [start,end] = await Promise.all([
+        resolve(startAddress,startCoords,metrics.origin),
+        resolve(endAddress,endCoords,metrics.destination,airportSlug),
+      ]);
+      if (version !== requestVersion.current) return;
+      metrics.origin = start.category;
+      metrics.destination = end.category;
+      recordStart();
+      if (!start.coords || !end.coords) {
+        const code = !start.coords && !end.coords ? "geocoding_both" : !start.coords ? "geocoding_start" : "geocoding_end";
+        trackEvent("calculator_error", {...metrics,outcome:code});
+        setState({...initialState,message:dict.errorMessages[code] || dict.errorMessages.generic});
+        return;
+      }
       const response = await fetch('/api/calculate', {
         method: 'POST',
         signal: AbortSignal.timeout(30000),
@@ -374,10 +406,10 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
           endAddress,
           pickupTime,
           passengers,
-          startLat: startCoords?.lat.toString() || '',
-          startLon: startCoords?.lon.toString() || '',
-          endLat: endCoords?.lat.toString() || '',
-          endLon: endCoords?.lon.toString() || '',
+          startLat: start.coords.lat.toString(),
+          startLon: start.coords.lon.toString(),
+          endLat: end.coords.lat.toString(),
+          endLon: end.coords.lon.toString(),
           errorMessages: dict.errorMessages,
         }),
       });
@@ -386,17 +418,18 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
       if (version !== requestVersion.current) return;
       if (!response.ok || data.message) {
         setState({ ...initialState, message: dict.errorMessages[data.code] || dict.errorMessages.generic });
-        trackEvent('calculator_error', { ...metrics, outcome: String(data.code || '').startsWith('geocoding') ? 'geocoding' : ['routing','rate_limited','validation','server_error'].includes(data.code) ? data.code : 'request_failed' });
+        trackEvent('calculator_error', { ...metrics, outcome: calculationOutcome(data.code) });
       } else { setState(data); trackEvent('calculator_success', { ...metrics, fare: Math.round(data.price * 100) / 100, distance: Math.round(data.distance * 10) / 10 }); }
     } catch (error) {
       if (version !== requestVersion.current) return;
+      recordStart();
       trackEvent("calculator_error", { ...metrics, outcome: "network_or_timeout" });
       setState({
         ...initialState,
         message: dict.errorMessages.generic || "Ein Fehler ist aufgetreten",
       });
     } finally {
-      setPending(false);
+      if (version === requestVersion.current) setPending(false);
     }
   };
 

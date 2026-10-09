@@ -123,14 +123,18 @@ try {
     last_event: new Date().toISOString(),
     first_available: "2026-10-05",
     timezone: "Europe/Berlin",
-    recent: [],
+    recent: [{id:"synthetic-error",created_at:"2026-10-09T11:50:13Z",name:"calculator_error",outcome:"cochem_only",path:"/de/flughafen/hahn",device:"mobile",language:"de",source:"calculator",origin:"unknown",destination:"airport-hahn",route_version:2,passengers:"5-8",tariff:"day"}],
   };
+  fixture.recent_errors = fixture.recent;
   fixture.routeReport = {
     version:2,first_available:"2026-10-05",sessions_available:true,legacy_calculations:7,missing_destination:7,
     routes:[{origin:"cochem",destination:"airport-hahn",calculations:8,successes:7,errors:1,call_clicks:3,sessions:4,call_sessions:2,consented_calculations:6,average_fare:120,average_distance:40,first_day:"2026-10-05",last_day:"2026-10-07",breakdown:[{passengers:"1-4",tariff:"day",calculations:8}]}],
     daily:[{day:"2026-10-05",origin:"cochem",destination:"airport-hahn",calculations:8}],
     interests:[{destination:"airport-hahn",searches:3,selections:4}],legacy_destinations:[{destination:"unknown",calculations:7}]
   };
+  fixture.routeReport.routes.push({...fixture.routeReport.routes[0],destination:"locality:DE-RP:place.12345:Mayen",calculations:3});
+  fixture.routeReport.daily.push({day:"2026-10-05",origin:"cochem",destination:"locality:DE-RP:place.12345:Mayen",calculations:3});
+  fixture.routeReport.interests.push({destination:"locality:DE-RP:place.12345:Mayen",searches:0,selections:3});
   let authenticated = false,
     mode = "normal";
   await p.route("**/api/admin/insights?*", (r) =>
@@ -156,7 +160,7 @@ try {
                   destinations: [],
                   destinationTrends: [],
                   groups: {},
-                  recent: [],
+                  recent: [], recent_errors: [],
                 }
               : fixture,
       ),
@@ -174,6 +178,20 @@ try {
   await p.getByLabel("Password", { exact: true }).fill("synthetic-test-only");
   await p.getByRole("button", { name: "Open dashboard", exact: true }).click();
   await p.getByText("1,284", { exact: true }).waitFor().catch(async e=>{console.error((await p.locator("body").innerText()).slice(-2000));throw e;});
+  assert.equal(await p.getByText("The typical estimate",{exact:true}).count(),0);
+  assert.equal(await p.getByText("Measured engagement",{exact:true}).count(),0);
+  await p.getByRole("button",{name:"Reliability",exact:true}).click();
+  await p.locator(".log-entry summary").click();
+  await p.getByText("Recorded code:",{exact:false}).waitFor();
+  assert.match(await p.locator(".log-body").innerText(),/intentional restriction/);
+  assert.match(await p.locator(".log-body").innerText(),/5-8/);
+  const logDownload=p.waitForEvent("download");
+  await p.getByRole("button",{name:"Export log CSV",exact:true}).click();
+  assert.equal((await logDownload).suggestedFilename(),"calculation-error-log.csv");
+  await p.getByLabel("Search error log").fill("no-such-route");
+  assert.equal(await p.locator(".log-entry").count(),0);
+  await p.getByLabel("Search error log").fill("");
+  await p.getByRole("button",{name:"Overview",exact:true}).click();
   mkdirSync("docs/previews", { recursive: true });
   await p.screenshot({
     path: "docs/previews/routes-overview-synthetic.jpg",
@@ -182,6 +200,9 @@ try {
   });
   await p.getByRole("button", { name: "Routes & Destinations", exact: true }).click();
   await p.getByRole("heading", { name: "Most calculated routes", exact: true }).waitFor();
+  await p.getByLabel("Search routes").fill("Mayen");
+  assert.equal(await p.locator(".route-detail").count(),1);
+  assert.match(await p.locator(".route-detail summary").innerText(),/Mayen · DE-RP/);
   await p.getByLabel("Search routes").fill("Hahn");
   assert.equal(await p.locator(".route-detail").count(), 1);
   await p.locator(".route-detail summary").click();
@@ -204,6 +225,10 @@ try {
       "Reliability",
     ]) {
       await p.getByRole("button", { name: section, exact: true }).click();
+      if(section === "Reliability" || section === "Features") {
+        await p.locator(".log-entry summary").click();
+        if(width===390 && section === "Reliability") await p.screenshot({path:"/tmp/diagnostics-mobile.png",fullPage:true});
+      }
       assert(
         await p.evaluate(
           () => document.documentElement.scrollWidth <= innerWidth,

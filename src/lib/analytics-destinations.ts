@@ -92,9 +92,12 @@ export function classifyDestination(
 }
 
 export type PlaceFeature = {
+  id?: string;
+  text_de?: string;
+  short_code?: string;
   text?: string;
   place_type?: string[];
-  context?: { id: string; text: string }[];
+  context?: { id: string; text: string; text_de?: string; short_code?: string }[];
 };
 /** Selected structured feature only. District/address strings never identify a town. */
 export function classifyPlace(feature?: PlaceFeature, airport?: string): Destination {
@@ -112,4 +115,39 @@ export function classifyPlace(feature?: PlaceFeature, airport?: string): Destina
   if (!city) return "unknown";
   const result = classifyDestination(city);
   return result.startsWith("airport-") ? "other" : result;
+}
+
+// Place-level keys only: region/country, provider place ID and municipality name.
+// Never construct these from an address, district, postcode, locality or search text.
+const localityKeyPattern = /^locality:[A-Z]{2}(?:-[A-Z0-9]{1,5})?:place\.[A-Za-z0-9_-]{1,80}:[\p{L}\p{M}][\p{L}\p{M} .’'()\/-]{0,99}$/u;
+export function isAnalyticsPlace(value: unknown): value is string {
+  return typeof value === "string" && (destinations.includes(value as Destination) || localityKeyPattern.test(value));
+}
+export function resolvedAnalyticsPlace(feature?: PlaceFeature, airport?: string): string {
+  if (airport) return classifyDestination("", airport);
+  if (!feature) return "unknown";
+  // Recognized airports and landmarks remain useful destination categories.
+  if (feature.place_type?.includes("poi")) {
+    const landmark = classifyDestination(feature.text || "");
+    if (landmark.startsWith("airport-") || ["reichsburg", "burg-eltz"].includes(landmark)) return landmark;
+  }
+  const town = feature.place_type?.includes("place") ? feature : feature.context?.find(c => c.id.startsWith("place."));
+  if (!town) return "unknown";
+  const name = (town.text_de || town.text || "").normalize("NFC").trim().replace(/\s+/g, " ");
+  const known = classifyDestination(name);
+  const country = feature.context?.find(c => c.id.startsWith("country."))?.short_code?.toUpperCase();
+  const region = feature.context?.find(c => c.id.startsWith("region."))?.short_code?.toUpperCase();
+  if ((!country || country === "DE") && (!region || region === "DE-RP") && !["other","unknown"].includes(known) && !known.startsWith("airport-")) return known;
+  const area = region && country && region.startsWith(country + "-") ? region : country;
+  const key = `locality:${area || ""}:${town.id || ""}:${name}`;
+  return localityKeyPattern.test(key) ? key : "unknown";
+}
+export function analyticsPlaceLabel(value?: string | null): string {
+  if (!value || value === "unknown") return "Locality not identified";
+  if (value === "other") return "Outside the former list (historical)";
+  if (localityKeyPattern.test(value)) {
+    const parts = value.split(":");
+    return `${parts[3]} · ${parts[1]}`;
+  }
+  return destinationLabels[value as Destination] || "Locality not identified";
 }

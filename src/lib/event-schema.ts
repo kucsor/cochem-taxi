@@ -1,5 +1,6 @@
 import { z } from "zod";
-import { destinations } from "./analytics-destinations.ts";
+import { calculationOutcomes } from "./calculation-diagnostics.ts";
+import { isAnalyticsPlace } from "./analytics-destinations.ts";
 export const eventNames = [
   "destination_search",
   "destination_select",
@@ -34,8 +35,8 @@ export const eventNames = [
 ] as const;
 // No addresses, coordinates, query strings, free-text errors or full referrer URLs.
 export const eventSchema = z.object({
-  destination: z.enum(destinations).optional(),
-  origin: z.enum(destinations).optional(),
+  destination: z.string().max(240).refine(isAnalyticsPlace).optional(),
+  origin: z.string().max(240).refine(isAnalyticsPlace).optional(),
   route_version: z.literal(2).optional(),
   after_estimate: z.literal(1).optional(),
   passengers: z.enum(["1-4", "5-8"]).optional(),
@@ -65,17 +66,6 @@ export const eventSchema = z.object({
     "other",
   ]),
   value: z.number().int().min(0).max(3600).optional(),
-  outcome: z
-    .enum([
-      "network_or_timeout",
-      "request_failed",
-      "geocoding",
-      "routing",
-      "rate_limited",
-      "validation",
-      "server_error",
-      "success",
-    ])
-    .optional(),
+  outcome: z.enum(calculationOutcomes).optional(),
 });
 export type AnalyticsEvent = z.infer<typeof eventSchema>;

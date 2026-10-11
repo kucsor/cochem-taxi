@@ -16,20 +16,14 @@ export async function POST(request: NextRequest) {
     if (!parsed.success) return new NextResponse(null, { status: 400 });
     if (!(await allowRequest(request, "events", 120)))
       return new NextResponse(null, { status: 429 });
-    const { id, name, path, visit, referrer, device, source, value, outcome, destination, origin, route_version, after_estimate, passengers, tariff, fare, distance } =
-      parsed.data;
+    const countryHeader = process.env.VERCEL === "1" ? request.headers.get("x-vercel-ip-country") : null;
+    // Vercel supplies connection geography. Never accept a client body country or store IPs.
+    const country = countryHeader && /^[A-Z]{2}$/.test(countryHeader) && countryHeader !== "XX" ? countryHeader : null;
     await gateway("event", {
+      ...parsed.data,
+      country,
       environment: process.env.VERCEL_ENV || "development",
-      id,
-      name,
-      path,
-      visit,
-      referrer,
-      device,
-      source,
-      value,
-      outcome, destination, origin, route_version, after_estimate, passengers, tariff, fare, distance,
-      language: path.split("/")[1],
+      language: parsed.data.path.split("/")[1],
     });
     return new NextResponse(null, { status: 204 });
   } catch {

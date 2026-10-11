@@ -19,7 +19,7 @@ import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import { CountUp } from "@/components/ui/count-up";
 import { classifyDestination, resolvedAnalyticsPlace } from "@/lib/analytics-destinations";
-import { trackEvent, clearEstimateAttribution } from "@/lib/tracking";
+import { trackEvent, clearEstimateAttribution, analyticsId } from "@/lib/tracking";
 import Image from "next/image";
 
 const Map = dynamic(() => import('@/components/landing/map').then(mod => mod.Map), {
@@ -208,7 +208,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
   const [state, setState] = useState<FareState>(initialState);
   const requestVersion = useRef(0);
   const lastSearchCategory = useRef("");
-  useEffect(() => { clearEstimateAttribution(); requestVersion.current++; setPending(false); setState(initialState); }, [startAddress, endAddress, pickupTime, passengers]);
+  useEffect(() => { requestVersion.current++; setPending(false); setState(initialState); }, [startAddress, endAddress, pickupTime, passengers]);
   const [pending, setPending] = useState(false);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
@@ -360,7 +360,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
     if (pending) return;
     const version = ++requestVersion.current;
     setState(initialState);
-    const metrics = { passengers, origin: originCategory.current, destination: destinationCategory.current, route_version: 2, tariff: Number(pickupTime.split(":")[0]) >= 22 || Number(pickupTime.split(":")[0]) < 6 ? "night" : "day", source: "calculator" };
+    const metrics = { calculation_id: analyticsId(), passengers, origin: originCategory.current, destination: destinationCategory.current, route_version: 2, tariff: Number(pickupTime.split(":")[0]) >= 22 || Number(pickupTime.split(":")[0]) < 6 ? "night" : "day", source: "calculator" };
     clearEstimateAttribution();
     let recordedStart = false;
     const recordStart = () => {
@@ -563,14 +563,14 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
                       <div className="grid grid-cols-2 gap-2 h-11 md:h-12 bg-white/5 p-1 rounded-lg md:rounded-xl border border-white/10">
                         <button
                           type="button"
-                          onClick={() => {setPassengers("1-4");trackEvent("passenger_change",{passengers:"1-4"});}}
+                          onClick={() => {clearEstimateAttribution();setPassengers("1-4");trackEvent("passenger_change",{passengers:"1-4"});}}
                           className={`rounded-md md:rounded-lg text-xs md:text-sm font-medium transition-all ${passengers === "1-4" ? "bg-primary text-black shadow-lg" : "text-muted-foreground hover:text-white"}`}
                         >
                           {dict.passengersStandard}
                         </button>
                         <button
                           type="button"
-                          onClick={() => {setPassengers("5-8");trackEvent("passenger_change",{passengers:"5-8"});}}
+                          onClick={() => {clearEstimateAttribution();setPassengers("5-8");trackEvent("passenger_change",{passengers:"5-8"});}}
                           className={`rounded-md md:rounded-lg text-xs md:text-sm font-medium transition-all ${passengers === "5-8" ? "bg-primary text-black shadow-lg" : "text-muted-foreground hover:text-white"}`}
                         >
                           {dict.passengersLarge}
@@ -591,7 +591,7 @@ export function FareCalculator({ airportSlug, dict, lang = "de", showDetailsLink
                         type="time"
                         required
                         value={pickupTime}
-                        onChange={(e) => {setPickupTime(e.target.value);}}
+                        onChange={(e) => {clearEstimateAttribution();setPickupTime(e.target.value);}}
                         onBlur={() => trackEvent("time_change")}
                         className="h-11 md:h-12 bg-white/5 border-white/10 focus:border-primary/50 focus:ring-primary/20 rounded-lg md:rounded-xl transition-all duration-300 w-full text-sm"
                       />

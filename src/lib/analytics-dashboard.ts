@@ -36,6 +36,7 @@ export type DestinationRow = {
   average_distance: number | null;
 };
 export type Insights = {
+  journeyReport?: JourneyReport;
   routeReport?: RouteReport;
   views: number;
   calls: number;
@@ -62,6 +63,8 @@ export type Insights = {
   recent_errors?: ActivityEvent[];
 };
 export const eventLabels: Record<string, string> = {
+  session_start: "Consented session started",
+  page_timing: "Visible / active time sample",
   page_view: "Page view",
   click_call_now: "Call taxi",
   click_calculator: "Open calculator",
@@ -164,3 +167,22 @@ export type RouteReport = {
   interests: { destination: string; searches: number; selections: number }[];
   legacy_destinations: { destination: string; calculations: number }[];
 };
+
+export type JourneyReport = {
+  version: number;
+  coverage: { views: number; country_views: number; session_views: number; measured_views: number; timing_samples: number; visible_ms: number; active_ms: number; session_starts: number; calls: number; linked_calls: number; session_calls: number };
+  countries: { country: string; views: number; session_starts: number; calculations: number; successes: number; errors: number; calls: number; linked_calls: number; visible_ms: number; active_ms: number }[];
+  routes: { country: string; origin: string; destination: string; calculations: number; errors: number; linked_calls: number }[];
+  targets: { name: string; source: string; target: string; target_language: string; count: number }[];
+  daily: { day: string; country: string; views: number; calculations: number; calls: number }[];
+};
+export type SessionRow = {
+  visit: string; first_at: string; last_at: string; span_seconds: number; countries: string[]; languages: string[]; devices: string[];
+  actions: number; views: number; calculations: number; successes: number; errors: number; calls: number; linked_calls: number;
+  timing_samples: number; visible_ms: number; active_ms: number; recorded_start: boolean;
+};
+export type JourneyEvent = ActivityEvent & {
+  country?: string; value?: number; target?: string; target_language?: string;
+  calculation_id?: string; call_delay_seconds?: number; visible_ms?: number; active_ms?: number; measurement_version?: number;
+};
+export type SessionReport = { total: number; events_total: number; sessions: SessionRow[]; events: JourneyEvent[]; retained_from: string; updated_at: string };

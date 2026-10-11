@@ -1,0 +1,38 @@
+import {readFileSync} from 'node:fs';
+import assert from 'node:assert/strict';
+process.on('uncaughtException',e=>{console.error(e.message,e.detail||'',e.position||'');process.exit(1)});
+const {PGlite}=await import(process.env.PGLITE_MODULE||'@electric-sql/pglite');
+const db=new PGlite();
+await db.exec("create role anon; create role authenticated; create role service_role bypassrls; create schema cron; create function cron.schedule(text,text,text) returns integer language sql as 'select 1';");
+await db.exec(readFileSync('supabase/schema.sql','utf8').replace('create extension if not exists pg_cron;',''));
+await db.exec(readFileSync('supabase/insights.sql','utf8'));
+await db.exec("insert into public.analytics_events(id,name,path,language,device,source,referrer,environment,destination) values (gen_random_uuid(),'use_calculator','/de','de','mobile','calculator','','production','zell-mosel');");
+await db.exec(readFileSync('supabase/migrations/20261007184125_route_insights_v2.sql','utf8'));
+await db.exec(readFileSync('supabase/migrations/20261009121859_activity_diagnostics.sql','utf8'));
+await db.exec(readFileSync('supabase/migrations/20261009133722_dynamic_localities.sql','utf8'));
+await db.exec(readFileSync('supabase/migrations/20261011073016_session_journeys.sql','utf8'));
+await db.exec('set role service_role');
+const visit=crypto.randomUUID(), calculation=crypto.randomUUID();
+async function event(name,extra={}) {
+ const e={id:crypto.randomUUID(),name,visit,country:'NL',target:'call-taxi',calculation_id:null,call_delay_seconds:null,visible_ms:null,active_ms:null,after_estimate:null,...extra};
+ await db.query("insert into public.analytics_events(id,name,path,language,device,source,referrer,environment,origin,destination,route_version,visit,country,target,measurement_version,calculation_id,call_delay_seconds,visible_ms,active_ms,after_estimate) values ($1,$2,'/de','de','mobile','calculator','','production','cochem','airport-hahn',2,$3,$4,$5,3,$6,$7,$8,$9,$10) on conflict(id) do nothing",[e.id,e.name,e.visit,e.country,e.target,e.calculation_id,e.call_delay_seconds,e.visible_ms,e.active_ms,e.after_estimate]);return e;
+}
+await event('session_start');await event('page_view');await event('use_calculator',{calculation_id:calculation});await event('calculator_success',{calculation_id:calculation});
+const call=await event('click_call_now',{calculation_id:calculation,after_estimate:1,call_delay_seconds:15});await event('click_call_now',call);
+await event('page_timing',{visible_ms:30000,active_ms:20000});await event('page_timing',{visible_ms:30000,active_ms:0});
+await event('page_view',{visit:null,country:null});await event('page_view',{visit:crypto.randomUUID(),country:'DE'});
+const report=async()=> (await db.query("select analytics_journey_insights(current_date,current_date) data")).rows[0].data;
+let r=await report();assert.equal(r.journeyReport.coverage.views,3);assert.equal(r.journeyReport.coverage.country_views,2);assert.equal(r.journeyReport.coverage.session_views,2);assert.equal(r.journeyReport.coverage.visible_ms,60000);assert.equal(r.journeyReport.coverage.active_ms,20000);assert.equal(r.journeyReport.coverage.linked_calls,1);
+assert.equal(r.journeyReport.countries.find(x=>x.country==='NL').calculations,1);assert.equal(r.journeyReport.routes.find(x=>x.country==='NL').origin,'cochem');
+const sessions=async(country='',id=null,offset=0)=>(await db.query("select analytics_sessions(current_date,current_date,'','','production',$1,$2,$3) data",[country,id,offset])).rows[0].data;
+assert.equal((await sessions()).total,2);assert.equal((await sessions('NL')).total,1);
+let detail=await sessions('NL',visit);assert.equal(detail.events_total,7);assert.equal(detail.events.find(x=>x.name==='click_call_now').calculation_id,calculation);assert.equal(detail.sessions[0].visible_ms,60000);assert.equal(detail.sessions[0].active_ms,20000);
+assert.equal((await sessions('DE',visit)).events_total,0);assert.equal((await sessions('NL',visit,200)).events.length,0);
+assert.equal((await db.query("select analytics_sessions(current_date,current_date,'en') data")).rows[0].data.total,0);
+assert.equal((await db.query("select analytics_sessions(current_date,current_date,'','','preview') data")).rows[0].data.total,0);
+await assert.rejects(event('page_timing',{visible_ms:10,active_ms:20}),/check constraint/);
+await assert.rejects(event('click_call_now',{call_delay_seconds:10}),/check constraint/);
+const dimensions=(await db.query('select dimensions from analytics_daily')).rows;assert.ok(dimensions.every(x=>!JSON.stringify(x).includes(visit)&&!JSON.stringify(x).includes(calculation)));
+await db.exec('delete from public.analytics_events');assert.equal((await sessions()).total,0);assert.equal((await report()).journeyReport.coverage.linked_calls,1);
+await db.exec('reset role; set role anon');await assert.rejects(db.query('select analytics_sessions(current_date,current_date)'),/permission denied/);await assert.rejects(db.query('select analytics_journey_insights(current_date,current_date)'),/permission denied/);
+console.log('Session SQL passed: countries, consent, timing, call references, deduplication, filters, pagination, retention, and private access.');await db.close();

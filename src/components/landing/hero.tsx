@@ -97,7 +97,7 @@ export function Hero({ dict }: { dict: Dictionary }) {
             className="group glass-card hover:bg-white/10 transition-all duration-300 h-14 md:h-16 px-6 md:px-8 rounded-full text-base md:text-lg border-white/20 w-full md:w-auto"
             onClick={() => {
               document.getElementById('rechner')?.scrollIntoView({ behavior: scrollBehavior() });
-              trackEvent('click_calculator');
+              trackEvent('click_calculator', {source: 'hero', target: '#rechner'});
             }}
           >
             <span>{dict.calculateButton}</span>

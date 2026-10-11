@@ -135,6 +135,11 @@ try {
   fixture.routeReport.routes.push({...fixture.routeReport.routes[0],destination:"locality:DE-RP:place.12345:Mayen",calculations:3});
   fixture.routeReport.daily.push({day:"2026-10-05",origin:"cochem",destination:"locality:DE-RP:place.12345:Mayen",calculations:3});
   fixture.routeReport.interests.push({destination:"locality:DE-RP:place.12345:Mayen",searches:0,selections:3});
+  const sessionId='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+  const calculationId='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb';
+  fixture.journeyReport={version:3,coverage:{views:1284,country_views:1000,session_views:800,measured_views:1000,timing_samples:10,visible_ms:120000,active_ms:60000,session_starts:5,calls:126,linked_calls:3,session_calls:80},countries:[{country:'NL',views:220,session_starts:5,calculations:7,successes:6,errors:1,calls:3,linked_calls:2,visible_ms:120000,active_ms:60000},{country:'unknown',views:284,session_starts:0,calculations:2,successes:2,errors:0,calls:1,linked_calls:0,visible_ms:0,active_ms:0}],routes:[{country:'NL',origin:'cochem',destination:'airport-hahn',calculations:7,errors:1,linked_calls:2}],targets:[{name:'click_call_now',source:'hero',target:'call-taxi',target_language:'unknown',count:3}],daily:[{day:'2026-10-10',country:'NL',views:220,calculations:7,calls:3}]};
+  const sessionFixture={total:1,events_total:3,retained_from:'2026-07-14',updated_at:new Date().toISOString(),sessions:[{visit:sessionId,first_at:'2026-10-10T12:00:00Z',last_at:'2026-10-10T12:02:00Z',span_seconds:120,countries:['NL'],languages:['de'],devices:['mobile'],actions:3,views:1,calculations:1,successes:1,errors:1,calls:1,linked_calls:1,timing_samples:1,visible_ms:90000,active_ms:60000,recorded_start:true}],events:[{id:'1',created_at:'2026-10-10T12:00:00Z',name:'calculator_success',path:'/de',source:'calculator',country:'NL',language:'de',origin:'cochem',destination:'airport-hahn',calculation_id:calculationId,fare:90,distance:40},{id:'2',created_at:'2026-10-10T12:00:15Z',name:'click_call_now',path:'/de',source:'hero',target:'call-taxi',country:'NL',language:'de',after_estimate:1,call_delay_seconds:15,calculation_id:calculationId},{id:'3',created_at:'2026-10-10T12:02:00Z',name:'calculator_error',path:'/de',source:'calculator',country:'NL',language:'de',outcome:'cochem_only'}]};
+  await p.route('**/api/admin/sessions?*',r=>{const country=new URL(r.request().url()).searchParams.get('country');return r.fulfill({contentType:'application/json',body:JSON.stringify(country&&country!=='NL'?{...sessionFixture,total:0,events_total:0,sessions:[],events:[]}:sessionFixture)});});
   let authenticated = false,
     mode = "normal";
   await p.route("**/api/admin/insights?*", (r) =>
@@ -223,11 +228,24 @@ try {
       "Features",
       "Audience",
       "Reliability",
+      "Sessions",
     ]) {
       await p.getByRole("button", { name: section, exact: true }).click();
       if(section === "Reliability" || section === "Features") {
         await p.locator(".log-entry summary").click();
         if(width===390 && section === "Reliability") await p.screenshot({path:"/tmp/diagnostics-mobile.png",fullPage:true});
+      }
+      if(section==='Sessions') {
+        await p.locator('.session-card').first().click();
+        await p.getByText('Call clicked after estimate · 15s later',{exact:true}).waitFor();
+        assert.match(await p.locator('.session-timeline').innerText(),/intentional restriction/);
+        assert.match(await p.locator('.session-timeline').innerText(),/Netherlands/);
+        if(width===390)await p.screenshot({path:'/tmp/sessions-mobile.png',fullPage:true});
+      }
+      if(section==='Audience') {
+        await p.getByRole('button',{name:/Netherlands.*220/}).click();
+        assert.match(await p.locator('.journey-route-list').innerText(),/Hahn/);
+        if(width===390)await p.screenshot({path:'/tmp/countries-mobile.png',fullPage:true});
       }
       assert(
         await p.evaluate(
@@ -261,7 +279,7 @@ try {
   );
   assert.deepEqual(errors, []);
   console.log(
-    "PASS: protected API, login UI, desktop/mobile/tablet layouts, five sections, search, filters, CSV, empty and failed reports; screenshots use synthetic data.",
+    "PASS: protected API, login UI, desktop/mobile/tablet layouts, six sections and country/session drill-down, search, filters, CSV, empty and failed reports; screenshots use synthetic data.",
   );
 } finally {
   await browser?.close();

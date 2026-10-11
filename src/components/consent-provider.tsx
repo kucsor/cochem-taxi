@@ -5,7 +5,7 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useState } 
 
 export type ConsentState = "unset" | "granted" | "denied";
 
-const STORAGE_KEY = "cochem-taxi-consent-v2";
+const STORAGE_KEY = "cochem-taxi-consent-v3";
 
 type ConsentContextValue = {
   consent: ConsentState;
@@ -25,7 +25,7 @@ const ConsentContext = createContext<ConsentContextValue>({
   reset: () => {},
 });
 
-/** Consent controls the optional in-memory session identifier. */
+/** Consent controls the optional tab-session identifier. */
 export function ConsentProvider({ children }: { children: React.ReactNode }) {
   const [consent, setConsent] = useState<ConsentState>("unset");
   const [hydrated, setHydrated] = useState(false);
@@ -42,13 +42,15 @@ export function ConsentProvider({ children }: { children: React.ReactNode }) {
     }
     try {
       window.localStorage.removeItem("cochem-taxi-consent-v1");
+      window.localStorage.removeItem("cochem-taxi-consent-v2");
       const stored = window.localStorage.getItem(STORAGE_KEY);
       if (stored === "granted" || stored === "denied") {
         setTrackingConsent(stored === "granted");
         setConsent(stored);
-      }
+      } else setTrackingConsent(false);
     } catch {
-      // Private mode or storage disabled - stay on "unset", nothing loads.
+      setTrackingConsent(false);
+      // Storage disabled: no optional session linking until a new choice.
     }
     setHydrated(true);
   }, []);

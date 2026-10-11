@@ -1,4 +1,5 @@
 "use client";
+import { MeasurementCoverage, CountriesPanel, TargetsPanel, SessionsPanel } from "./journeys-panel";
 import { ActivityLog } from "./activity-log";
 import { failureDetails } from "@/lib/calculation-diagnostics";
 import { RoutesPanel } from "./routes-panel";
@@ -18,6 +19,7 @@ import {
   Line,
 } from "recharts";
 import {
+  MousePointer2,
   Activity,
   ArrowUpRight,
   BarChart3,
@@ -60,6 +62,7 @@ const tabs = [
   ["features", "Features", Activity],
   ["audience", "Audience", Users],
   ["quality", "Reliability", ShieldCheck],
+  ["sessions", "Sessions", MousePointer2],
 ] as const;
 type Tab = (typeof tabs)[number][0];
 const fmt = (n: number | null | undefined) =>
@@ -625,6 +628,7 @@ export default function Dashboard() {
             )}
             {tab === "overview" && (
               <>
+                <MeasurementCoverage report={stats.journeyReport} />
                 <section className="hero-insight">
                   <div>
                     <p className="eyebrow">
@@ -807,6 +811,7 @@ export default function Dashboard() {
                 </div>
               </>
             )}
+            {tab === "sessions" && <SessionsPanel from={from} to={to} language={language} device={device} environment={environment} refresh={stats.updated_at} countries={stats.journeyReport?.countries || []} />}
             {tab === "destinations" && <RoutesPanel stats={stats} from={from} to={to} />}
             {tab === "features" && (
               <>
@@ -851,11 +856,13 @@ export default function Dashboard() {
                     rows={group("callSources")}
                   />
                 </div>
+                <TargetsPanel report={stats.journeyReport} />
                 <ActivityLog events={stats.recent} />
               </>
             )}
             {tab === "audience" && (
               <>
+                <CountriesPanel report={stats.journeyReport} />
                 <div className="two-grid">
                   <Breakdown title="Devices" rows={group("devices")} />
                   <Breakdown title="Languages" rows={group("languages")} />

@@ -2,6 +2,8 @@ import { z } from "zod";
 import { calculationOutcomes } from "./calculation-diagnostics.ts";
 import { isAnalyticsPlace } from "./analytics-destinations.ts";
 export const eventNames = [
+  "session_start",
+  "page_timing",
   "destination_search",
   "destination_select",
   "pickup_select",
@@ -35,6 +37,13 @@ export const eventNames = [
 ] as const;
 // No addresses, coordinates, query strings, free-text errors or full referrer URLs.
 export const eventSchema = z.object({
+  measurement_version: z.literal(3).optional(),
+  target: z.string().max(180).regex(/^(?:[a-z0-9-]+|\/(de|en|nl)(\/[a-z0-9-]+){0,3}(#[a-z0-9-]+)?|#[a-z0-9-]+|external:[a-zA-Z0-9.-]+)$/).optional(),
+  target_language: z.enum(["de", "en", "nl"]).optional(),
+  calculation_id: z.string().uuid().optional(),
+  call_delay_seconds: z.number().int().min(0).max(1800).optional(),
+  visible_ms: z.number().int().min(0).max(120000).optional(),
+  active_ms: z.number().int().min(0).max(120000).optional(),
   destination: z.string().max(240).refine(isAnalyticsPlace).optional(),
   origin: z.string().max(240).refine(isAnalyticsPlace).optional(),
   route_version: z.literal(2).optional(),

@@ -53,7 +53,7 @@ export function BottomNav({dict}: {dict:NavDictionary}) {
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: scrollBehavior() });
-    trackEvent('click_scroll_top');
+    trackEvent('click_scroll_top', {source: 'navigation', target: 'page-top'});
   };
 
   const itemClass =
@@ -80,7 +80,8 @@ export function BottomNav({dict}: {dict:NavDictionary}) {
           {/* Home */}
           <Link
             href={`/${lang}`}
-            onClick={() => trackEvent('click_home_nav')}
+            data-analytics-manual
+            onClick={() => trackEvent('click_home_nav', {source: 'navigation', target: `/${lang}`})}
             aria-current={homeActive ? 'true' : undefined}
             className={itemClass}
           >
@@ -91,7 +92,8 @@ export function BottomNav({dict}: {dict:NavDictionary}) {
           {/* Calculator */}
           <Link
             href={`/${lang}#rechner`}
-            onClick={() => trackEvent('click_calculator')}
+            data-analytics-manual
+            onClick={() => trackEvent('click_calculator', {source: 'navigation', target: `/${lang}#rechner`})}
             aria-current={rechnerActive ? 'true' : undefined}
             className={itemClass}
           >
@@ -114,7 +116,8 @@ export function BottomNav({dict}: {dict:NavDictionary}) {
           {/* Services */}
           <Link
             href={`/${lang}#services`}
-            onClick={() => trackEvent('click_services_nav')}
+            data-analytics-manual
+            onClick={() => trackEvent('click_services_nav', {source: 'navigation', target: `/${lang}#services`})}
             aria-current={servicesActive ? 'true' : undefined}
             className={itemClass}
           >

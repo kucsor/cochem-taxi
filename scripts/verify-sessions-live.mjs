@@ -1,0 +1,41 @@
+// Run only against an authorized configured backend. Test data uses a dedicated preview path.
+import {spawn} from 'node:child_process';
+import {randomBytes,scryptSync} from 'node:crypto';
+import assert from 'node:assert/strict';
+const password=randomBytes(24).toString('hex'),salt=randomBytes(24).toString('hex');
+const origin='http://127.0.0.1:9138',path='/en/analytics-verification-'+randomBytes(5).toString('hex');
+const server=spawn(process.execPath,['node_modules/next/dist/bin/next','start','-H','127.0.0.1','-p','9138'],{env:{...process.env,VERCEL_ENV:'preview',VERCEL:'1',ADMIN_PASSWORD_HASH:`${salt}:${scryptSync(password,salt,64).toString('hex')}`},stdio:['ignore','pipe','pipe']});
+let cookie='';
+const request=(url,body)=>fetch(origin+url,{method:body===undefined?'GET':'POST',headers:{origin,'content-type':'application/json','x-vercel-ip-country':'NL',cookie,'x-real-ip':`verification-${salt}`},body:body===undefined?undefined:JSON.stringify(body),signal:AbortSignal.timeout(30000)});
+try{
+ await new Promise((resolve,reject)=>{const t=setTimeout(()=>reject(Error('Server startup timeout')),30000);server.stdout.on('data',d=>{if(String(d).includes('Ready')){clearTimeout(t);resolve()}});server.once('exit',()=>{clearTimeout(t);reject(Error('Server exited'))});});
+ assert.equal((await request('/api/admin/insights')).status,401);
+ const login=await request('/api/admin/login',{username:'kuxor',password});assert.equal(login.status,200);cookie=login.headers.get('set-cookie').split(';')[0];
+ const today=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Berlin'}).format(new Date());
+ const url=`/api/admin/insights?from=${today}&to=${today}&environment=preview`;
+ const before=await (await request(url)).json();
+ const prodBefore=await (await request(url.replace('preview','production'))).json();
+ assert.equal((await request('/api/admin/sessions?country=bad')).status,400);
+ const calculationId=crypto.randomUUID();
+ const event={measurement_version:3,calculation_id:calculationId,target:'calculate',id:crypto.randomUUID(),name:'calculator_success',path,visit:crypto.randomUUID(),origin:'cochem',route_version:2,referrer:'',device:'mobile',source:'calculator',destination:'locality:DE-RP:place.12345:Mayen',passengers:'5-8',tariff:'night',fare:150,distance:45};
+ console.log('TEST_PATH',path);
+ assert.equal((await request('/api/events',{...event,id:crypto.randomUUID(),name:'use_calculator',fare:undefined,distance:undefined})).status,204);
+ assert.equal((await request('/api/events',event)).status,204);
+ assert.equal((await request('/api/events',event)).status,204);
+ assert.equal((await request('/api/events',{...event,id:crypto.randomUUID(),destination:'private street 123'})).status,400);
+ assert.equal((await request('/api/events',{...event,id:crypto.randomUUID(),name:'click_call_now',target:'call-taxi',after_estimate:1,call_delay_seconds:12,fare:undefined,distance:undefined})).status,204);
+ const report=await (await request(url)).json();assert.equal(report.successes,before.successes+1);assert.equal(report.total,before.total+3);assert(report.recent.some(x=>x.path===path&&x.destination==='locality:DE-RP:place.12345:Mayen'));
+ const route=report.routeReport.routes.find(r=>r.origin==='cochem'&&r.destination==='locality:DE-RP:place.12345:Mayen');assert(route);const old=before.routeReport.routes.find(r=>r.origin==='cochem'&&r.destination==='locality:DE-RP:place.12345:Mayen');assert.equal(route.calculations,(old?.calculations||0)+1);assert.equal(route.call_clicks,(old?.call_clicks||0)+1);assert.equal(route.sessions,(old?.sessions||0)+1);assert.equal(route.call_sessions,(old?.call_sessions||0)+1);
+ assert.equal((await request('/api/events',{...event,id:crypto.randomUUID(),name:'page_timing',visible_ms:30000,active_ms:14000,fare:undefined,distance:undefined})).status,204);
+ const sessionUrl=`/api/admin/sessions?from=${today}&to=${today}&environment=preview&country=NL&visit=${event.visit}`;
+ const sessions=await (await request(sessionUrl)).json();assert.equal(sessions.total,1);assert.equal(sessions.events_total,4);assert.equal(sessions.sessions[0].visible_ms,30000);assert.equal(sessions.sessions[0].active_ms,14000);
+ const linked=sessions.events.find(e=>e.name==='click_call_now');assert.equal(linked.calculation_id,calculationId);assert.equal(linked.call_delay_seconds,12);assert.equal(linked.country,'NL');assert.equal(linked.language,'en');
+ assert.equal((await (await request(sessionUrl.replace('country=NL','country=DE'))).json()).total,0);
+ assert.equal((await (await request(sessionUrl+'&offset=200')).json()).events.length,0);
+ assert.ok(report.journeyReport.countries.find(c=>c.country==='NL').calculations>=1);
+ const prodAfter=await (await request(url.replace('preview','production'))).json();assert(!prodAfter.recent.some(x=>x.path===path));assert(prodAfter.total>=prodBefore.total);
+ assert.equal((await request('/api/admin/stats?environment=production')).status,200);
+ assert.equal((await request('/api/admin/insights?from=2026-02-31&to=2026-03-01')).status,400);
+ assert.equal((await request('/api/admin/logout',{})).status,200);assert.equal((await request(url)).status,401);assert.equal((await request('/api/admin/sessions')).status,401);cookie='';
+ console.log('PASS: country separated from language, session timeline, visible/active timing, calculation/call ID and delay, authenticated API → live Edge Function → database → private report, duplicate protection, destination privacy validation, environment separation, legacy report and session revocation.');
+}finally{if(cookie)await request('/api/admin/logout',{}).catch(()=>{});server.kill('SIGTERM');}

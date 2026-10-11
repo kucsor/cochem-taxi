@@ -46,9 +46,10 @@ export function LanguageSwitcher({ currentLang }: { currentLang?: string }) {
           <DropdownMenuItem key={locale} asChild>
             <Link 
               href={redirectedPathName(locale)}
+              data-analytics-manual
               onClick={() => {
                 if (locale !== currentLocale) {
-                  trackEvent('change_language', { language: locale });
+                  trackEvent('change_language', { language: locale, source: 'header', target: redirectedPathName(locale) });
                 }
               }}
             >
